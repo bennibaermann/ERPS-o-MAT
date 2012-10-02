@@ -36,7 +36,16 @@ $self =
 	'Obergrenze' => 1,
 	'Text' => '$wert?"Ja":"Nein"',
 	'Beschreibung' => 'Ersetzt auch noch einen weiteren Sinn des Zauberers'
-       }
+       },
+       'Beleuchtung/Nachtsicht' =>
+       {
+       	'Wert' => 0,
+       	'Faktor' => 3,
+       	'Groessenordnung' => 'linear',
+       	'Obergrenze' => 1,
+       	'Text' => '$wert?"Ja":"Nein"',
+       	'Beschreibung' => 'damit kann man auch im Dunkeln sehen',
+       	},
      },
      'Oberspruch' => ['Hellsicht'],
      'Spezialisierung' => { 'muss' => ['RW'] }

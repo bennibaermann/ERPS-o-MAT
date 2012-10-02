@@ -74,7 +74,7 @@ sub berechne{
 }
 
 #
-# Ermittle aus dem Index (undokumentiert in $browseentry->{'curIndex'})
+# Ermittle aus dem Index (undokumentiert in $browseentry->{'_BE_curIndex'})
 # den Wert einer Variable, abhaengig von der Groessenordnung
 #
 
@@ -315,7 +315,7 @@ sub formel{
 	  $back += $self->{'Variable'}->{$var}->{'Faktor'} * $go;
      }
 
-     print "Formel liefert: $back\n";
+     # print "Formel liefert: $back\n";
 
    return $back;
 }

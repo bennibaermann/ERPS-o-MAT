@@ -23,7 +23,7 @@ $self =
 	'Text' => '$wert * 10',
 	'Beschreibung' => 'Mitgenommene Ausruestung'
        },
-       'Personen' =>
+       'weitere Lebewesen' =>
        {
 	'Wert' => 0,
 	'Faktor' => 5,
