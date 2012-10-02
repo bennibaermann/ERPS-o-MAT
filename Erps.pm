@@ -30,7 +30,7 @@ sub berechne_PSI_Kosten{
 sub decode{
      my $ergebnis = shift;
      
-     return "unendlicher Patzer" if($ergebnis == -$main::UNENDLICH);
+     return "unendlicher Patzer" if($ergebnis == -$::UNENDLICH);
      return "Fehler" if($ergebnis == 0);
      return "normal geschafft" if($ergebnis == 1);
      return "normal nicht geschafft" if($ergebnis == -1);
@@ -201,7 +201,7 @@ sub WS_Generator{
  
   print "Wahrscheinlichkeiten vorberechnen\n";
   $Erps::ws_tab[1] = 0;
-  for my $w (2..$main::MAXWURF){
+  for my $w (2..$::MAXWURF){
     $Erps::ws_tab[$w] = $Erps::ws_tab[$w-1]+WS_eq_Generator($w);
   #  print "WS $w: $Erps::ws_tab[$w]\n";
   }

@@ -47,7 +47,11 @@ Simpel
   vielleicht ein dummy-spruch zu diesem zweck?)
   (einfach den leeren Spruch definieren, allerdings werden 
   dann Mehrfachfertigkeiten gebraucht, siehe unten)
+  
+3 Die Formel des Spruches anzeigen. Dafür ein eigenes Textfeld im Spruch anlegen.
 
+2 negative MW-Modifikationen erlauben (zB Vereinfachungen, die nicht vorgesehen 
+  sind)
 
 Einfach
 -------
@@ -74,6 +78,7 @@ Einfach
 
 2 Ausgabe der genauen Spruchdauer. z.B. 3 Sekunden, 5 Runden, etc...
 
+3 Tabelle lesbarer machen durch Verwendung von Farben
 
 Mittel
 ------
@@ -95,7 +100,7 @@ Mittel
   offene Parameter sind immer virtuell (aber virtuelle
   muessen nicht immer offen sein).
 
-3 Doms Wuerfelvariante optional einstellbar. 
+3 Doms Wuerfelvariante optional einstellbar. (?)
 
 
 Schwierig
@@ -126,9 +131,9 @@ Schwierig
 Schwer
 ------
 
-3 bessere Kapselung des main::-quatsches, allgemein besseres OOP
-  (Sprueche sollten kein main:: mehr enthalten, wie macht man dann 
-  den config-kram?).
+3 bessere Kapselung des $::-quatsches, allgemein besseres OOP
+  (Sprueche sollten kein $:: mehr enthalten, wie macht man dann 
+  den config-kram? alles in einen einzigen $::conf-Hash).
 
 3 Oberflaeche ERPS-o-MAT-tauglich machen (als notebook???). ausserdem
   sollte die oberflaeche eh gekapselt werden in dem sinn, dass sie zum
@@ -138,7 +143,8 @@ Schwer
   kommandozeile oder sogar ueber eine datei eingelesen. braucht 
   man das wirklich? insbesondere sollte die ausgabe auch
   konfigurierbar sein. dann kann man das vielleicht in irgendwelchen
-  anderen scripten verwenden. aber konkret faellt mir zur zeit nix ein.
+  anderen scripten verwenden. aber konkret faellt mir zur zeit nix ein. wäre
+  praktisch für ein webinterface.
 
 3 Abhaengigkeiten zwischen Parametern. beispiel: Mensch-Illusion
   fuehrt zu einer ganz bestimmten Groesse. 
@@ -154,8 +160,6 @@ Unmoeglich
 
 3 umgekehrte Berechnung (zB: MW und RW angeben, Schaden wird
   ausgegeben)
-
-6 GUI-Editieren/Einfuegen von Spruechen (nicht wirklich noetig...)
 
 
 Unbekannt
