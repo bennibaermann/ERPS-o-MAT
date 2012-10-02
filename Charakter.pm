@@ -171,7 +171,7 @@ sub berechne_ergebnis{
 # sonderbehandlung fuer negative(und null) ergebnisse
      $ergebnis = -$::UNENDLICH if($summe <= 0);
 
-     print "summe: $summe mw: $mw ergebnis: $ergebnis gewuerfelt: $gewuerfelt\n";
+     # print "summe: $summe mw: $mw ergebnis: $ergebnis gewuerfelt: $gewuerfelt\n";
      
      return $ergebnis;
 }

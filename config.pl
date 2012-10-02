@@ -10,38 +10,44 @@
 $::RULE_VERSION = 2;
 
 #
+# PSI-Kosten für Krits abrunden oder aufrunden? (ultraneue Regel)
+# Mögliche Werte 0,1
+
+$::PSIKOSTEN_ABRUNDEN = 1;
+
+#
 # Farb-Spezifikationen, werden zur Zeit nicht wirklich benutzt...
 #
-$main::BGCOLOR = 'gray85';
+$::BGCOLOR = 'gray85';
 
 #
 # Dieser Parameter gibt an, wieviele Zeilen die Wuerfeltabelle hat
 #
-$main::MAX_TABLE = 10;
+$::MAX_TABLE = 10;
 
 #
 # Dieser Parameter gibt an, was das maximal zu berechnende 
 # Wuerfelergebnis fuer die Wuerfeltabelle ist.
 #
-$main::MAXWURF = 100;
+$::MAXWURF = 100;
 
 #
 # Aus diesem Verzeichnis werden alle *.pm-Dateien als Spruchklassen
 # geladen. Pfad relativ zum aktuellen Verzeichnis.
 #
-$main::SPRUCHDIR = 'Sprueche';
+$::SPRUCHDIR = 'Sprueche';
 
 #
 # Aus diesem Verzeichnis werden alle *.ch-Dateien als Charakterdaten
 # geladen. Pfad relativ zum aktuellen Verzeichnis.
 #
-$main::CHARDIR = 'Charaktere';
+$::CHARDIR = 'Charaktere';
 
 #
 # wird an einigen stellen als "sehr grosser wert" verwendet
 #
 
-$main::UNENDLICH = 10000;
+$::UNENDLICH = 10000;
 
 #
 # Dieser Wert gibt die Genauigkeit der
@@ -50,29 +56,29 @@ $main::UNENDLICH = 10000;
 # mehr Rechenzeit 
 
 # wird nicht mehr benutzt
-# $main::GENAUIGKEIT = 4;
+# $::GENAUIGKEIT = 4;
 
 # Dieser Wert gibt die Anzahl der Stellen hinter dem Komma an, die bei
 # den Wahrscheinlichkeitswerten verwendet werden sollen
 
-$main::KOMMA = 1;
+$::KOMMA = 1;
 
 #
 # Die maximal betrachtete Wundgroesse
 # (wird zur Zeit nur bei der Spezialisierungssuche verwendet)
 
-$main::MAX_WUND = 50;
+$::MAX_WUND = 50;
 
 #
 # Die maximale Anzahl an Werten, die noch durch Radiobuttons
 # dargestellt werden
 #
 
-$main::MAX_RADIO = 4;
+$::MAX_RADIO = 4;
 
 # Dieser Spruch wird am Anfang eingelesen
-$main::DEFAULT_SPRUCH = 'Elementstrahl';
+$::DEFAULT_SPRUCH = 'Elementstrahl';
 
 # Dieser Charakter wird am Anfang eingelesen
-$main::DEFAULT_CHARAKTER = 'Stoffel';
+$::DEFAULT_CHARAKTER = 'Stoffel';
 

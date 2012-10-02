@@ -239,7 +239,7 @@ sub ist_psi{
 }
 
 #
-# Diese Funktion liefert den Bereich einer fertigkeit
+# Diese Funktion liefert den Bereich einer Fertigkeit
 # kann vorerst nur psi... ;-)
 
 sub get_bereich{
