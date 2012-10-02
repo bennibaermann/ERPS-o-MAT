@@ -1,6 +1,5 @@
 #
-# Das soll mal eine allgemeine Zauberspruchklasse werden. Zur Zeit 
-# kann sie nur einen Spruch, naemlich Schockstrahl...
+# Die allgemeine Zauberspruchklasse
 #
 
 package Spruch;
@@ -28,8 +27,8 @@ sub new{
        my $val = 0;
        my $sef = $self->{'Fertigkeiten'};
        for my $spruch_fert (@$sef){
-	 if($main::stoffel->{'Fertigkeit'}->{$spruch_fert} > $val){
-	   $val = $main::stoffel->{'Fertigkeit'}->{$spruch_fert};
+	 if($::stoffel->{'Fertigkeit'}->{$spruch_fert} > $val){
+	   $val = $::stoffel->{'Fertigkeit'}->{$spruch_fert};
 	   $self->{'Fertigkeit'} = $spruch_fert;
 	 }
        }
@@ -68,7 +67,7 @@ sub berechne{
 
      $mw->{'Ungesenkt'} = POSIX::floor
 	  ($mw->{'Grund'} * ($prozente/100) 
-	   * ($self->dauer_prozente($main::dauer)/100) + 0.5 + $main::mw_mod);
+	   * ($self->dauer_prozente($::dauer)/100) + 0.5 + $::mw_mod);
      $mw->{'Gesenkt'} = $mw->{'Ungesenkt'} - $gesenkt_um;
 
      return $mw;
@@ -95,7 +94,7 @@ sub get_wert{
      $groe eq 'quadratisch' || 
      $groe eq 'kubisch'){
     my $max = $ref->{'Obergrenze'};
-    return $index if (!defined($max) || $max > $main::MAX_RADIO);
+    return $index if (!defined($max) || $max > $::MAX_RADIO);
     return $ref->{'Wert'};
   }elsif($groe eq 'log2'){
     return 2 ** $index;
@@ -132,19 +131,19 @@ sub get_input_var{
     # Die Variable muss in jedem Spruch so heissen wie hier!
     my $wert = $self->{'Variable'}->{$label}->{'Wert'};
     my $text = eval($self->{'Variable'}->{$label}->{'Text'});
-    $back =  $main::spruch_frame->BrowseEntry
+    $back =  $::spruch_frame->BrowseEntry
       (-label => $label,
        -variable => \$text,
-       -browsecmd => \&main::aktualisieren
+       -browsecmd => \&::aktualisieren
       );
      $back->{'curIndex'} = $wert;
     $back->{'curIndex'}-- 
       if($self->{'Variable'}->{$label}->{'Groessenordnung'} eq 'log2');
   }else{
-     $back = $main::spruch_frame->BrowseEntry
+     $back = $::spruch_frame->BrowseEntry
        (-label => $label,
 	-variable => \$self->{'Variable'}->{$label}->{'Wert'},
-       -browsecmd => \&main::aktualisieren
+       -browsecmd => \&::aktualisieren
       );
   }
   
@@ -156,7 +155,7 @@ sub get_input_var{
 	  }
      }
      $back->Subwidget('entry')->bind('<Key-Return>',
-					      \&main::aktualisieren);
+					      \&::aktualisieren);
      return $back;
 }
 
@@ -170,9 +169,9 @@ sub get_input_flag{
      my $text = shift;
      my $var_ref = shift;
 
-     return $main::spruch_frame->Checkbutton
+     return $::spruch_frame->Checkbutton
 	  (-text => $text,
-	   -command => \&main::aktualisieren,
+	   -command => \&::aktualisieren,
 	   -variable => $var_ref,
 	   -onvalue => '1',
 	   -offvalue => '0');
@@ -189,7 +188,7 @@ sub get_input_radio{
   my $ref = $self->{'Variable'}->{$var};
   my $groe = $ref->{'Groessenordnung'};
 
-  my $radio_frame = $main::spruch_frame->LabFrame
+  my $radio_frame = $::spruch_frame->LabFrame
     (-label => $var,
      -labelside => 'acrosstop');
 
@@ -202,7 +201,7 @@ sub get_input_radio{
 	(-variable => \$ref->{'Wert'},
 	 -value => $wert,
 	 -text => eval($ref->{'Text'}),
-	 -command => \&main::aktualisieren);
+	 -command => \&::aktualisieren);
     }
   }elsif(ref($groe) eq 'ARRAY'){
     $max = scalar(@$groe);
@@ -211,7 +210,7 @@ sub get_input_radio{
 	(-variable => \$ref->{'Wert'},
 	 -value => $groe->[$wert][0],
 	 -text => $groe->[$wert][0],
-	 -command => \&main::aktualisieren);
+	 -command => \&::aktualisieren);
     }
   }elsif(ref($groe) eq 'HASH'){
     for my $wert (keys(%$groe)){
@@ -219,7 +218,7 @@ sub get_input_radio{
 	(-variable => \$ref->{'Wert'},
 	 -value => $wert,
 	 -text => $wert,
-	 -command => \&main::aktualisieren);
+	 -command => \&::aktualisieren);
     }
   }
 
@@ -232,7 +231,7 @@ sub get_input_radio{
 sub get_output_text{
      my $text = shift;
 
-     return $main::spruch_out_frame->Label(-text => $text);
+     return $::spruch_out_frame->Label(-text => $text);
 }
 
 #
@@ -275,7 +274,7 @@ sub dauer_prozente{
      return 120 if ($diff == -1);
      return 150 if ($diff == -2);
 
-     return $main::UNENDLICH;
+     return $::UNENDLICH;
 }
 
 # eine kleine hilfsfunktion fuer die obige, die text-dauer in einen
@@ -423,7 +422,7 @@ sub create_oberflaeche{
 		 # checkbutton
 		 $vars->{$var}->{'Wahl'} = get_input_flag
 		   ($var,\$vars->{$var}->{'Wert'});
-	       }elsif($max <= $main::MAX_RADIO){
+	       }elsif($max <= $::MAX_RADIO){
 		 #radiobutton
 		 $vars->{$var}->{'Wahl'} = 
 		   $self->get_input_radio($var);
@@ -455,7 +454,7 @@ sub create_oberflaeche{
 	    if($anzahl == 2){
 	      $vars->{$var}->{'Wahl'} = $self->get_input_flag
 		($var,\$var->{'Wert'});
-	    }elsif($anzahl <= $main::MAX_RADIO){
+	    }elsif($anzahl <= $::MAX_RADIO){
 	      # Radiobuttons hin
 	      $vars->{$var}->{'Wahl'} = 
 		$self->get_input_radio($var);
@@ -473,7 +472,7 @@ sub create_oberflaeche{
 	       if($anzahl == 2){
 		 $vars->{$var}->{'Wahl'} = $self->get_input_flag
 		   ($var,\$var->{'Wert'});
-	       }elsif($anzahl <= $main::MAX_RADIO){
+	       }elsif($anzahl <= $::MAX_RADIO){
 		    # Radiobuttons hin
 		 $vars->{$var}->{'Wahl'} = 
 		   $self->get_input_radio($var);
@@ -494,8 +493,8 @@ sub create_oberflaeche{
 sub aktualisieren{
      my $self = shift;
 
-     my $mws = $self->berechne($main::stoffel,
-			       $main::gesenkt_um);
+     my $mws = $self->berechne($::stoffel,
+			       $::gesenkt_um);
 
      return $mws;
 };
@@ -574,7 +573,7 @@ $Spruch::RW_quadratisch =
    'Wert' => 1,
    'Faktor' => 1,
    'Groessenordnung' => 'quadratisch',
-   'Text' => '$wert * $main::stoffel->{"Basisattribut"}->{"PSI"} . " meter"',
+   'Text' => '$wert * $::stoffel->{"Basisattribut"}->{"PSI"} . " meter"',
    'Beschreibung' => 'RW in PSI-Metern'
 };
 
@@ -584,9 +583,9 @@ $Spruch::RW_log2 =
    'Faktor' => 1,
    'Groessenordnung' => 'log2',
    'Text' => 'my $ref = sub{
-        my $psi = $wert*$main::stoffel->{"Basisattribut"}->{"PSI"};
+        my $psi = $wert*$::stoffel->{"Basisattribut"}->{"PSI"};
         ($psi<1000)?($psi . " meter"):
-           (sprintf("%." . $main::KOMMA . "f kilometer",$psi/1000))};
+           (sprintf("%." . $::KOMMA . "f kilometer",$psi/1000))};
       &$ref',
    # [x] Du willst diese Zeilen nicht verstehen.
    'Beschreibung' => 'logarithmische RW in PSI-Metern'

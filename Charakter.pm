@@ -5,7 +5,9 @@
 # Zauberspruchberechner 
 
 package Charakter;
-#use strict;
+use strict;
+use POSIX;
+
 # use "Spruch";
 
 # Der Konstruktor
@@ -18,7 +20,7 @@ sub new{
 
      # einlesen des Charakterfiles... sehr simpel
      open(CHAR,"Charaktere/". $name . ".ch") or die "Fehler: $!\n";
-     @ev = <CHAR>;
+     my @ev = <CHAR>;
      close CHAR;
      eval "@ev";
 
@@ -54,7 +56,7 @@ sub TRK_Tabelle{
 }
 
 # diese Funktion liefert den Wuerfelbonus
-# fertigkeit + main::wuerfel_mod (+PSE)
+# fertigkeit + $::wuerfel_mod (+PSE)
 sub bonus{
      my $self = shift;
      my $fertigkeit = shift;
@@ -70,7 +72,7 @@ sub bonus{
        }
      }
      # jetzt noch die Wuerfelmodifikationen
-     $summe += $main::wuerfel_mod;
+     $summe += $::wuerfel_mod;
      return $summe;
 }
 
@@ -91,7 +93,7 @@ sub magtheo_bonus{
        }
      }
      # jetzt noch die Wuerfelmodifikationen
-     $summe += $main::wuerfel_mod;
+     $summe += $::wuerfel_mod;
      return $summe;
 }
 
@@ -134,21 +136,26 @@ sub berechne_ergebnis{
 # erstmal etwas daemlich nur bis zu doppelkrits
 # TODO: verallgemeinerung in schleifen statt copy&paste
 
-     $ergebnis = 0;
-     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
-     $ergebnis = -4 if($summe >= $mw/16 && $summe < $mw/8);
-     $ergebnis = -3 if($summe >= $mw/8 && $summe < $mw/4);
-     $ergebnis = -2 if($summe >= $mw/4 && $summe < $mw/2);
-     $ergebnis = -1 if($summe >= $mw/2 && $summe < $mw);
-     $ergebnis = 1  if($summe >= $mw && $summe < $mw*2);
-     $ergebnis = 2  if($summe >= $mw*2 && $summe < $mw*3);
-     $ergebnis = 3  if($summe >= $mw*3 && $summe < $mw*4);
-     $ergebnis = 4  if($summe >= $mw*4 && $summe < $mw*5);
-     $ergebnis = 5  if($summe >= $mw*5 && $summe < $mw*6);
-     $ergebnis = 6  if($summe >= $mw*6 && $summe < $mw*7);
-     $ergebnis = 7  if($summe >= $mw*7 && $summe < $mw*8);
-     $ergebnis = 8  if($summe >= $mw*8 && $summe < $mw*9);
-     $ergebnis = 9  if($summe >= $mw*9 && $summe < $mw*10);
+     my $ergebnis = 0;
+     
+     if($::RULE_VERSION == 1){
+     	     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
+     	     $ergebnis = -4 if($summe >= $mw/16 && $summe < $mw/8);
+     	     $ergebnis = -3 if($summe >= $mw/8 && $summe < $mw/4);
+     	     $ergebnis = -2 if($summe >= $mw/4 && $summe < $mw/2);
+     	     $ergebnis = -1 if($summe >= $mw/2 && $summe < $mw);
+     	     $ergebnis = 1  if($summe >= $mw && $summe < $mw*2);
+     	     $ergebnis = 2  if($summe >= $mw*2 && $summe < $mw*3);
+     	     $ergebnis = 3  if($summe >= $mw*3 && $summe < $mw*4);
+     	     $ergebnis = 4  if($summe >= $mw*4 && $summe < $mw*5);
+     	     $ergebnis = 5  if($summe >= $mw*5 && $summe < $mw*6);
+     	     $ergebnis = 6  if($summe >= $mw*6 && $summe < $mw*7);
+     	     $ergebnis = 7  if($summe >= $mw*7 && $summe < $mw*8);
+     	     $ergebnis = 8  if($summe >= $mw*8 && $summe < $mw*9);
+     	     $ergebnis = 9  if($summe >= $mw*9 && $summe < $mw*10);
+     }else{
+     	  $ergebnis = POSIX::floor(($summe - $mw) / 10) + 1;
+     }
 
 # Sonderbehandlung fuer die 1-1:
 
@@ -162,8 +169,10 @@ sub berechne_ergebnis{
      }
 
 # sonderbehandlung fuer negative(und null) ergebnisse
-     $ergebnis = -$main::UNENDLICH if($summe <= 0);
+     $ergebnis = -$::UNENDLICH if($summe <= 0);
 
+     print "summe: $summe mw: $mw ergebnis: $ergebnis gewuerfelt: $gewuerfelt\n";
+     
      return $ergebnis;
 }
 
@@ -176,7 +185,7 @@ sub get_prozente{
      my $self = shift;
      my $spruch = shift;
      
-     my $spruref = $main::sprueche->{$spruch};
+     my $spruref = $::sprueche->{$spruch};
 
      print "Ober: $spruref->{'Oberspruch'}\n";
 
@@ -190,7 +199,7 @@ sub get_prozente{
      # Obersprueche
      my $ober = $spruref->{'Oberspruch'};
      for my $os (@$ober){
-       $oberprotz = $self->get_prozente($os);
+       my $oberprotz = $self->get_prozente($os);
        if($oberprotz < $charakterprozente){
 	 $charakterprozente = $oberprotz ;
        }
@@ -201,11 +210,11 @@ sub get_prozente{
      if(!ref($charakterprozente)){
        return $charakterprozente;
      }else{
-       $c_hat50 = $charakterprozente->{'Spez50'};
-       $c_hat60 = $charakterprozente->{'Spez60'};
+       my $c_hat50 = $charakterprozente->{'Spez50'};
+       my $c_hat60 = $charakterprozente->{'Spez60'};
        if($c_hat50){
 	 if(ref($c_hat50) eq 'ARRAY'){
-	   for $count (@$c_hat50){
+	   for my $count (@$c_hat50){
 	     return 50 if($spruref->spezialisierung_passt($count));
 	   }
 	 }else{
@@ -214,7 +223,7 @@ sub get_prozente{
        }
        if($c_hat60){
 	 if(ref($c_hat60) eq 'ARRAY'){
-	   for $count (@$c_hat60){
+	   for my $count (@$c_hat60){
 	     return 60 if($spruref->spezialisierung_passt($count));
 	   }
 	 }else{

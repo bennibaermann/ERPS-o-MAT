@@ -11,7 +11,7 @@ sub standard_psi_kosten{
 }
 
 # Diese Funktion erwartet ein Ergebnis in der Form, wie es 
-# Charakter::berechne_ergbnis liefert und die 
+# Charakter::berechne_ergebnis liefert und die 
 # Standard-PSI-Kosten und liefert dann die wirklichen PSI-Kosten 
 # zurueck
 
