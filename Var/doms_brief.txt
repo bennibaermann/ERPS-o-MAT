@@ -1,0 +1,81 @@
+Hallo!
+
+Ich hab mir mal Gedanken gemacht ueber die diversen aufgetauchten
+Probleme mit den Zauberspruechen. Sag mal, was Du davon haeltst:
+
+1. Problem:
+-----------
+
+Es wird eine 90%-Spezialisierung benoetigt. Also fuer
+(Elemente)Binden, etc...
+
+Loesung: Im Spruchformat gibt es einen neuen Eintrag
+$self->{'90pro_Spez'}->...
+der ist im Prinzip genauso aufgebaut, wie die bisherigen
+Spezialisierungen (die man evntl. umbenennne n sollte, wg.
+konsistenz. In den Funktionen, wo die Prozente ermittelt werden,
+muss man das dann entsprechend beruecksichtigen. Sollte
+eigentlich keine allzugrossen Probleme machen.
+
+2. Problem:
+-----------
+
+"offene Parameter" werden benoetigt. Also z.B. ganz bestimmte
+Illusionen, oder ganz konkrete Sprueche, die gebunden werden
+sollen. 
+
+Loesung: Diese sind immer virtuell. Sie werden _nicht_ im 
+Spruch deklariert sondern im aktuellen Charakter.
+
+Es wird einfach nur ein enum zur Laufzeit gefuellt. Zusaetzlicher
+eintrag unspezifisch.
+
+#Loesung: Diese muessen als unsortierte enums in das Spruchformat
+#aufgenommen werden. Nicht in die Charakterdateien! Es handelt
+#sich eindeutig um Eigenschaften des Spruches und nicht des
+#Charakters. 
+#
+#
+#sich daraus ergebende Probleme: 
+#
+#- Charakterdateien koennen leichter inkonsistent werden, da sie
+#schnell mal einen Spruch enthalten koennen, der so nicht
+#existiert. 
+#Loesung: es ist eh sinnvoll am programmanfang einen
+#konsistenzcheck der datenbanken zu machen und dann gegebenenfalls
+#entsprechende fehlermeldungen auszugeben.
+#
+#- Die Werte in diesem Enum sind abhaengig von anderen parametern.
+#so fuehrt eine Mensch-Illusion direkt zu einer ganz bestimmten
+#Groesse. Diese Abhaengigkeiten zwischen Parametern sind aber eh
+#noch ein Fall, der auch an anderer Stelle (Heilung) schon
+#aufgetaucht ist. Das ist ziemlich knifflig und kann ja auch
+#erstmal vernachlaessigt werden.
+
+Problem 3
+---------
+
+Die existenz von "virtuellen Paramtern", ist noetig. das sind
+solche, die an sich keinen direkten Einfluss auf den Mindestwurf
+haben, aber dennoch auswaehlbar sein muessen, da sie ueber
+prozente/spezialisierung einen indirekten einfluss haben koennen.
+Das fuehrt aber zu einer ansich in den meisten Faellen ziemlich
+aufgeblaehten Oberflaeche.
+
+Loesung: Man sollte diese Parameter nur dann anzeigen, wenn der
+Charakter entsprechende Spezialisierungen besitzt.
+
+Beispiel:
+
+Spruch: Illusion eines gehenden Menschen
+
+Der Charakter hat Bildillusion 70%, Menschenillusion 60% und
+Drachenillusion 50%. Angezeigt wird der virtuelle-offene-Paramter
+Illusionsart nur mit der Auswahl: 
+/Bildillusion,Menschenillusion,Tierillusion,andere Illusion/
+
+wie das im Detail zu programmieren ist, hab ich mir jetzt noch
+keine Gedanken zu gemacht, sollte aber nicht allzuschwer sein. 
+
+Gruesse, Benni
+

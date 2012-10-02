@@ -1,0 +1,218 @@
+
+			ERPS-o-MAT-TODO
+			---------------
+
+Dieses Programm soll irgendwann mal eine komplette (Space)-ERPS
+Umgebung werden, die den Spielleiter und die Spieler entlasten soll,
+so dass Routineaufgaben wesentlich schneller vonstatten gehen.
+
+Dazu sind folgende Module vorgesehen:
+
+- Charaktererschaffung
+- NSC-Verwaltung
+- dynamische Charakterboegen/NSCs
+- Kaempfe und Aktionsphasen
+- Wuerfelautomat
+- Zaubern
+- Beschwoeren
+- Binden
+- Aktionsphasen grafisch darstellen auf Floorplanes (Version 2 ;-)
+
+
+			Zauber-o-MAT-TODO
+			-----------------
+
+zunaechst konzentriere ich mich auf das Zaubern-Modul. Dieses Modul
+soll folgendes koennen:
+
+- Verwendung von Charakterdaten wie Fertigkeiten, PSI, Prozente
+ (spaeter aus den andern Modulen uebernommen)
+- Berechnen von Mindestwuerfen und PSI-Kosten
+- GUI-maessige interaktive Spruchberechnung um verschiedene
+  Varianten durchrechnen zu koennen
+
+Im Einzelnen fehlt in dieser Version des Programms noch
+folgendes. Sortiert nach vermutetem Implementierungsaufwand. 
+Die Zahl gibt meine Prioritaet an. 1 ist hoch:
+
+
+Simpel
+------
+
+5 Widerstandwurf erlaubt/nicht erlaubt ausgeben
+  (muss auch noch in die Spruchdefinition)
+
+4 MWs eingeben und nur die rechte Seite neu berechnen
+  (oder allgemein: Berechnungen auch ohne Spruch durchfuehrbar...
+  vielleicht ein dummy-spruch zu diesem zweck?)
+  (einfach den leeren Spruch definieren, allerdings werden 
+  dann Mehrfachfertigkeiten gebraucht, siehe unten)
+
+
+Einfach
+-------
+
+4 Verallgemeinerung der Krit-Ergebnis-Funktion, damit man auch
+  54fache Krits noch korrekt angezeigt kriegt...
+
+2 Erwartungswert fuer PSI-Kosten
+
+3 Veraenderung der Aufrechterhalten-Dauer Tage 200%, stunden 150%,
+  runden 90%, sek. 80%
+  (muss auch noch in die Spruchdefinition)
+
+3 2mal runden bei Prozenten... (optional in config.pl)
+
+3 Dauer-Prozente ausgeben (in Balloon)
+
+3 Ballon auf Tabellenueberschriften
+
+2 Balloon auf Variablenbeschreibungen
+
+4 get_input_var und die anderen Oberflaechenfunktionen nicht in
+  Spruch.pm sondern in einem eigenen Modul oder in main  (wirklich?)
+
+2 Ausgabe der genauen Spruchdauer. z.B. 3 Sekunden, 5 Runden, etc...
+
+
+Mittel
+------
+
+2 Spruchbeschreibung ausgeben (sollte irgendwie extern und mit ballons
+  gehen). Quelle auch mit angeben!
+
+6 verschiedene Spruchbibliotheken (pro Spielleiter, Space-Erps, ...)
+  jetzt schon per config.pl machbar.
+
+5 Eine Datenstruktur fuer Regelvariantenkombinationen.
+
+4 Wahrscheinlichkeiten fuer Teammagie optional ausgeben
+
+1 90%-Spezialisierung (Binden, Illusion...)
+
+1 offene Parameter, das sind solche, die zur Laufzeit aus
+  Charakterdaten (Spezialisierung) ermittelt werden.
+  offene Parameter sind immer virtuell (aber virtuelle
+  muessen nicht immer offen sein).
+
+3 Doms Wuerfelvariante optional einstellbar. 
+
+
+Schwierig
+---------
+
+1 Fertigkeit bei mehreren Moeglichkeiten pro Spruch auswaehlbar
+  machen. Zur Zeit wird die hoechste genommen. das sollte als default so
+  bleiben. Auswahl sollte oben bei den charakterwerten stattfinden.
+
+3 optional einstellbares automatisches senken. verschiedene modi:
+  maximum, um 1 (wenn mod 5) default!, 
+  auf mod 5, auf N wuerfeln fuer erfolg(default = 10)
+
+2 Check der Datenbank. Insbesondere gucken, ob die Sprueche bei den
+  Chars ueberhaupt vorhanden sind und allgemeine syntaxfehler abfangen.
+
+2 virtuelle Parameter. Das sind solche, die nur zur Spezialisierung
+  benoetigt werden. Sie sollten auch nur dann angezeigt werden,
+  wenn sie beim Charakter benoetigt werden! Ein Flag virtuell
+  im Spruch zeigt das an.
+
+3 nur bis zum halben MW senken erlauben! (man weiss ja den mw erst
+  hinterher... muesste also nach der mw-berechnung, aber vor der
+  ausgabe kommen) eigentlich muesste die auswahlbox auch angepasst
+  werden...
+
+
+Schwer
+------
+
+3 bessere Kapselung des main::-quatsches, allgemein besseres OOP
+  (Sprueche sollten kein main:: mehr enthalten, wie macht man dann 
+  den config-kram?).
+
+3 Oberflaeche ERPS-o-MAT-tauglich machen (als notebook???). ausserdem
+  sollte die oberflaeche eh gekapselt werden in dem sinn, dass sie zum
+  beispiel von binden-aufgerufen werden kann.
+
+6 kommandozeilenversion. alle parameter werden entweder auf der
+  kommandozeile oder sogar ueber eine datei eingelesen. braucht 
+  man das wirklich? insbesondere sollte die ausgabe auch
+  konfigurierbar sein. dann kann man das vielleicht in irgendwelchen
+  anderen scripten verwenden. aber konkret faellt mir zur zeit nix ein.
+
+3 Abhaengigkeiten zwischen Parametern. beispiel: Mensch-Illusion
+  fuehrt zu einer ganz bestimmten Groesse. 
+  
+4 Automatische Optimierungen auf verschiedene Parameter
+
+5 Eine eigene Tabelle fuer Wahrscheinlichkeitsaenderungen durch senken
+  (geht wohl nur als Toplevel)
+
+
+Unmoeglich
+----------
+
+3 umgekehrte Berechnung (zB: MW und RW angeben, Schaden wird
+  ausgegeben)
+
+6 GUI-Editieren/Einfuegen von Spruechen (nicht wirklich noetig...)
+
+
+Unbekannt
+--------- 
+
+3 Spruchparameter sollen nicht zurueckgesetzt werden bei neuem
+  Charakter... (oder einstellbar)
+
+3 kleiner Font bei PSI-Kosten vor dem Gleichheitszeichen
+
+3 irgendeine optische Unterscheidung ab der "normal geschafft" zeile in der
+  tabelle.
+
+3 optische Unterscheidung und Sortierung der Sprueche nach %en, die der 
+  Charakter hat.
+
+Ausserdem muss natuerlich die Spruchbibliothek vervollstaendigt werden. 
+
+
+Known-Bugs-Section
+------------------
+
+1 mehrere Fertigkeiten pro Spruch funktionieren noch garnicht.
+
+1 Der Fertigkeit-nicht-vorhanden-malus wird bei jedem &aktualisieren
+  nochmal draufaddiert! Loesung:? Nur bei Spruch- oder Charakterwechsel?
+
+1 Fehler bei mehrfachen Charakterwechseln
+
+1 Mw-mod bleiben nach charakterwechsel stehen.
+
+3 Bug bei schon mit 1-2 geschafft: magtheo 99% muesste kleiner
+  sein... oder? nochmal checken, ob das ueberhaupt ein bug ist.
+
+5 Spruch wird mehrfach aufgerufen am anfang... doof und langsam
+
+3 Magietheorie wird noch nicht korrekt
+  behandelt, wenn man sie garnicht hat. aber auch sonst nicht ;-)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

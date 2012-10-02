@@ -1,0 +1,114 @@
+
+
+Zauber-o-Mat
+------------
+
+Dieses Perl/Tk-Programm soll das Berechnen von Zauberspruechen in ERPS
+erleichtern. Spaeter soll es als ein Modul im groesseren Projekt
+ERPS-o-MAT aufgehen.
+
+wichtige Dateien:
+-----------------
+
+nach Auspacken des ERPS-o-MAT.tgz sollten folgende Dateien zur Verfuegung
+stehen:
+
+
+README:		dieser Text
+TODO:		Beschreibung des Projektes und
+		Details, die in dieser Version noch fehlen,
+		sowie bekannte Bugs.
+Copying		Die Gnu-Public-License gilt fuer alle Teile
+		dieses Programms
+
+Zauber-o-Mat	Das eigentliche Programm. Einfach aufrufen.
+
+Charakter.pm	Die Charakter-Klasse
+Erps.pm		einige allgemeine ERPS-Regeln
+Spruch.pm	Die Spruch-Klasse
+config.pl	Wichtige globale Konfigurationsparameter
+
+Charaktere/	Dateien mit der Endung *.ch, die in diesem
+		Verzeichnis stehen, koennen als Charaktere
+		eingelesen werden. Zum einfuegen eigener 
+		Charaktere bitte einfach einen vorhandenen
+		kopieren und veraendern.
+
+Sprueche/	Dateien mit der Endung *.sp, die in diesem
+		Verzeichnis stehen koennen als Sprueche
+		eingelesen werden. dito.
+
+Doc/		Hier soll mal Dokumentation rein. Zur Zeit 
+		noch nicht vorhanden.
+
+
+Requirements
+------------
+
+Perl 5.x, getestet ist es zur Zeit nur mit Version:
+
+	This is perl, version 5.005_02 built for i586-linux
+
+Perl/Tk, getestet ist es zur Zeit nur mit:
+
+	Tk-800-012
+
+definitiv nicht vollstaendig funktionieren tut es mit Tk-800-007.
+
+Perl und Perl/Tk sind unter einer Vielzahl von Plattformen 
+verfuegbar! Bitte sagt Bescheid, wenn ihr Erfahrungen mit anderen
+Konfigurationen habt.
+
+Autor:
+------
+
+Bugreports, Wuensche, Verbesserungen etc. bitte an:
+
+Benjamin Baermann, Berger Str. 406, 60385 Frankfurt am Main
+				benni@cs.uni-frankfurt.de
+
+Copyright:
+----------
+
+Der Autor stellt das Programm unter der GPL zur Verfuegung.
+siehe COPYING.
+
+Helfer:
+-------
+
+Dominikus Scherkl		scherkl@cs.uni-frankfurt.de
+	- besonderen Dank fuer den Wahrscheinlichkeitskram und
+	das Spruchformat
+
+Ernst-Joachim Preussler		erps@cs.uni-frankfurt.de
+	- besonderen Dank fuer ERPS und andere 
+	vielfaeltige Anregungen
+
+History:
+--------
+
+Version 0.1	nur intern verfuegbar
+
+Version 0.2.0	erste oeffentliche Version Februar 99
+
+Version 0.2.1	- Beschleunigt, 
+		- zusaetzliche Sprueche,
+		- Bugs rausgemacht, 
+		- kleine Details
+
+Version 0.2.2	- Magietheorie wird beruecksichtigt bei
+		Berechnung der Wahrscheinlichkeiten
+		(known-bug: ohne magietheorie keine erhoehung)
+		- Charakterdaten (teilweise) aenderbar
+
+Viel Spass!
+
+
+
+
+
+
+
+
+
+

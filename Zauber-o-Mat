@@ -1,0 +1,568 @@
+#!/usr/local/bin/perl -w
+
+#
+# In dieser Datei wird im wesentlichen die Oberflaeche und ihr Verhalten 
+# implementiert. 
+#
+
+use strict;
+# use diagnostics;
+use Charakter;
+use Spruch;
+use Erps;
+use Tk;
+use Tk::BrowseEntry;
+use Tk::Radiobutton;
+use Tk::Table;
+use Tk::LabFrame;
+use POSIX;
+require "config.pl";
+
+#
+# Wahrscheinlichkeitstabelle vorberechnen
+#
+
+&Erps::WS_Generator();
+
+# alle Module im Verzeichnis $spruchdir sind verfuegbar...
+# und werden in eine liste  eingetragen
+opendir(SPRUECHE,$main::SPRUCHDIR) || 
+     die "Kann Verzeichnis $main::SPRUCHDIR nicht oeffnen\n";
+while($_ = readdir(SPRUECHE)){
+     next if( ! (/^.*\.sp$/)); # nur *.sp-files
+     s/^(.*)\.sp$/$1/;
+     my $spruchname = $_;
+     my $spruch = Spruch->new($spruchname);
+     $main::sprueche->{$spruchname} = $spruch;
+     push(@main::spruchliste,$spruchname);
+}
+closedir SPRUECHE;
+
+# Alle Charaktere im gleichnamigen Verzeichnis verfuegbar machen
+#
+opendir(CHARS,$main::CHARDIR) || 
+     die "Kann Verzeichnis $main::CHARDIR nicht oeffnen\n";
+while($_ = readdir(CHARS)){
+     next if( ! (/.*\.ch$/)); # nur *.ch-files
+     s/^(.*?)\.ch$/$1/;
+     my $charaktername = $_;
+     my $char = Charakter->new($charaktername);
+     $main::chars->{$charaktername} = $char;
+     push(@main::charliste,$_);
+}
+closedir CHARS;
+
+# jetzt die ganzen Spruchmodule einlesen...
+# $main::use = "";
+# foreach $main::spru (@main::spruchliste){
+#     $main::use = $main::use . "use Sprueche::$main::spru;";
+# }
+
+# erstaunlich, das das so ueberhaupt funktioniert...
+# eval $main::use;
+
+# erstmal nur der default-Char
+$main::stoffel = $main::chars->{$main::DEFAULT_CHARAKTER};
+
+# nur der Defaultspruch...
+# $main::sprucho = Schockstrahl->new();
+# $main::sprucho = Spruch->new('Elementstrahl');
+$main::sprucho = $main::sprueche->{$main::DEFAULT_SPRUCH};
+$main::sprucho_alt = $main::sprucho;
+
+$main::top = MainWindow->new();
+$main::top->title("ZAUBER-o-MAT Version 0.2");
+
+$main::oben_frame = $main::top->Frame();
+$main::input_frame = $main::oben_frame->LabFrame
+     (-label => 'Eingabe',
+      -labelside => 'acrosstop');
+$main::output_frame= $main::oben_frame->LabFrame
+     (-label => 'Ausgabe',
+      -labelside => 'acrosstop',
+      -background => $main::BGCOLOR);
+$main::command_frame=$main::top->Frame(-background => $main::BGCOLOR);
+
+#
+# Die Eingabeseite
+#
+
+
+$main::charname = $main::DEFAULT_CHARAKTER;
+$main::charwahl = $main::input_frame->BrowseEntry(-label => 'Charakter: ',
+					-variable => \$main::charname,
+					-browsecmd => \&char_aktualisieren);
+
+$main::charwahl->Subwidget('entry')->bind('<Key-Return>',
+					      \&char_aktualisieren);
+
+# nur die verfuegbaren charaktere werden auch eingetragen
+foreach my $char (@main::charliste){
+     $main::charwahl->insert('end',$char);
+}
+
+$main::char_frame = $main::input_frame->LabFrame
+     (-label => $main::stoffel->{'Name'},
+      -labelside => 'acrosstop',
+      -background => $main::BGCOLOR);
+
+$main::char_links_frame = $main::char_frame->Frame();
+$main::char_rechts_frame = $main::char_frame->Frame();
+
+#  my $PSI_txt = "PSI: " . $main::stoffel->{'Basisattribut'}->{'PSI'};
+#  $main::PSI = $main::char_frame->Label(-text => $PSI_txt);  
+#my $PSE_txt = "PSE: " . $main::stoffel->{'Fertigkeit'}->{'PSE'};
+#$main::PSE = $main::char_frame->Label(-text => $PSE_txt);  
+#my $magtheo_txt = "Magietheorie: " . 
+#     $main::stoffel->{'Fertigkeit'}->{'Magietheorie'};
+#$main::magietheorie = $main::char_frame->Label(-text => $magtheo_txt);  
+my $fert_text = "Fertigkeit: ???";
+$main::Fertigkeit = $main::char_links_frame->Label(-text => $fert_text);  
+my $proz_text = "Prozente: ???";
+$main::Prozente = $main::char_links_frame->Label(-text => $proz_text);  
+
+$main::PSI = $main::char_rechts_frame->
+     LabEntry(-textvariable => 
+	      \$main::stoffel->{'Basisattribut'}->{'PSI'},
+	      -width => 2,
+	      -label => 'PSI:',
+	      -labelPack => [ -side => 'left']);
+
+$main::PSI->bind('<Key-Return>',\&spruch_aktualisieren);
+
+$main::PSE = $main::char_links_frame->
+     LabEntry(-textvariable => 
+	      \$main::stoffel->{'Fertigkeit'}->{'PSE'},
+	      -width => 2,
+	      -label => 'PSE:',
+	      -labelPack => [ -side => 'left']);
+
+$main::PSE->bind('<Key-Return>',\&aktualisieren);
+
+$main::magietheorie = $main::char_rechts_frame->
+     LabEntry(-textvariable => 
+	      \$main::stoffel->{'Fertigkeit'}->{'Magietheorie'},
+	      -width => 2,
+	      -label => 'Magietheorie:',
+	      -labelPack => [ -side => 'left']);
+
+$main::magietheorie->bind('<Key-Return>',\&aktualisieren);
+
+# $main::fertigkeit = $main::char_frame->
+#     LabEntry(-textvariable => 
+#	      \$main::stoffel->{'Fertigkeit'}->{''},
+#	      -width => 2,
+#	      -label => 'Magietheorie:',
+#	      -labelPack => [ -side => 'left']);
+#
+# $main::PSE->bind('<Key-Return>',\&aktualisieren);
+
+#  my $PSE_txt = "PSE: " . $main::stoffel->{'Fertigkeit'}->{'PSE'};
+#  $main::PSE = $main::char_frame->Label(-text => $PSE_txt);  
+#  my $magtheo_txt = "Magietheorie: " . 
+#       $main::stoffel->{'Fertigkeit'}->{'Magietheorie'};
+#  $main::magietheorie = $main::char_frame->Label(-text => $magtheo_txt);  
+#  my $fert_text = "Fertigkeit: ???";
+#  $main::Fertigkeit = $main::char_frame->Label(-text => $fert_text);  
+#  my $proz_text = "Prozente: ???";
+#  $main::Prozente = $main::char_frame->Label(-text => $proz_text);  
+
+
+
+$main::allgemein_frame = $main::input_frame->LabFrame
+     (-label => 'Allgemeines',
+      -labelside => 'acrosstop',
+      -background => $main::BGCOLOR);
+
+# $main::spruch = "Schockstrahl";
+$main::spruch = "Elementstrahl";
+$main::spruchwahl = $main::allgemein_frame->BrowseEntry(-label => 'Spruch: ',
+					-variable => \$main::spruch,
+					-browsecmd => \&spruch_aktualisieren);
+
+# nur die verfuegbaren sprueche werden auch eingetragen
+foreach $main::spru (@main::spruchliste){
+     $main::spruchwahl->insert('end',$main::spru);
+}
+
+$main::spruchwahl->Subwidget('entry')->bind('<Key-Return>',
+					      \&spruch_aktualisieren);
+
+$main::spruch_frame = $main::input_frame->LabFrame
+     (-label => 'Spruchabhängige Parameter',
+      -labelside => 'acrosstop',
+      -background => $main::BGCOLOR);
+
+$main::dauer = $main::sprucho->{'Dauer'};
+$main::dauer_wahl = $main::allgemein_frame->BrowseEntry
+     (-label => 'Spruchdauer: ', 
+      -variable => \$main::dauer,
+      -browsecmd => \&aktualisieren);
+
+$main::dauer_wahl->insert('end', 'Sofortiger Zauber'); 
+$main::dauer_wahl->insert('end', 'Rundenzauber'); 
+$main::dauer_wahl->insert('end', 'Minutenzauber'); 
+$main::dauer_wahl->insert('end', 'Stundenzauber'); 
+$main::dauer_wahl->insert('end', 'Tagezauber'); 
+$main::dauer_wahl->Subwidget('entry')->bind('<Key-Return>',
+					      \&aktualisieren);
+$main::mw_mod = 0;
+$main::mw_mod_wahl = $main::allgemein_frame->BrowseEntry
+     (-label => 'MW-Modifikationen: ', 
+      -variable => \$main::mw_mod,
+      -browsecmd => \&aktualisieren);
+
+for($main::i = 0; $main::i != 20; $main::i++){
+     $main::mw_mod_wahl->insert('end', $main::i); 
+}
+$main::mw_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
+					      \&aktualisieren);
+
+$main::wuerfel_mod = 0;
+$main::wuerfel_mod_wahl = $main::allgemein_frame->BrowseEntry
+     (-label => 'Wuerfel-Modifikationen: ', 
+      -variable => \$main::wuerfel_mod,
+      -browsecmd => \&aktualisieren);
+
+for($main::i = -10; $main::i != 10; $main::i++){
+     $main::wuerfel_mod_wahl->insert('end', $main::i); 
+}
+$main::wuerfel_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
+					      \&aktualisieren);
+$main::gesenkt_um = 0;
+$main::gesenkt_wahl = $main::allgemein_frame->BrowseEntry
+     (-label => 'gesenkt um: ', 
+      -variable => \$main::gesenkt_um,
+      -browsecmd => \&aktualisieren);
+
+for($main::i = 0; $main::i != 20; $main::i++){
+     $main::gesenkt_wahl->insert('end', $main::i); 
+}
+
+$main::gesenkt_wahl->Subwidget('entry')->bind('<Key-Return>',
+					      \&aktualisieren);
+
+$main::ist_negativ = 0;
+$main::check_negativ = $main::allgemein_frame->Checkbutton
+	  (-text => 'nach dem Senken negative Psi-Punkte',
+	   -command => \&main::aktualisieren,
+	   -variable => \$main::ist_negativ,
+	   -onvalue => '1',
+	   -offvalue => '0');
+
+$main::exit_button = $main::command_frame->Button(-text => "Exit",
+				      -command => \&exit);
+
+#
+# Die Ausgabe-Seite
+#
+
+$main::mw_frame = $main::output_frame->LabFrame
+     (-label => 'Mindestwürfe',
+      -labelside => 'acrosstop');
+
+$main::MWG = $main::mw_frame->Label(-text => 'Grund-MW: 0');
+$main::MWU = $main::mw_frame->Label(-text => 'MW-Ungesenkt: 0');
+$main::MWS = $main::mw_frame->Label(-text => 'MW-Gesenkt: 0');
+
+$main::table_frame = $main::output_frame->LabFrame
+     (-label => 'Würfeltabelle',
+      -labelside => 'acrosstop');
+
+$main::tabelle = $main::table_frame->Table(-rows => $main::MAX_TABLE,
+					    -columns => 4,
+					    -scrollbars => 0);
+
+$main::tabelle->put(0,0,'Gewuerfelt');
+$main::tabelle->put(0,1,'Ergebnis');
+$main::tabelle->put(0,2,'PSI-Kosten');
+$main::tabelle->put(0,3,'WS');
+
+$main::ws_fert = $main::table_frame->Label
+     (-text => 'Erfolgswahrscheinlichkeit: ??');
+$main::ws_lp =  $main::table_frame->Label
+     (-text => 'Lernpunktwahrscheinlichkeit: ??');
+$main::ws_magtheo = $main::table_frame->Label
+     (-text => 'Magietheoriewahrscheinlichkeit: ??');
+$main::ws_magtheo_lp =  $main::table_frame->Label
+     (-text => 'Lernpunkt-Magietheorie-wahrscheinlichkeit: ??');
+
+$main::spruch_out_frame = $main::output_frame->LabFrame
+     (-label => 'Spruchabhängige Ausgaben',
+      -labelside => 'acrosstop',
+      -background => $main::BGCOLOR);
+
+$main::sprucho->create_oberflaeche();
+
+#
+# Packung!
+#
+
+$main::oben_frame->pack(-side => 'top', -anchor => 'n');
+$main::input_frame->pack(-side => 'left', -anchor => 'n');
+$main::charwahl->pack(-anchor => 'w');
+$main::char_frame->pack( -anchor => 'w', -fill => 'x');
+$main::char_links_frame->pack( -anchor => 'w', -fill => 'x',
+			       -side => 'left', -expand => 'both');
+$main::char_rechts_frame->pack( -anchor => 'n', -fill => 'x', 
+				-side => 'left', -expand => 'both');
+$main::allgemein_frame->pack( -anchor => 'w', -fill => 'x');
+$main::spruch_frame->pack( -anchor => 'w', -fill => 'x');
+$main::mw_frame->pack( -anchor => 'w', -fill => 'x');
+$main::table_frame->pack( -anchor => 'w', -fill => 'x');
+$main::spruch_out_frame->pack( -anchor => 'w', -fill => 'x');
+$main::output_frame->pack(-side => 'left', -anchor => 'n');
+$main::command_frame->pack(-side => 'bottom');
+
+$main::exit_button->pack();
+
+$main::spruchwahl->pack(-anchor => 'e');
+
+# auch hier: dynamisch!!!
+$main::sprucho->pack();
+
+$main::dauer_wahl->pack(-anchor => 'e');
+$main::mw_mod_wahl->pack(-anchor => 'e');
+$main::wuerfel_mod_wahl->pack(-anchor => 'e');
+$main::gesenkt_wahl->pack(-anchor => 'e');
+$main::check_negativ->pack(-anchor => 'e');
+$main::PSI->pack(-anchor => 'e');
+$main::PSE->pack(-anchor => 'e');
+$main::magietheorie->pack(-anchor => 'e');
+$main::Fertigkeit->pack(-anchor => 'e');
+$main::Prozente->pack(-anchor => 'e');
+
+$main::MWG->pack(-anchor => 'w');
+$main::MWU->pack(-anchor => 'w');
+$main::MWS->pack(-anchor => 'w');
+
+$main::tabelle->pack();
+$main::ws_fert->pack(-anchor => 'e');
+$main::ws_lp->pack(-anchor => 'e');
+$main::ws_magtheo->pack(-anchor => 'e');
+$main::ws_magtheo_lp->pack(-anchor => 'e');
+
+&spruch_aktualisieren;
+# &aktualisieren;
+&MainLoop;
+
+#
+# Diese Funktion wird ausgefuehrt, wenn ein Charakter ausgewaehlt wurde
+#
+sub char_aktualisieren{
+
+
+     $main::stoffel = $main::chars->{$main::charname};
+
+     $main::PSI->delete(0,'end');
+     $main::PSI->insert(0,$main::stoffel->{'Basisattribut'}->{'PSI'});
+     
+     $main::PSE->delete(0,'end');
+     $main::PSE->insert(0,$main::stoffel->{'Fertigkeit'}->{'PSE'});
+#     my $magtheo_txt = "PSE: " . 
+     $main::magietheorie->delete(0,'end');
+     $main::magietheorie->insert
+	  (0, $main::stoffel->{'Fertigkeit'}->{'Magietheorie'});
+
+     $main::char_frame->configure(-label => $main::stoffel->{'Name'});
+     
+     &spruch_aktualisieren;
+}
+
+#
+# Diese Funktion wird ausgefuehrt, wenn ein Spruch ausgewaehlt wurde
+#
+
+sub spruch_aktualisieren{
+
+     # zuerst die alte oberflaeche vernichten
+     my $spruchabhaengig = $main::sprucho_alt->get_spruchabhaengig();
+
+     my $widget;
+     foreach $widget (@$spruchabhaengig){
+#	  print "zu zerstoerendes Widget: $widget\n";
+	  $widget->destroy() if(Exists($widget));
+     }
+
+     $main::sprucho = $main::sprueche->{$main::spruch};
+
+     # die neue oberflaeche erzeugen und packen
+     $main::sprucho->create_oberflaeche();
+     $main::sprucho->pack();
+     $main::sprucho_alt = $main::sprucho;
+
+     # neue Zauberdauer eintragen
+     $main::dauer = $main::sprucho->{'Dauer'};
+
+     &aktualisieren;
+}
+
+# Diese Funktion wird bei so gut wie jeder Oberflaecheninteraktion
+# ausgefuehrt
+# TODO: aufspalten dieser Funktion. bisserl gross geworden...
+
+sub aktualisieren{
+
+#
+# Wir berechnen die neue MW-Erhoehungsvorgabe anhand nicht-gekonnter
+# Fertigkeiten
+#
+
+     $main::mw_mod += $main::stoffel->get_erhoehung
+	  ($main::sprucho->{'Fertigkeit'});
+     if(&Erps::ist_psi($main::sprucho->{'Fertigkeit'})){
+	  $main::mw_mod += $main::stoffel->get_erhoehung('PSE');
+     }
+
+     my $mws = $main::sprucho->aktualisieren();
+
+#
+# Der Bonus auf den Wuerfelwurf wird ausgerechnet
+#
+     my $bonus = $main::stoffel->bonus($main::sprucho->{'Fertigkeit'});
+     $main::stoffel->{'Bonus'} = $bonus;
+
+# das selbe fuer magtheo
+
+     my $m_bonus = $main::stoffel->
+	  magtheo_bonus($main::sprucho->{'Fertigkeit'});
+     $main::stoffel->{'Magtheo_Bonus'} = $m_bonus;
+
+     $main::MWG->configure(-text => "unmodifizierter MW: $mws->{'Grund'}");
+     $main::MWU->configure
+	  (-text => "MW nach Prozenten und Modifikationen: ".
+	   "$mws->{'Ungesenkt'}");
+     $main::MWS->configure(-text => "MW-Gesenkt: $mws->{'Gesenkt'}");
+     # diverse wahrscheinlichkeiten ausrechnen
+
+     #
+     # Probleme im Zusammenhang mit Wahrscheinlichkeiten:
+     #    - Summe in der Tabelle gibt immer 91% statt 100%
+     #    - diese 9% fehlen immer im hinteren Teil
+     #    - Wenn nur die 1-1 faild: 100% Erfolg statt 99%
+
+     if($bonus > 0){
+	  $main::tabelle->put(0,0,"Gewuerfelt (+$bonus)");
+     }elsif($bonus < 0){
+	  $main::tabelle->put(0,0,"Gewuerfelt (-$bonus)");
+     }else{
+	  $main::tabelle->put(0,0,"Gewuerfelt");
+     }
+     my $ws = Erps::WS_Fert($mws->{'Gesenkt'} - $bonus);
+     $ws = sprintf('%.' . $main::KOMMA . 'f',$ws);
+     $main::ws_fert->configure
+	  (-text => "Erfolgswahrscheinlichkeit: $ws \%");
+     $ws = Erps::WS_LP($mws->{'Gesenkt'} - $bonus);
+     $ws = sprintf('%.' . $main::KOMMA . 'f',$ws);
+     $main::ws_lp->configure
+	  (-text => "Lernpunktwahrscheinlichkeit: $ws \%");
+     $ws = Erps::WS_Magtheo($mws->{'Gesenkt'} - $m_bonus,
+			    $mws->{'Ungesenkt'} - $m_bonus);
+     $ws = sprintf('%.' . $main::KOMMA . 'f',$ws);
+     $main::ws_magtheo->configure
+	  (-text => "Magietheoriewahrscheinlichkeit: $ws \%");
+     $ws = Erps::WS_Magtheo_LP($mws->{'Gesenkt'} - $m_bonus,
+			       $mws->{'Ungesenkt'} - $m_bonus);
+     $ws = sprintf('%.' . $main::KOMMA . 'f',$ws);
+     $main::ws_magtheo_lp->configure
+	  (-text => "Lernpunkt-Magietheorie-Wahrscheinlichkeit: $ws \%");
+     $main::Prozente->configure
+	  (-text => "Prozente: " .
+	   $main::stoffel->get_prozente($main::sprucho->get_name()). "%");
+     my $bereich = $main::sprucho->{'Fertigkeit'};
+     if(defined($main::stoffel->{'Fertigkeit'}->{$bereich})){
+	  $main::Fertigkeit->configure
+	  (-text => "$bereich: " .
+	   $main::stoffel->{'Fertigkeit'}->{$bereich});
+     }else{
+	  $main::Fertigkeit->configure
+	  (-text => "$bereich: nicht vorhanden");
+     }
+	   
+#
+# Hier wird jetzt die Tabelle gefuellt
+#
+
+# zunaechst muessen wir sie mal leeren ...
+
+     for($main::y = 1; $main::y != $main::MAX_TABLE; $main::y++){
+	  for($main::x = 0; $main::x != 4;$main::x++){
+	       $main::tabelle->put($main::y,$main::x,"");
+	  }
+     }
+     my $wurf;
+     my $zeilen_anfang = 2;
+     my ($ergebnis,$gewuerfelt_text);
+     my $zeile = 1;
+#     $main::stoffel->{'Bonus'} = 
+#	  $main::stoffel->bonus($main::sprucho->{'Fertigkeit'});
+     my $alt_ergebnis = $main::stoffel->berechne_ergebnis
+	       ($mws->{'Gesenkt'},
+		2,
+		$main::sprucho->{'Fertigkeit'});;
+     for ($wurf = 2;$wurf != $main::MAXWURF; $wurf++){
+
+	  $ergebnis = $main::stoffel->berechne_ergebnis
+	       ($mws->{'Gesenkt'},
+		$wurf,
+		$main::sprucho->{'Fertigkeit'});
+	  # zeilensprung in der Tabelle!
+	  if($ergebnis != $alt_ergebnis || $wurf == $main::MAXWURF-1){
+	       my $WS;
+	       # nur ein einzelnes Ergebnis in der Zeile?
+	       if($wurf-1 != $zeilen_anfang){
+		    my $wurf1 = $wurf-1;
+		    $gewuerfelt_text = "$zeilen_anfang - $wurf1";
+		    $WS = Erps::WS_zwischen($zeilen_anfang,$wurf1);
+	       }else{
+		    $gewuerfelt_text = "$zeilen_anfang";
+		    $WS = Erps::WS_eq($zeilen_anfang);
+	       }
+	       $WS = sprintf('%.' . $main::KOMMA . 'f %%',$WS);
+	       
+	       if($zeile < $main::MAX_TABLE && $alt_ergebnis != 0){
+		    $main::tabelle->put($zeile,0,$gewuerfelt_text);
+		    $main::tabelle->put($zeile,1,Erps::decode($alt_ergebnis));
+		    $main::tabelle->put($zeile,3,$WS);
+
+		    my $kosten;
+		    my $normal_kosten;
+		    if(! $main::ist_negativ){
+			 $normal_kosten = floor(Erps::berechne_PSI_Kosten
+						($alt_ergebnis, 
+					    Erps::standard_psi_kosten
+						 ($mws->{'Gesenkt'}))+0.5);
+			 $kosten = $main::gesenkt_um + $normal_kosten;
+		    }else{
+			 # doppelte kosten im negativen
+			 $normal_kosten = 2*floor(Erps::berechne_PSI_Kosten
+						($alt_ergebnis, 
+					    Erps::standard_psi_kosten
+						 ($mws->{'Gesenkt'}))+0.5);
+			 $kosten = $main::gesenkt_um + $normal_kosten;
+		    }
+		    # kann bei negativen Wuerfelmodifikationen
+		    # passieren
+		    $kosten = "unendlich" if 
+			 ($alt_ergebnis == -$main::UNENDLICH);
+
+		    $main::tabelle->put
+			 ($zeile,2,
+			  "$normal_kosten + $main::gesenkt_um = $kosten");
+	       }
+						
+	       $zeile++;
+	       $zeilen_anfang = $wurf;
+	  }
+	  $alt_ergebnis = $ergebnis;
+     }
+
+}
+
+
+
+
+
+
+
+

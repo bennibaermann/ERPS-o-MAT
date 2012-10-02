@@ -1,0 +1,105 @@
+Op.	Wahrscheinlichkeit in %
+>=	2W10 offen	(2+/22-)2W10
+-14			99,8
+-13			99,745
+-12			99,677
+-11			99,596
+-10			99,502
+- 9			99,395
+- 8			99,275
+- 7			99,14
+- 6			99,02
+- 5			98,815
+- 4			98,525
+- 3			98,15
+- 2			97,69
+- 1			97,145
+  0			96,515
+  1			95,8
+  2	100		95		
+  3	99		94,1		
+  4	97		93,3		
+  5	94		91,6		
+  6	90		89		
+  7	85		85,5		
+  8	79		81,1		
+  9	72		75,8
+ 10	64		69,6
+ 11	55		62,5
+ 12	47		54,5
+ 13	39,8		45,5
+ 14	33,4		37,5
+ 15	27,8		30,4
+ 16	23		24,2
+ 17	19		18,9
+ 18	15,8		14,5
+ 19	13,4		11
+ 20	11,8		 8,4
+ 21	10		 6,7
+ 22	 8,4		 5,9
+ 23	 6,97		 5
+ 24	 5,71		 4,2
+ 25	 4,62		 3,485
+ 26	 3,7		 2,855
+ 27	 2,95		 2,31
+ 28	 2,37		 1,85
+ 29	 1,96		 1,475
+ 30	 1,72		 1,185
+ 31	 1,45		 0,98
+ 32	 1,21		 0,86
+ 33	 0,996	 0,725
+ 34	 0,808	 0,605
+ 35	 0,646	 0,498
+ 36	 0,51		 0,404
+ 37	 0,4		 0,323
+ 38	 0,316	 0,255
+ 39	 0,258	 0,2
+
+alle anderen Operatoren ergeben sich aus der Tabelle:
+(<) : 100 - (>=)
+(>a) : (>= a-1)
+(=a) : (>=a - >=(a+1))
+(>=a und <=b) : (>=a - >=(b+1))
+
+
+Die Formel fuer 2W10 ist leider nicht geschlossen angebbar, obwohl immer
+hoechstens zwei Terme der unendlichen Summe groesser als Null sein koennen:
+
+Def: Die Anzahl der Kombinationen die die Zahl x ergeben sei Z(x). 
+
+WS(2W10 = MW) = Z(MW) + Z(MW-10)*0.1*2 + Z(MW-20)*0,01*3 + ... %
+				`------.-----´   `------.------´
+				= 0 fuer MW<12    = 0 fuer MW<22
+
+
+oder als Summenformel:  Summe( Z(MW-k*10) * (10^(-k)) * k )
+				k>=0
+
+dabei ist Z(x) = 0 fuer x<2 oder x>18,
+          Z(x) = 1 fuer x=2 oder x=18,
+          Z(x) = 2 fuer x=3 oder x=17,
+          Z(x) = 3 fuer x=4 oder x=16,
+          Z(x) = 4 fuer x=5 oder x=15,
+          Z(x) = 5 fuer x=6 oder x=14,
+          Z(x) = 6 fuer x=7 oder x=13,
+          Z(x) = 7 fuer x=8 oder x=12,
+          Z(x) = 8 fuer x=9 oder x=11,
+      und Z(x) = 9 fuer x=10.
+
+> - Wie aendern sich diese Werte mit deinem neuen System (das will ich
+> naemlich auch irgendwann optional einbauen)
+
+Die Formel fuer (2+/22-)2W10 ist:
+
+WS((2+/22-)2W10 = MW) = WS(2W10 = 2+MW)/2 + WS(2W10 = 22-MW)/2
+
+> - Wie ist der Erwartungswert eines Schadenswurfes genau: Ich glaub w*6.6
+> oder?
+Ja. Genauer: 6 2/3. EW(3W10) ist also genau 20.
+--
+Hochachtungsvoll,                               Huizlipochtli der Grosse
+                                           fuer Quasimodo Universal (58)
+
+                                                  i.A. Dominikus Scherkl
+                                           scherkl@stud.uni-frankfurt.de
+

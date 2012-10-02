@@ -1,0 +1,24 @@
+Da ich selbst kein Windows verwende, hier ein paar Erfahrungsberichte:
+--------------------------------------------------------------------
+Hallo ErpsInen,
+
+ich habe bei
+
+   http://world.std.com/~aep/ptkdb/#requirements
+
+unter
+
+   Perl 5.00502 for Win32 with Tk800.011
+
+den Local Build gesaugt und bei uns in der Firma
+auf dem Netz installiert. Im Fenster (NT) Erkunder
+muß dan nur noch eine Verknüpfung für *.pl Dateien zu
+\\globalerfirmenrechner\...\pearl\5.00502\bin\MSWin32-x86\pearl.exe
+erstellt werden. Zauber-O-Mat habe ich in Zauber-O-Mat.pl umbenannt.
+
+Und schon lief das Programm. Fast schon Plug'nPlay, also ganz
+KleinweichFenster untuepisch! Weitere Vorteile: Keine Registry
+Einträge wie bei ActivePearl.
+
+Grüße vom groessten Heiler aller Zeiten, Roderick II
+------------------------------------------------------------
