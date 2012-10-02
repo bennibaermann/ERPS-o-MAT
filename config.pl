@@ -4,6 +4,12 @@
 #
 
 #
+# Welche Version der ERPS-Regeln soll verwendet werden?
+# Mögliche Werte: 1,2
+
+$::RULE_VERSION = 2;
+
+#
 # Farb-Spezifikationen, werden zur Zeit nicht wirklich benutzt...
 #
 $main::BGCOLOR = 'gray85';

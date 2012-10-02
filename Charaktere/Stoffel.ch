@@ -7,16 +7,16 @@
      $self->{'Basisattribut'}->{'PSI'} = 19;  
      $self->{'Basisattribut'}->{'STR'} = 10;  
 
-     $self->{'Fertigkeit'}->{'PSE'} = 14;
+     $self->{'Fertigkeit'}->{'PSE'} = 15;
      $self->{'Fertigkeit'}->{'Magietheorie'} = 15;
-     $self->{'Fertigkeit'}->{'Schock'} = 8;
-     $self->{'Fertigkeit'}->{'Elemente'} = 7;
-     $self->{'Fertigkeit'}->{'Wahrnehmung'} = 7;
+     $self->{'Fertigkeit'}->{'Schock'} = 9;
+     $self->{'Fertigkeit'}->{'Elemente'} = 8;
+     $self->{'Fertigkeit'}->{'Wahrnehmung'} = 8;
      $self->{'Fertigkeit'}->{'Regeneration'} = 8;
      $self->{'Fertigkeit'}->{'Illusion'} = 4;
      $self->{'Fertigkeit'}->{'Bewegung'} = 6;
      $self->{'Fertigkeit'}->{'Kontrolle'} = 4;
-     $self->{'Fertigkeit'}->{'Binden'} = 7;
+     $self->{'Fertigkeit'}->{'Binden'} = 8;
      $self->{'Fertigkeit'}->{'Koerperbewusstsein'} = 4;
      $self->{'Fertigkeit'}->{'Verstaendnis'} = 6;
      $self->{'Fertigkeit'}->{'Telepathie'} = 6;
@@ -37,12 +37,13 @@
 
      # Dimension
      $self->{'Spruchprozente'}->{'Dimensionstor'} = 70;
-     $self->{'Spruchprozente'}->{'Teleportation'} = 80;
+     $self->{'Spruchprozente'}->{'Teleportation'} = 70;
+     $self->{'Spruchprozente'}->{'Dimensionszauber_erkennen'} = 90;
 
      # Elemente
      $self->{'Spruchprozente'}->{'Elementstrahl'} = 80;
      $self->{'Spruchprozente'}->{'Elementvolumen'} = 80;
-     $self->{'Spruchprozente'}->{'Elementball'} = 80;
+     $self->{'Spruchprozente'}->{'Elementball'} = 70;
      $self->{'Spruchprozente'}->{'Stillezone'} = 90;
 
      # Regeneration
@@ -52,7 +53,7 @@
      $self->{'Spruchprozente'}->{'Gift_neutralisieren'} = 90;
 
      # Kontrolle
-     $self->{'Spruchprozente'}->{'Handlungen_beherrschen'} = 90;
+     $self->{'Spruchprozente'}->{'Handlungen_beherrschen'} = 80;
 
      # Wahrnehmung
      $self->{'Spruchprozente'}->{'Hellhoeren'} = 90;
@@ -65,18 +66,21 @@
      $self->{'Spruchprozente'}->{'Material_untersuchen'} = 90; 
      $self->{'Spruchprozente'}->{'Person_finden'} = 70; 
      $self->{'Spruchprozente'}->{'Formen_erkennen'} = 90; 
-
+     $self->{'Spruchprozente'}->{'Dinge_finden'} = 90;
+ 
      # Beschwoeren
      $self->{'Spruchprozente'}->{'Kundschafter'} = 70; 
      $self->{'Spruchprozente'}->{'Traeger'} = 90; 
 
      # Binden
      $self->{'Spruchprozente'}->{'Dimension_binden'} = 90; 
-     $self->{'Spruchprozente'}->{'Bewegung_binden'} = 90; 
+     $self->{'Spruchprozente'}->{'Bewegung_binden'} = 80; 
      $self->{'Spruchprozente'}->{'Artefakt_verstehen'} = 90; 
 
      # Bewegung
-     $self->{'Spruchprozente'}->{'Laehmen'} = 80; 
+     $self->{'Spruchprozente'}->{'Laehmen'} = 70;
+     $self->{'Spruchprozente'}->{'Levitation'} = 70;
+     $self->{'Spruchprozente'}->{'Fliegen'} = 70;
      
      # Gegenmagie
      $self->{'Spruchprozente'}->{'Sphaere_durchdringen'} = 90; 
@@ -88,14 +92,16 @@
      $self->{'Spruchprozente'}->{'Sprache_verstehen'} = 80; 
      $self->{'Spruchprozente'}->{'Arjol_Kommunikation'} = 90; 
      $self->{'Spruchprozente'}->{'Entschluesselung'} = 90; 
-
+     $self->{'Spruchprozente'}->{'Bereich_erkennen'} = 90;
+     
      # Telepathie
+     # TODO: nur bis RW 1, kann man das einfach dazu packen?
      $self->{'Spruchprozente'}->{'Gedanken_lesen'} =
        {'Spez50' => {'Tiefe' => 'Langzeitgedaechtnis'} };
 
      # Illusion
-     $self->{'Spruchprozente'}->{'Bildillusion'} = 80; 
-     $self->{'Spruchprozente'}->{'Unsichtbarkeit'} = 80; 
+     $self->{'Spruchprozente'}->{'Bildillusion'} = 70; 
+     $self->{'Spruchprozente'}->{'Unsichtbarkeit'} = 70; 
 
 
 
