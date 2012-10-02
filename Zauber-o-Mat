@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/perl -w
 
 #
 # In dieser Datei wird im wesentlichen die Oberflaeche und ihr Verhalten 
