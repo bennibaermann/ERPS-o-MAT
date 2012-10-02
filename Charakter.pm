@@ -133,13 +133,13 @@ sub berechne_ergebnis{
 
 #
 # hier jetzt die eigentliche berechnung ...
-# erstmal etwas daemlich nur bis zu doppelkrits
-# TODO: verallgemeinerung in schleifen statt copy&paste
+
 
      my $ergebnis = 0;
      
-     if($::RULE_VERSION == 1){
-     	     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
+     if($::OLD_KRITS == 1){
+     	     # TODO: verallgemeinerung in schleifen statt copy&paste
+    	     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
      	     $ergebnis = -4 if($summe >= $mw/16 && $summe < $mw/8);
      	     $ergebnis = -3 if($summe >= $mw/8 && $summe < $mw/4);
      	     $ergebnis = -2 if($summe >= $mw/4 && $summe < $mw/2);
@@ -155,6 +155,7 @@ sub berechne_ergebnis{
      	     $ergebnis = 9  if($summe >= $mw*9 && $summe < $mw*10);
      }else{
      	  $ergebnis = POSIX::floor(($summe - $mw) / 10) + 1;
+     	  $ergebnis -= 1 if $ergebnis < 1; # 0 wird ausgelassen
      }
 
 # Sonderbehandlung fuer die 1-1:

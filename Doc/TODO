@@ -178,6 +178,9 @@ Ausserdem muss natuerlich die Spruchbibliothek vervollstaendigt werden.
 Known-Bugs-Section
 ------------------
 
+? Wenn Stoffel einen 5w-Feuerstrahl RW 1 macht, fehlen die ersten
+beiden Spalten in der Ausgabe.
+
 1 mehrere Fertigkeiten pro Spruch funktionieren noch garnicht.
 
 1 Der Fertigkeit-nicht-vorhanden-malus wird bei jedem &aktualisieren

@@ -4,14 +4,15 @@
 #
 
 #
-# Welche Version der ERPS-Regeln soll verwendet werden?
-# Mögliche Werte: 1,2
+# Sollen die Krits auf die alte Art (halbieren/verdoppeln)
+# oder auf die neue (+/1 10) berechnet werden?
+# Mögliche Werte: 0, 1
 
-$::RULE_VERSION = 2;
+$::OLD_KRITS = 0;
 
 #
 # PSI-Kosten für Krits abrunden oder aufrunden? (ultraneue Regel)
-# Mögliche Werte 0,1
+# Mögliche Werte 0, 1
 
 $::PSIKOSTEN_ABRUNDEN = 1;
 
