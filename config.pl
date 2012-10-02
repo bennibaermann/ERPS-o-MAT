@@ -8,7 +8,7 @@
 # oder auf die neue (+/1 10) berechnet werden?
 # Mögliche Werte: 0, 1
 
-$::OLD_KRITS = 0;
+$::OLD_CRITS = 0;
 
 #
 # PSI-Kosten für Krits abrunden oder aufrunden? (ultraneue Regel)

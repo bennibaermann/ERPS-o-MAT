@@ -137,7 +137,7 @@ sub berechne_ergebnis{
 
      my $ergebnis = 0;
      
-     if($::OLD_KRITS == 1){
+     if($::OLD_CRITS == 1){
      	     # TODO: verallgemeinerung in schleifen statt copy&paste
     	     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
      	     $ergebnis = -4 if($summe >= $mw/16 && $summe < $mw/8);
@@ -188,7 +188,7 @@ sub get_prozente{
      
      my $spruref = $::sprueche->{$spruch};
 
-     print "Ober: $spruref->{'Oberspruch'}\n";
+     # print "Ober: $spruref->{'Oberspruch'}\n";
 
      # eh unschoen global...
      my $vars = $spruref->{'Variablen'};
@@ -255,10 +255,6 @@ sub get_erhoehung{
   return 2 if($prio == 2);
   return 0 if($prio == 3); # fuer space-erps und erps++
 }
-
-  
-
-
 
 1;
 

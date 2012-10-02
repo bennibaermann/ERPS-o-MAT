@@ -6,6 +6,7 @@
 #
 
 use strict;
+use utf8;
 # use diagnostics;
 use Charakter;
 use Spruch;
@@ -175,7 +176,7 @@ $::allgemein_frame = $::input_frame->LabFrame
       -background => $::BGCOLOR);
 
 # $::spruch = "Schockstrahl";
-$::spruch = "Elementstrahl";
+$::spruch = $::DEFAULT_SPRUCH;
 $::spruchwahl = $::allgemein_frame->BrowseEntry(-label => 'Spruch: ',
 					-variable => \$::spruch,
 					-browsecmd => \&spruch_aktualisieren);
@@ -189,7 +190,7 @@ $::spruchwahl->Subwidget('entry')->bind('<Key-Return>',
 					      \&spruch_aktualisieren);
 
 $::spruch_frame = $::input_frame->LabFrame
-     (-label => 'Spruchabh�ngige Parameter',
+     (-label => 'Spruchabhängige Parameter',
       -labelside => 'acrosstop',
       -background => $::BGCOLOR);
 
@@ -220,7 +221,7 @@ $::mw_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
 
 $::wuerfel_mod = 0;
 $::wuerfel_mod_wahl = $::allgemein_frame->BrowseEntry
-     (-label => 'Wuerfel-Modifikationen: ', 
+     (-label => 'Würfel-Modifikationen: ', 
       -variable => \$::wuerfel_mod,
       -browsecmd => \&aktualisieren);
 
@@ -258,7 +259,7 @@ $::exit_button = $::command_frame->Button(-text => "Exit",
 #
 
 $::mw_frame = $::output_frame->LabFrame
-     (-label => 'Mindestw�rfe',
+     (-label => 'Mindestwürfe',
       -labelside => 'acrosstop');
 
 $::MWG = $::mw_frame->Label(-text => 'Grund-MW: 0');
@@ -266,14 +267,14 @@ $::MWU = $::mw_frame->Label(-text => 'MW-Ungesenkt: 0');
 $::MWS = $::mw_frame->Label(-text => 'MW-Gesenkt: 0');
 
 $::table_frame = $::output_frame->LabFrame
-     (-label => 'W�rfeltabelle',
+     (-label => 'Würfeltabelle',
       -labelside => 'acrosstop');
 
 $::tabelle = $::table_frame->Table(-rows => $::MAX_TABLE,
 					    -columns => 4,
 					    -scrollbars => 0);
 
-$::tabelle->put(0,0,'Gewuerfelt');
+$::tabelle->put(0,0,'Gewürfelt');
 $::tabelle->put(0,1,'Ergebnis');
 $::tabelle->put(0,2,'PSI-Kosten');
 $::tabelle->put(0,3,'WS');
@@ -288,7 +289,7 @@ $::ws_magtheo_lp =  $::table_frame->Label
      (-text => 'Lernpunkt-Magietheorie-wahrscheinlichkeit: ??');
 
 $::spruch_out_frame = $::output_frame->LabFrame
-     (-label => 'Spruchabh�ngige Ausgaben',
+     (-label => 'Spruchabhängige Ausgaben',
       -labelside => 'acrosstop',
       -background => $::BGCOLOR);
 
