@@ -85,8 +85,12 @@ sub get_wert{
 
   my $ref = $self->{'Variable'}->{$var};
   my $groe = $ref->{'Groessenordnung'};
-  my $index = $ref->{'Wahl'}->{'curIndex'};
-
+  
+  # TODO: something better than this very dirty hack
+  my $index = $ref->{'Wahl'}->{'_BE_curIndex'};
+  
+  #  print "curIndex: $index Groessenordnung: $groe\n";
+  
   if($groe eq 'linear' || 
      $groe eq 'quadratisch' || 
      $groe eq 'kubisch'){
