@@ -83,6 +83,10 @@ Einfach
 Mittel
 ------
 
+0 Webapp bauen. Dazu müssen vermutlich "nur" Anpassungen in Zauber-o-Mat.pl und
+  an Spruch.pm::create_oberflaeche() gemacht werden und ein neues Embperl-Script
+  gebastelt werden. Die Stellen sind schon markiert mit TODO_WEBAPP.
+
 2 Spruchbeschreibung ausgeben (sollte irgendwie extern und mit ballons
   gehen). Quelle auch mit angeben!
 
@@ -98,7 +102,7 @@ Mittel
 1 offene Parameter, das sind solche, die zur Laufzeit aus
   Charakterdaten (Spezialisierung) ermittelt werden.
   offene Parameter sind immer virtuell (aber virtuelle
-  muessen nicht immer offen sein).
+  muessen nicht immer offen sein). (hä?)
 
 3 Doms Wuerfelvariante optional einstellbar. (?)
 

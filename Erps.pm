@@ -205,6 +205,7 @@ sub WS_Generator{
     $Erps::ws_tab[$w] = $Erps::ws_tab[$w-1]+WS_eq_Generator($w);
   #  print "WS $w: $Erps::ws_tab[$w]\n";
   }
+  print "fertig.\n"
 
 }
 

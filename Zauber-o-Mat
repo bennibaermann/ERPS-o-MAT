@@ -19,14 +19,20 @@ use Tk::LabFrame;
 use POSIX;
 require "config.pl";
 
+#############################################################
+# TODO: ab hier alles in eine init-Funktion, die auch von der
+# Webapp benutzt werden kann
+#############################################################
+
 #
 # Wahrscheinlichkeitstabelle vorberechnen
 #
-
+# TODO_WEBAPP: nur berechnen, wenn nicht schon vorhanden
 &Erps::WS_Generator();
 
 # alle Module im Verzeichnis $spruchdir sind verfuegbar...
 # und werden in eine liste  eingetragen
+# TODO für Webapp: nur, wenn nicht schon geschehen
 opendir(SPRUECHE,$::SPRUCHDIR) || 
      die "Kann Verzeichnis $::SPRUCHDIR nicht oeffnen\n";
 while($_ = readdir(SPRUECHE)){
@@ -41,6 +47,7 @@ closedir SPRUECHE;
 
 # Alle Charaktere im gleichnamigen Verzeichnis verfuegbar machen
 #
+# TODO_WEBAPP: nur, wenn nicht schon geschehen
 opendir(CHARS,$::CHARDIR) || 
      die "Kann Verzeichnis $::CHARDIR nicht oeffnen\n";
 while($_ = readdir(CHARS)){
@@ -53,23 +60,23 @@ while($_ = readdir(CHARS)){
 }
 closedir CHARS;
 
-# jetzt die ganzen Spruchmodule einlesen...
-# $::use = "";
-# foreach $::spru (@::spruchliste){
-#     $::use = $::use . "use Sprueche::$::spru;";
-# }
-
-# erstaunlich, das das so ueberhaupt funktioniert...
-# eval $::use;
-
 # erstmal nur der default-Char
+# TODO_WEBAPP: nur, wenn nicht schon geschehen
 $::stoffel = $::chars->{$::DEFAULT_CHARAKTER};
 
 # nur der Defaultspruch...
-# $::sprucho = Schockstrahl->new();
-# $::sprucho = Spruch->new('Elementstrahl');
+# TODO_WEBAPP: nur, wenn nicht schon geschehen
 $::sprucho = $::sprueche->{$::DEFAULT_SPRUCH};
 $::sprucho_alt = $::sprucho;
+
+############################################################
+#
+# Ab hier wieder Tk-spezifischer Code
+#
+# TODO_WEBAPP: Dieser Teil muss komplett neu in einem Embperlscript
+# TODO_WEBAPP: geschrieben werden
+#
+############################################################
 
 $::top = MainWindow->new();
 $::top->title("ZAUBER-o-MAT Version 0.2");
@@ -110,13 +117,6 @@ $::char_frame = $::input_frame->LabFrame
 $::char_links_frame = $::char_frame->Frame();
 $::char_rechts_frame = $::char_frame->Frame();
 
-#  my $PSI_txt = "PSI: " . $::stoffel->{'Basisattribut'}->{'PSI'};
-#  $::PSI = $::char_frame->Label(-text => $PSI_txt);  
-#my $PSE_txt = "PSE: " . $::stoffel->{'Fertigkeit'}->{'PSE'};
-#$::PSE = $::char_frame->Label(-text => $PSE_txt);  
-#my $magtheo_txt = "Magietheorie: " . 
-#     $::stoffel->{'Fertigkeit'}->{'Magietheorie'};
-#$::magietheorie = $::char_frame->Label(-text => $magtheo_txt);  
 my $fert_text = "Fertigkeit: ???";
 $::Fertigkeit = $::char_links_frame->Label(-text => $fert_text);  
 my $proz_text = "Prozente: ???";
@@ -148,26 +148,6 @@ $::magietheorie = $::char_rechts_frame->
 	      -labelPack => [ -side => 'left']);
 
 $::magietheorie->bind('<Key-Return>',\&aktualisieren);
-
-# $::fertigkeit = $::char_frame->
-#     LabEntry(-textvariable => 
-#	      \$::stoffel->{'Fertigkeit'}->{''},
-#	      -width => 2,
-#	      -label => 'Magietheorie:',
-#	      -labelPack => [ -side => 'left']);
-#
-# $::PSE->bind('<Key-Return>',\&aktualisieren);
-
-#  my $PSE_txt = "PSE: " . $::stoffel->{'Fertigkeit'}->{'PSE'};
-#  $::PSE = $::char_frame->Label(-text => $PSE_txt);  
-#  my $magtheo_txt = "Magietheorie: " . 
-#       $::stoffel->{'Fertigkeit'}->{'Magietheorie'};
-#  $::magietheorie = $::char_frame->Label(-text => $magtheo_txt);  
-#  my $fert_text = "Fertigkeit: ???";
-#  $::Fertigkeit = $::char_frame->Label(-text => $fert_text);  
-#  my $proz_text = "Prozente: ???";
-#  $::Prozente = $::char_frame->Label(-text => $proz_text);  
-
 
 
 $::allgemein_frame = $::input_frame->LabFrame
@@ -346,6 +326,17 @@ $::ws_magtheo_lp->pack(-anchor => 'e');
 &spruch_aktualisieren;
 # &aktualisieren;
 &MainLoop;
+
+######################################################################
+#
+# Aktualisierungsfunktionen, die von der Oberfläche aufgerufen werden
+# wenn eine Neuberechnung notwendig wird.
+#
+# TODO_WEBAPP: Die Aktualisierungsfunktionen müssen so verallgemeinert 
+# werden, dass sie auch vom Submit-Button einer Webapp aufgerufen werden
+# können
+#
+#####################################################################
 
 #
 # Diese Funktion wird ausgefuehrt, wenn ein Charakter ausgewaehlt wurde

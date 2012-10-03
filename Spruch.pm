@@ -73,6 +73,13 @@ sub berechne{
      return $mw;
 }
 
+#####################################################################
+#
+# TODO_WEBAPP: Ab hier ist Tk-spezifischer Code eingemischt, der da nicht 
+# TODO_WEBAPP: hingehört.
+#
+####################################################################
+
 #
 # Ermittle aus dem Index (undokumentiert in $browseentry->{'_BE_curIndex'})
 # den Wert einer Variable, abhaengig von der Groessenordnung
@@ -252,6 +259,13 @@ sub pack{
      }
 }
 
+########################################################################
+#
+# TODO_WEBAPP: Ende Tk-spezifischer Code.
+#
+######################################################################
+
+
 #
 # Diese Funktion liefert die Prozente, die durch variierte Zauberdauer
 # entstehen (vergleich mit 'Dauer'des Spruchs)
@@ -399,6 +413,9 @@ sub suche_radio{
 
 #
 # Hier wird die gesamte Spruchabhaengige Oberflaeche generiert
+#
+# TODO_WEBAPP: eine ähnliche Funktion braucht es auch für eine Webapp,
+# TODO_WEBAPP: die dann HTML-Formulare auswirft
 #
 
 sub create_oberflaeche{
