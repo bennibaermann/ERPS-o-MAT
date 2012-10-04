@@ -7,6 +7,7 @@
 package Charakter;
 use strict;
 use POSIX;
+require "config.pl";
 
 # use "Spruch";
 
@@ -254,6 +255,24 @@ sub get_erhoehung{
   return 3 if($prio == 1);
   return 2 if($prio == 2);
   return 0 if($prio == 3); # fuer space-erps und erps++
+}
+
+
+# Alle Charaktere im gleichnamigen Verzeichnis verfuegbar machen
+#
+
+unless(defined $::chars){
+	opendir(CHARS,$::CHARDIR) || 
+	die "Kann Verzeichnis $::CHARDIR nicht oeffnen\n";
+	while($_ = readdir(CHARS)){
+		next if( ! (/.*\.ch$/)); # nur *.ch-files
+		s/^(.*?)\.ch$/$1/;
+		my $charaktername = $_;
+		my $char = Charakter->new($charaktername);
+		$::chars->{$charaktername} = $char;
+		push(@::charliste,$_);
+	}
+	closedir CHARS;
 }
 
 1;

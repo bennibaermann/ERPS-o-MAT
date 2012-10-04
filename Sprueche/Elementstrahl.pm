@@ -12,6 +12,8 @@ sub new{
      my $type = shift;
      my $self = Spruch->new();
 
+     # print "Elementstrahl.pm::new() wurde aufgerufen!\n";
+     
      $self->{'Name'} = "Elementstrahl";
      $self->{'Dauer'} = "Sofortiger Zauber";
      $self->{'Beschreibung'} = "TP-Schaden, Ruestung zaehlt,".

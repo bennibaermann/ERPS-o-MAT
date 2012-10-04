@@ -110,6 +110,9 @@ Mittel
 Schwierig
 ---------
 
+2 Fertigkeit und Prozente eingebbar machen. Wichtig für TODO_WEBAPP, weil
+  sonst nur vorinstallierte Charaktere funktionieren.
+
 1 Fertigkeit bei mehreren Moeglichkeiten pro Spruch auswaehlbar
   machen. Zur Zeit wird die hoechste genommen. das sollte als default so
   bleiben. Auswahl sollte oben bei den charakterwerten stattfinden.
@@ -141,14 +144,13 @@ Schwer
 
 3 Oberflaeche ERPS-o-MAT-tauglich machen (als notebook???). ausserdem
   sollte die oberflaeche eh gekapselt werden in dem sinn, dass sie zum
-  beispiel von binden-aufgerufen werden kann.
+  beispiel von binden-aufgerufen werden kann. auch für TODO_WEBAPP sinnvoll.
 
 6 kommandozeilenversion. alle parameter werden entweder auf der
   kommandozeile oder sogar ueber eine datei eingelesen. braucht 
   man das wirklich? insbesondere sollte die ausgabe auch
   konfigurierbar sein. dann kann man das vielleicht in irgendwelchen
-  anderen scripten verwenden. aber konkret faellt mir zur zeit nix ein. wäre
-  praktisch für ein webinterface.
+  anderen scripten verwenden. aber konkret faellt mir zur zeit nix ein.
 
 3 Abhaengigkeiten zwischen Parametern. beispiel: Mensch-Illusion
   fuehrt zu einer ganz bestimmten Groesse. 

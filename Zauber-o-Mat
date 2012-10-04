@@ -19,47 +19,6 @@ use Tk::LabFrame;
 use POSIX;
 require "config.pl";
 
-#############################################################
-# TODO: ab hier alles in eine init-Funktion, die auch von der
-# Webapp benutzt werden kann
-#############################################################
-
-#
-# Wahrscheinlichkeitstabelle vorberechnen
-#
-# TODO_WEBAPP: nur berechnen, wenn nicht schon vorhanden
-&Erps::WS_Generator();
-
-# alle Module im Verzeichnis $spruchdir sind verfuegbar...
-# und werden in eine liste  eingetragen
-# TODO für Webapp: nur, wenn nicht schon geschehen
-opendir(SPRUECHE,$::SPRUCHDIR) || 
-     die "Kann Verzeichnis $::SPRUCHDIR nicht oeffnen\n";
-while($_ = readdir(SPRUECHE)){
-     next if( ! (/^.*\.sp$/)); # nur *.sp-files
-     s/^(.*)\.sp$/$1/;
-     my $spruchname = $_;
-     my $spruch = Spruch->new($spruchname);
-     $::sprueche->{$spruchname} = $spruch;
-     push(@::spruchliste,$spruchname);
-}
-closedir SPRUECHE;
-
-# Alle Charaktere im gleichnamigen Verzeichnis verfuegbar machen
-#
-# TODO_WEBAPP: nur, wenn nicht schon geschehen
-opendir(CHARS,$::CHARDIR) || 
-     die "Kann Verzeichnis $::CHARDIR nicht oeffnen\n";
-while($_ = readdir(CHARS)){
-     next if( ! (/.*\.ch$/)); # nur *.ch-files
-     s/^(.*?)\.ch$/$1/;
-     my $charaktername = $_;
-     my $char = Charakter->new($charaktername);
-     $::chars->{$charaktername} = $char;
-     push(@::charliste,$_);
-}
-closedir CHARS;
-
 # erstmal nur der default-Char
 # TODO_WEBAPP: nur, wenn nicht schon geschehen
 $::stoffel = $::chars->{$::DEFAULT_CHARAKTER};
@@ -71,7 +30,7 @@ $::sprucho_alt = $::sprucho;
 
 ############################################################
 #
-# Ab hier wieder Tk-spezifischer Code
+# Ab hier Tk-spezifischer Code
 #
 # TODO_WEBAPP: Dieser Teil muss komplett neu in einem Embperlscript
 # TODO_WEBAPP: geschrieben werden

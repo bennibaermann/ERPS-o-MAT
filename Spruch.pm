@@ -5,6 +5,7 @@
 package Spruch;
 use POSIX;
 use strict;
+require "config.pl";
 
 # Konstruktor:
 # Die Wesentliche Arbeit machen hier die abgeleiteten Klassen
@@ -617,17 +618,23 @@ $Spruch::Schaden_quadratisch =
    'Beschreibung' => 'Schaden in w10'
 };
 
+# Alle Sprüche laden, wenn nicht schon geschehen
+# alle Module im Verzeichnis $spruchdir sind verfuegbar...
+# und werden in eine liste  eingetragen
+
+unless(defined $::sprueche){
+	opendir(SPRUECHE,$::SPRUCHDIR) || 
+	die "Kann Verzeichnis $::SPRUCHDIR nicht oeffnen\n";
+	while($_ = readdir(SPRUECHE)){
+		next if( ! (/^.*\.sp$/)); # nur *.sp-files
+		s/^(.*)\.sp$/$1/;
+		my $spruchname = $_;
+		my $spruch = Spruch->new($spruchname);
+		$::sprueche->{$spruchname} = $spruch;
+		push(@::spruchliste,$spruchname);
+	}
+	closedir SPRUECHE;
+}	
+
 1;
-
-
-
-
-
-
-
-
-
-
-
-
 
