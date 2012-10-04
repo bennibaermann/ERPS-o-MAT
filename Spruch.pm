@@ -384,7 +384,7 @@ sub get_prozente{
 #
 # Liefert die Spruchabhaengigen Widgets zurueck.
 # Wird zum packen und kaputtmachen, etc... benoetigt
-#
+# TODO_WEBAPP: Evaluieren ob wir sowas für die Webapp auch brauchen
 
 sub get_spruchabhaengig{
   my $self = shift;

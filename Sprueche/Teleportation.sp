@@ -1,7 +1,7 @@
 $self = 
   { 'Name' => "Teleportation",
     'Dauer' => "Sofortiger Zauber",
-    'Beschreibung' => "blubb",
+    'Beschreibung' => "Plötzliche Ortsveränderungen aller Art",
     'Fertigkeit' => 'Bewegung',
     'BasisMW' => 25,
     'Variable' => 
