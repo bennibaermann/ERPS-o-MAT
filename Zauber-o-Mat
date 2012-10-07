@@ -8,6 +8,8 @@
 use strict;
 use utf8;
 # use diagnostics;
+use POSIX;
+use Eomconfig qw($conf);
 use Charakter;
 use Spruch;
 use Erps;
@@ -16,16 +18,15 @@ use Tk::BrowseEntry;
 use Tk::Radiobutton;
 use Tk::Table;
 use Tk::LabFrame;
-use POSIX;
-require "config.pl";
+
 
 # erstmal nur der default-Char
 # TODO_WEBAPP: nur, wenn nicht schon geschehen
-$::stoffel = $::chars->{$::DEFAULT_CHARAKTER};
+$::stoffel = $::chars->{$::conf->{-DEFAULT_CHARAKTER}};
 
 # nur der Defaultspruch...
 # TODO_WEBAPP: nur, wenn nicht schon geschehen
-$::sprucho = $::sprueche->{$::DEFAULT_SPRUCH};
+$::sprucho = $::sprueche->{$::conf->{-DEFAULT_SPRUCH}};
 $::sprucho_alt = $::sprucho;
 
 ############################################################
@@ -47,15 +48,15 @@ $::input_frame = $::oben_frame->LabFrame
 $::output_frame= $::oben_frame->LabFrame
      (-label => 'Ausgabe',
       -labelside => 'acrosstop',
-      -background => $::BGCOLOR);
-$::command_frame=$::top->Frame(-background => $::BGCOLOR);
+      -background => $::conf->{-BGCOLOR});
+     $::command_frame=$::top->Frame(-background => $::conf->{-BGCOLOR});
 
 #
 # Die Eingabeseite
 #
 
 
-$::charname = $::DEFAULT_CHARAKTER;
+$::charname = $::conf->{-DEFAULT_CHARAKTER};
 $::charwahl = $::input_frame->BrowseEntry(-label => 'Charakter: ',
 					-variable => \$::charname,
 					-browsecmd => \&char_aktualisieren);
@@ -71,7 +72,7 @@ foreach my $char (@::charliste){
 $::char_frame = $::input_frame->LabFrame
      (-label => $::stoffel->{'Name'},
       -labelside => 'acrosstop',
-      -background => $::BGCOLOR);
+      -background => $::conf->{-BGCOLOR});
 
 $::char_links_frame = $::char_frame->Frame();
 $::char_rechts_frame = $::char_frame->Frame();
@@ -112,10 +113,10 @@ $::magietheorie->bind('<Key-Return>',\&aktualisieren);
 $::allgemein_frame = $::input_frame->LabFrame
      (-label => 'Allgemeines',
       -labelside => 'acrosstop',
-      -background => $::BGCOLOR);
+      -background => $::conf->{-BGCOLOR});
 
 # $::spruch = "Schockstrahl";
-$::spruch = $::DEFAULT_SPRUCH;
+$::spruch = $::conf->{-DEFAULT_SPRUCH};
 $::spruchwahl = $::allgemein_frame->BrowseEntry(-label => 'Spruch: ',
 					-variable => \$::spruch,
 					-browsecmd => \&spruch_aktualisieren);
@@ -131,7 +132,7 @@ $::spruchwahl->Subwidget('entry')->bind('<Key-Return>',
 $::spruch_frame = $::input_frame->LabFrame
      (-label => 'Spruchabhängige Parameter',
       -labelside => 'acrosstop',
-      -background => $::BGCOLOR);
+      -background => $::conf->{-BGCOLOR});
 
 $::dauer = $::sprucho->{'Dauer'};
 $::dauer_wahl = $::allgemein_frame->BrowseEntry
@@ -209,7 +210,7 @@ $::table_frame = $::output_frame->LabFrame
      (-label => 'Würfeltabelle',
       -labelside => 'acrosstop');
 
-$::tabelle = $::table_frame->Table(-rows => $::MAX_TABLE,
+     $::tabelle = $::table_frame->Table(-rows => $::conf->{-MAX_TABLE},
 					    -columns => 4,
 					    -scrollbars => 0);
 
@@ -230,7 +231,7 @@ $::ws_magtheo_lp =  $::table_frame->Label
 $::spruch_out_frame = $::output_frame->LabFrame
      (-label => 'Spruchabhängige Ausgaben',
       -labelside => 'acrosstop',
-      -background => $::BGCOLOR);
+      -background => $::conf->{-BGCOLOR});
 
 $::sprucho->create_oberflaeche();
 
@@ -400,21 +401,21 @@ sub aktualisieren{
 	  $::tabelle->put(0,0,"Gewuerfelt");
      }
      my $ws = Erps::WS_Fert($mws->{'Gesenkt'} - $bonus);
-     $ws = sprintf('%.' . $::KOMMA . 'f',$ws);
+     $ws = sprintf('%.' . $::conf->{-KOMMA} . 'f',$ws);
      $::ws_fert->configure
 	  (-text => "Erfolgswahrscheinlichkeit: $ws \%");
      $ws = Erps::WS_LP($mws->{'Gesenkt'} - $bonus);
-     $ws = sprintf('%.' . $::KOMMA . 'f',$ws);
+     $ws = sprintf('%.' . $::conf->{-KOMMA} . 'f',$ws);
      $::ws_lp->configure
 	  (-text => "Lernpunktwahrscheinlichkeit: $ws \%");
      $ws = Erps::WS_Magtheo($mws->{'Gesenkt'} - $m_bonus,
 			    $mws->{'Ungesenkt'} - $m_bonus);
-     $ws = sprintf('%.' . $::KOMMA . 'f',$ws);
+     $ws = sprintf('%.' . $::conf->{-KOMMA} . 'f',$ws);
      $::ws_magtheo->configure
 	  (-text => "Magietheoriewahrscheinlichkeit: $ws \%");
      $ws = Erps::WS_Magtheo_LP($mws->{'Gesenkt'} - $m_bonus,
 			       $mws->{'Ungesenkt'} - $m_bonus);
-     $ws = sprintf('%.' . $::KOMMA . 'f',$ws);
+     $ws = sprintf('%.' . $::conf->{-KOMMA} . 'f',$ws);
      $::ws_magtheo_lp->configure
 	  (-text => "Lernpunkt-Magietheorie-Wahrscheinlichkeit: $ws \%");
      $::Prozente->configure
@@ -436,7 +437,7 @@ sub aktualisieren{
 
 # zunaechst muessen wir sie mal leeren ...
 
-     for($::y = 1; $::y != $::MAX_TABLE; $::y++){
+for($::y = 1; $::y != $::conf->{-MAX_TABLE}; $::y++){
 	  for($::x = 0; $::x != 4;$::x++){
 	       $::tabelle->put($::y,$::x,"");
 	  }
@@ -451,14 +452,14 @@ sub aktualisieren{
 	       ($mws->{'Gesenkt'},
 		2,
 		$::sprucho->{'Fertigkeit'});;
-     for ($wurf = 2;$wurf != $::MAXWURF; $wurf++){
+	       for ($wurf = 2;$wurf != $::conf->{-MAXWURF}; $wurf++){
 
 	  $ergebnis = $::stoffel->berechne_ergebnis
 	       ($mws->{'Gesenkt'},
 		$wurf,
 		$::sprucho->{'Fertigkeit'});
 	  # zeilensprung in der Tabelle!
-	  if($ergebnis != $alt_ergebnis || $wurf == $::MAXWURF-1){
+	  if($ergebnis != $alt_ergebnis || $wurf == $::conf->{-MAXWURF}-1){
 	       my $WS;
 	       # nur ein einzelnes Ergebnis in der Zeile?
 	       if($wurf-1 != $zeilen_anfang){
@@ -469,9 +470,9 @@ sub aktualisieren{
 		    $gewuerfelt_text = "$zeilen_anfang";
 		    $WS = Erps::WS_eq($zeilen_anfang);
 	       }
-	       $WS = sprintf('%.' . $::KOMMA . 'f %%',$WS);
+	       $WS = sprintf('%.' . $::conf->{-KOMMA} . 'f %%',$WS);
 	       
-	       if($zeile < $::MAX_TABLE && $alt_ergebnis != 0){
+	       if($zeile < $::conf->{-MAX_TABLE} && $alt_ergebnis != 0){
 		    $::tabelle->put($zeile,0,$gewuerfelt_text);
 		    $::tabelle->put($zeile,1,Erps::decode($alt_ergebnis));
 		    $::tabelle->put($zeile,3,$WS);
@@ -479,7 +480,7 @@ sub aktualisieren{
 		    my $kosten;
 		    my $normal_kosten;
 		    my $runden_mod = 0;
-		    $runden_mod = 0.5 unless $::PSIKOSTEN_ABRUNDEN;		    
+		    $runden_mod = 0.5 unless $::conf->{-PSIKOSTEN_ABRUNDEN};		    
 		    if(! $::ist_negativ){
 			 $normal_kosten = floor(Erps::berechne_PSI_Kosten
 						($alt_ergebnis, 
@@ -497,7 +498,7 @@ sub aktualisieren{
 		    # kann bei negativen Wuerfelmodifikationen
 		    # passieren
 		    $kosten = "unendlich" if 
-			 ($alt_ergebnis == -$::UNENDLICH);
+		    ($alt_ergebnis == -$::conf->{-UNENDLICH});
 
 		    $::tabelle->put
 			 ($zeile,2,
@@ -511,9 +512,6 @@ sub aktualisieren{
      }
 
 }
-
-
-
 
 
 

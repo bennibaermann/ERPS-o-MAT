@@ -3,11 +3,11 @@
 # (Space-)ERPS-Charakter enthalten
 # Momentan ist sie aber nur eine Hilfsklasse fuer den 
 # Zauberspruchberechner 
-
+# use Cwd; print "cwd: ". getcwd() . "<p>";
 package Charakter;
 use strict;
 use POSIX;
-require "config.pl";
+# require "config.pl";
 
 # use "Spruch";
 
@@ -138,7 +138,7 @@ sub berechne_ergebnis{
 
      my $ergebnis = 0;
      
-     if($::OLD_CRITS == 1){
+     if($::conf->{-OLD_CRITS} == 1){
      	     # TODO: verallgemeinerung in schleifen statt copy&paste
     	     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
      	     $ergebnis = -4 if($summe >= $mw/16 && $summe < $mw/8);
@@ -171,7 +171,7 @@ sub berechne_ergebnis{
      }
 
 # sonderbehandlung fuer negative(und null) ergebnisse
-     $ergebnis = -$::UNENDLICH if($summe <= 0);
+$ergebnis = -$::conf->{-UNENDLICH} if($summe <= 0);
 
      # print "summe: $summe mw: $mw ergebnis: $ergebnis gewuerfelt: $gewuerfelt\n";
      
@@ -260,10 +260,13 @@ sub get_erhoehung{
 
 # Alle Charaktere im gleichnamigen Verzeichnis verfuegbar machen
 #
-
+BEGIN{
 unless(defined $::chars){
-	opendir(CHARS,$::CHARDIR) || 
-	die "Kann Verzeichnis $::CHARDIR nicht oeffnen\n";
+	#use Cwd;
+	#my $cwd = cwd();
+	# print "cwd: $cwd\n";
+	opendir(CHARS,$::conf->{-CHARDIR}) || 
+	die "Kann Verzeichnis $::conf->{-CHARDIR} nicht oeffnen.";
 	while($_ = readdir(CHARS)){
 		next if( ! (/.*\.ch$/)); # nur *.ch-files
 		s/^(.*?)\.ch$/$1/;
@@ -274,7 +277,7 @@ unless(defined $::chars){
 	}
 	closedir CHARS;
 }
-
+}
 1;
 
 

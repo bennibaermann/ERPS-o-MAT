@@ -5,7 +5,7 @@
 package Spruch;
 use POSIX;
 use strict;
-require "config.pl";
+use Eomconfig;
 
 # Konstruktor:
 # Die Wesentliche Arbeit machen hier die abgeleiteten Klassen
@@ -440,7 +440,7 @@ sub create_oberflaeche{
 		 # checkbutton
 		 $vars->{$var}->{'Wahl'} = get_input_flag
 		   ($var,\$vars->{$var}->{'Wert'});
-	       }elsif($max <= $::MAX_RADIO){
+	       }elsif($max <= $::conf->{-MAX_RADIO}){
 		 #radiobutton
 		 $vars->{$var}->{'Wahl'} = 
 		   $self->get_input_radio($var);
@@ -472,7 +472,7 @@ sub create_oberflaeche{
 	    if($anzahl == 2){
 	      $vars->{$var}->{'Wahl'} = $self->get_input_flag
 		($var,\$var->{'Wert'});
-	    }elsif($anzahl <= $::MAX_RADIO){
+	    }elsif($anzahl <= $::conf->{-MAX_RADIO}){
 	      # Radiobuttons hin
 	      $vars->{$var}->{'Wahl'} = 
 		$self->get_input_radio($var);
@@ -490,7 +490,7 @@ sub create_oberflaeche{
 	       if($anzahl == 2){
 		 $vars->{$var}->{'Wahl'} = $self->get_input_flag
 		   ($var,\$var->{'Wert'});
-	       }elsif($anzahl <= $::MAX_RADIO){
+	       }elsif($anzahl <= $::conf->{-MAX_RADIO}){
 		    # Radiobuttons hin
 		 $vars->{$var}->{'Wahl'} = 
 		   $self->get_input_radio($var);
@@ -603,7 +603,7 @@ $Spruch::RW_log2 =
    'Text' => 'my $ref = sub{
         my $psi = $wert*$::stoffel->{"Basisattribut"}->{"PSI"};
         ($psi<1000)?($psi . " meter"):
-           (sprintf("%." . $::KOMMA . "f kilometer",$psi/1000))};
+        (sprintf("%." . $::conf->{-KOMMA} . "f kilometer",$psi/1000))};
       &$ref',
    # [x] Du willst diese Zeilen nicht verstehen.
    'Beschreibung' => 'logarithmische RW in PSI-Metern'
@@ -623,8 +623,8 @@ $Spruch::Schaden_quadratisch =
 # und werden in eine liste  eingetragen
 
 unless(defined $::sprueche){
-	opendir(SPRUECHE,$::SPRUCHDIR) || 
-	die "Kann Verzeichnis $::SPRUCHDIR nicht oeffnen\n";
+	opendir(SPRUECHE,$::conf->{-SPRUCHDIR}) || 
+	die "Kann Verzeichnis $::conf->{-SPRUCHDIR} nicht oeffnen\n";
 	while($_ = readdir(SPRUECHE)){
 		next if( ! (/^.*\.sp$/)); # nur *.sp-files
 		s/^(.*)\.sp$/$1/;
