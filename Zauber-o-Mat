@@ -9,7 +9,7 @@ use strict;
 use utf8;
 # use diagnostics;
 use POSIX;
-use Eomconfig qw($conf get_conf);
+use Eomconfig;# qw($conf get_conf);
 use Charakter;
 use Spruch;
 use Erps;
@@ -19,20 +19,23 @@ use Tk::Radiobutton;
 use Tk::Table;
 use Tk::LabFrame;
 
+my $conf = Eomconfig->new();
+$::conf = $conf;
+
+# TODO: das sollte in konstruktoren
+Spruch->init_sprueche();
+Erps->init_erps();
+
 my $char_hash = {};
 my $char_list = [];
-
 Charakter->init_chars($char_hash,$char_list);
-
 $::chars = $char_hash;
 @::charliste = @$char_list;
 
 # erstmal nur der default-Char
-# TODO_WEBAPP: nur, wenn nicht schon geschehen
 $::stoffel = $::chars->{$::conf->{-DEFAULT_CHARAKTER}};
 
 # nur der Defaultspruch...
-# TODO_WEBAPP: nur, wenn nicht schon geschehen
 $::sprucho = $::sprueche->{$::conf->{-DEFAULT_SPRUCH}};
 $::sprucho_alt = $::sprucho;
 

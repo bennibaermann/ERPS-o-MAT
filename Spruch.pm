@@ -621,20 +621,21 @@ $Spruch::Schaden_quadratisch =
 # Alle Sprüche laden, wenn nicht schon geschehen
 # alle Module im Verzeichnis $spruchdir sind verfuegbar...
 # und werden in eine liste  eingetragen
-
-unless(defined $::sprueche){
+sub init_sprueche{
+    unless(defined $::sprueche){
 	opendir(SPRUECHE,$::conf->{-SPRUCHDIR}) || 
 	die "Kann Verzeichnis $::conf->{-SPRUCHDIR} nicht oeffnen\n";
 	while($_ = readdir(SPRUECHE)){
-		next if( ! (/^.*\.sp$/)); # nur *.sp-files
-		s/^(.*)\.sp$/$1/;
-		my $spruchname = $_;
-		my $spruch = Spruch->new($spruchname);
-		$::sprueche->{$spruchname} = $spruch;
-		push(@::spruchliste,$spruchname);
+	    next if( ! (/^.*\.sp$/)); # nur *.sp-files
+	    s/^(.*)\.sp$/$1/;
+	    my $spruchname = $_;
+	    my $spruch = Spruch->new($spruchname);
+	    $::sprueche->{$spruchname} = $spruch;
+	    push(@::spruchliste,$spruchname);
 	}
 	closedir SPRUECHE;
-}	
+    }	
+}
 
 1;
 

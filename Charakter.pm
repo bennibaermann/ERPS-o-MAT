@@ -7,7 +7,7 @@
 package Charakter;
 use strict;
 use POSIX;
-use Eomconfig qw($conf get_conf);
+use Eomconfig;# qw($conf get_conf);
 # require "config.pl";
 
 # use "Spruch";
@@ -266,13 +266,10 @@ sub init_chars{
     my $hash = shift;
     my $list = shift;
     
-    #    unless(defined $::chars){
-    #use Cwd;
-    #my $cwd = cwd();
-    # print "cwd: $cwd\n";
-    # my $conf = Eomconfig->get_conf();
-    opendir(CHARS,$::conf->{-CHARDIR}) || 
-    die "Kann Verzeichnis $::conf->{-CHARDIR} nicht oeffnen.";
+    my $conf = Eomconfig->new();
+    
+    opendir(CHARS,$conf->{-CHARDIR}) || 
+    die "Kann Verzeichnis $conf->{-CHARDIR} nicht oeffnen.";
     while($_ = readdir(CHARS)){
     	next if( ! (/.*\.ch$/)); # nur *.ch-files
     	s/^(.*?)\.ch$/$1/;

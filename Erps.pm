@@ -256,8 +256,9 @@ sub get_bereich{
 # Wahrscheinlichkeitstabelle vorberechnen
 # aber nur, wenn das nicht schon geschehen ist
 # sollte beim ersten "use ERPS;" passieren.
-&Erps::WS_Generator() unless defined $ERPS::ws_tab;
-
+sub init_erps{
+    &Erps::WS_Generator() unless defined $ERPS::ws_tab;
+}
 1;
 
 
