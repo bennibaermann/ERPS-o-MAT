@@ -22,10 +22,18 @@ use Tk::LabFrame;
 my $conf = Eomconfig->new();
 $::conf = $conf;
 
-# TODO: das sollte in konstruktoren
-Spruch->init_sprueche();
 Erps->init_erps();
 
+# TODO: das sollte in konstruktoren einer containerklasse
+
+# Sprueche initialisieren
+my $spruch_hash = {};
+my $spruch_list = [];
+Spruch->init_sprueche($spruch_hash,$spruch_list);
+$::sprueche = $spruch_hash;
+@::spruchliste = @$spruch_list;
+
+# charaktere initialisieren
 my $char_hash = {};
 my $char_list = [];
 Charakter->init_chars($char_hash,$char_list);
@@ -33,7 +41,7 @@ $::chars = $char_hash;
 @::charliste = @$char_list;
 
 # erstmal nur der default-Char
-$::stoffel = $::chars->{$::conf->{-DEFAULT_CHARAKTER}};
+$::stoffel = $char_hash->{$::conf->{-DEFAULT_CHARAKTER}};
 
 # nur der Defaultspruch...
 $::sprucho = $::sprueche->{$::conf->{-DEFAULT_SPRUCH}};

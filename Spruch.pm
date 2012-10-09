@@ -622,19 +622,23 @@ $Spruch::Schaden_quadratisch =
 # alle Module im Verzeichnis $spruchdir sind verfuegbar...
 # und werden in eine liste  eingetragen
 sub init_sprueche{
-    unless(defined $::sprueche){
-	opendir(SPRUECHE,$::conf->{-SPRUCHDIR}) || 
-	die "Kann Verzeichnis $::conf->{-SPRUCHDIR} nicht oeffnen\n";
-	while($_ = readdir(SPRUECHE)){
-	    next if( ! (/^.*\.sp$/)); # nur *.sp-files
-	    s/^(.*)\.sp$/$1/;
-	    my $spruchname = $_;
-	    my $spruch = Spruch->new($spruchname);
-	    $::sprueche->{$spruchname} = $spruch;
-	    push(@::spruchliste,$spruchname);
-	}
-	closedir SPRUECHE;
-    }	
+    my $class = shift; # wird nicht benutzt
+    my $hash = shift;
+    my $list = shift;
+    
+    my $conf = Eomconfig->new();
+    
+    opendir(SPRUECHE,$conf->{-SPRUCHDIR}) || 
+    die "Kann Verzeichnis $conf->{-SPRUCHDIR} nicht oeffnen\n";
+    while($_ = readdir(SPRUECHE)){
+    	next if( ! (/^.*\.sp$/)); # nur *.sp-files
+    	s/^(.*)\.sp$/$1/;
+    	my $spruchname = $_;
+    	my $spruch = Spruch->new($spruchname);
+    	$hash->{$spruchname} = $spruch;
+    	push(@$list,$spruchname);
+    }
+    closedir SPRUECHE;
 }
 
 1;
