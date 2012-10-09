@@ -97,4 +97,6 @@ $::conf = {
 # Dieser Charakter wird am Anfang eingelesen
 	-DEFAULT_CHARAKTER => 'Stoffel',
 };
+
+sub get_conf{return $::conf;};
 1;
