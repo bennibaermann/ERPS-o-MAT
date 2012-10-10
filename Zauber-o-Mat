@@ -30,13 +30,13 @@ Erps->init_erps($conf);
 my $spruch_hash = {};
 my $spruch_list = [];
 Spruch->init_sprueche($spruch_hash,$spruch_list);
-$::sprueche = $spruch_hash;
+# $::sprueche = $spruch_hash;
 @::spruchliste = @$spruch_list;
 
 # charaktere initialisieren
 my $char_hash = {};
 my $char_list = [];
-Charakter->init_chars($char_hash,$char_list);
+Charakter->init_chars($char_hash,$char_list,$spruch_hash);
 $::chars = $char_hash;
 @::charliste = @$char_list;
 
@@ -44,7 +44,7 @@ $::chars = $char_hash;
 $::stoffel = $char_hash->{$conf->{-DEFAULT_CHARAKTER}};
 
 # nur der Defaultspruch...
-$::sprucho = $::sprueche->{$conf->{-DEFAULT_SPRUCH}};
+$::sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
 $::sprucho_alt = $::sprucho;
 
 ############################################################
@@ -354,7 +354,7 @@ sub spruch_aktualisieren{
 	  $widget->destroy() if(Exists($widget));
      }
 
-     $::sprucho = $::sprueche->{$::spruch};
+     $::sprucho = $spruch_hash->{$::spruch};
 
      # die neue oberflaeche erzeugen und packen
      $::sprucho->create_oberflaeche();

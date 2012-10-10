@@ -16,13 +16,16 @@ use Eomconfig;# qw($conf get_conf);
 sub new{
      my $class = shift;
      my $name = shift; # Der Name des Charakterfiles ohne .ch und Dir
+     my $sprueche = shift;
+
      my $self = {};
     
      print "Charakter-new($name)\n";
 
      $self->{-conf} = Eomconfig->new();
+     $self->{-sprueche} = $sprueche;
      
-     # einlesen des Charakterfiles... sehr simpel
+     # einlesen des Charakterfiles... 
      open(CHAR,"Charaktere/". $name . ".ch") or die "Fehler: $!\n";
      my @ev = <CHAR>;
      close CHAR;
@@ -192,7 +195,7 @@ sub get_prozente{
      my $self = shift;
      my $spruch = shift;
      
-     my $spruref = $::sprueche->{$spruch};
+     my $spruref = $self->{-sprueche}->{$spruch};
 
      # print "Ober: $spruref->{'Oberspruch'}\n";
 
@@ -269,6 +272,7 @@ sub init_chars{
     my $class = shift; # wird nicht benutzt
     my $hash = shift;
     my $list = shift;
+    my $sprueche = shift;
     
     my $conf = Eomconfig->new();
     
@@ -278,7 +282,7 @@ sub init_chars{
     	next if( ! (/.*\.ch$/)); # nur *.ch-files
     	s/^(.*?)\.ch$/$1/;
     	my $charaktername = $_;
-    	my $char = Charakter->new($charaktername);
+    	my $char = Charakter->new($charaktername,$sprueche);
     	$hash->{$charaktername} = $char;
     	push(@$list,$_);
     }
