@@ -24,24 +24,19 @@ my $conf = Eomconfig->new();
 
 Erps->init_erps($conf);
 
-# TODO: das sollte in konstruktoren einer containerklasse
+# TODO: das sollte in konstruktoren 
 
 # Sprueche initialisieren
 my $spruch_hash = {};
 my $spruch_list = [];
 Spruch->init_sprueche($spruch_hash,$spruch_list);
-# $::sprueche = $spruch_hash;
-@::spruchliste = @$spruch_list;
 
 # charaktere initialisieren
-my $char_hash = {};
 my $char_list = [];
-Charakter->init_chars($char_hash,$char_list,$spruch_hash);
-$::chars = $char_hash;
-@::charliste = @$char_list;
+Charakter->init_chars($char_list,$spruch_hash);
 
 # erstmal nur der default-Char
-$::stoffel = $char_hash->{$conf->{-DEFAULT_CHARAKTER}};
+$::stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 
 # nur der Defaultspruch...
 $::sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
@@ -83,7 +78,7 @@ $::charwahl->Subwidget('entry')->bind('<Key-Return>',
 					      \&char_aktualisieren);
 
 # nur die verfuegbaren charaktere werden auch eingetragen
-foreach my $char (@::charliste){
+foreach my $char (@$char_list){
      $::charwahl->insert('end',$char);
 }
 
@@ -140,7 +135,7 @@ $::spruchwahl = $::allgemein_frame->BrowseEntry(-label => 'Spruch: ',
 					-browsecmd => \&spruch_aktualisieren);
 
 # nur die verfuegbaren sprueche werden auch eingetragen
-foreach $::spru (@::spruchliste){
+foreach $::spru (@$spruch_list){
      $::spruchwahl->insert('end',$::spru);
 }
 
@@ -320,23 +315,24 @@ $::ws_magtheo_lp->pack(-anchor => 'e');
 # Diese Funktion wird ausgefuehrt, wenn ein Charakter ausgewaehlt wurde
 #
 sub char_aktualisieren{
-
-
-     $::stoffel = $::chars->{$::charname};
-
-     $::PSI->delete(0,'end');
-     $::PSI->insert(0,$::stoffel->{'Basisattribut'}->{'PSI'});
-     
-     $::PSE->delete(0,'end');
-     $::PSE->insert(0,$::stoffel->{'Fertigkeit'}->{'PSE'});
-#     my $magtheo_txt = "PSE: " . 
-     $::magietheorie->delete(0,'end');
-     $::magietheorie->insert
-	  (0, $::stoffel->{'Fertigkeit'}->{'Magietheorie'});
-
-     $::char_frame->configure(-label => $::stoffel->{'Name'});
-     
-     &spruch_aktualisieren;
+    
+    print "Charakter umschalten zu $::charname...\n";
+    # $::stoffel = $char_hash->{$::charname};
+    $::stoffel = Charakter->new($::charname,$spruch_list,$conf);
+    
+    $::PSI->delete(0,'end');
+    $::PSI->insert(0,$::stoffel->{'Basisattribut'}->{'PSI'});
+    
+    $::PSE->delete(0,'end');
+    $::PSE->insert(0,$::stoffel->{'Fertigkeit'}->{'PSE'});
+    #     my $magtheo_txt = "PSE: " . 
+    $::magietheorie->delete(0,'end');
+    $::magietheorie->insert
+    (0, $::stoffel->{'Fertigkeit'}->{'Magietheorie'});
+    
+    $::char_frame->configure(-label => $::stoffel->{'Name'});
+    
+    &spruch_aktualisieren;
 }
 
 #
@@ -377,7 +373,7 @@ sub aktualisieren{
 # Wir berechnen die neue MW-Erhoehungsvorgabe anhand nicht-gekonnter
 # Fertigkeiten
 #
-
+	# use Data::Dumper;print Dumper $::stoffel;
      $::mw_mod += $::stoffel->get_erhoehung
 	  ($::sprucho->{'Fertigkeit'});
      if(&Erps::ist_psi($::sprucho->{'Fertigkeit'})){

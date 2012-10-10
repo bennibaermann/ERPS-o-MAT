@@ -17,12 +17,16 @@ sub new{
      my $class = shift;
      my $name = shift; # Der Name des Charakterfiles ohne .ch und Dir
      my $sprueche = shift;
+     my $conf = shift;
 
      my $self = {};
     
      print "Charakter-new($name)\n";
-
-     $self->{-conf} = Eomconfig->new();
+     if(defined $conf){
+     	 $self->{-conf} = $conf;
+     }else{
+     	 $self->{-conf} = Eomconfig->new();
+     }
      $self->{-sprueche} = $sprueche;
      
      # einlesen des Charakterfiles... 
@@ -270,7 +274,7 @@ sub get_erhoehung{
 #
 sub init_chars{
     my $class = shift; # wird nicht benutzt
-    my $hash = shift;
+    # my $hash = shift;
     my $list = shift;
     my $sprueche = shift;
     
@@ -282,8 +286,8 @@ sub init_chars{
     	next if( ! (/.*\.ch$/)); # nur *.ch-files
     	s/^(.*?)\.ch$/$1/;
     	my $charaktername = $_;
-    	my $char = Charakter->new($charaktername,$sprueche);
-    	$hash->{$charaktername} = $char;
+    	# my $char = Charakter->new($charaktername,$sprueche);
+    	# $hash->{$charaktername} = $char;
     	push(@$list,$_);
     }
     closedir CHARS;
