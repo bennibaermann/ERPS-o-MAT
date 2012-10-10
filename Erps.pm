@@ -28,9 +28,10 @@ sub berechne_PSI_Kosten{
 # Diese Funktion wandelt kodierte Ergebnisse in Text um
 #
 sub decode{
-     my $ergebnis = shift;
+     my $ergebnis = shift; 
+     my $unendlich = shift;
      
-     return "unendlicher Patzer" if($ergebnis == -$::conf->{-UNENDLICH});
+     return "unendlicher Patzer" if($ergebnis == -$unendlich);
      return "Fehler" if($ergebnis == 0);
      return "normal geschafft" if($ergebnis == 1);
      return "normal nicht geschafft" if($ergebnis == -1);
@@ -198,14 +199,17 @@ sub WS_less{
 # hier werden die wahrscheinlichkeitswerte vorberechnet
 # wg. schneller
 sub WS_Generator{
- 
-  print "Wahrscheinlichkeiten vorberechnen\n";
-  $Erps::ws_tab[1] = 0;
-  for my $w (2..$::conf->{-MAXWURF}){
-    $Erps::ws_tab[$w] = $Erps::ws_tab[$w-1]+WS_eq_Generator($w);
-  #  print "WS $w: $Erps::ws_tab[$w]\n";
-  }
-  print "fertig.\n"
+    my $conf = shift;
+    # use Data::Dumper; print Dumper $conf;
+    
+    print "Wahrscheinlichkeiten vorberechnen\n";
+    $Erps::ws_tab[1] = 0;
+    for my $w (2..$conf->{-MAXWURF}){
+    	$Erps::ws_tab[$w] = $Erps::ws_tab[$w-1] + WS_eq_Generator($w);
+    	print ".";
+    	# print "WS $w: $Erps::ws_tab[$w]\n";
+    }
+    print "fertig.\n"
 
 }
 
@@ -257,7 +261,9 @@ sub get_bereich{
 # aber nur, wenn das nicht schon geschehen ist
 # sollte beim ersten "use ERPS;" passieren.
 sub init_erps{
-    &Erps::WS_Generator() unless defined $ERPS::ws_tab;
+    my $class = shift; # not in use
+    my $conf = shift;
+    &Erps::WS_Generator($conf) unless defined $ERPS::ws_tab;
 }
 1;
 

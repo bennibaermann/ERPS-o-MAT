@@ -16,6 +16,9 @@ sub new{
 
      print "Spruch->new($name)\n";
 
+     # config
+     $self->{-config} = Eomconfig->new(); 
+     
      # einlesen des Spruchfiles... sehr simpel
      open(SPRU,"Sprueche/". $name . ".sp") or 
        die "!!! Kann Spruch nicht oeffnen: $! ";
@@ -421,6 +424,8 @@ sub suche_radio{
 
 sub create_oberflaeche{
      my $self = shift;
+     
+     my $conf = $self->{-config};
 
      for my $var (keys(%{$self->{'Variable'}})){
 	  my $vars = $self->{'Variable'};
@@ -440,7 +445,7 @@ sub create_oberflaeche{
 		 # checkbutton
 		 $vars->{$var}->{'Wahl'} = get_input_flag
 		   ($var,\$vars->{$var}->{'Wert'});
-	       }elsif($max <= $::conf->{-MAX_RADIO}){
+	       }elsif($max <= $conf->{-MAX_RADIO}){
 		 #radiobutton
 		 $vars->{$var}->{'Wahl'} = 
 		   $self->get_input_radio($var);
@@ -472,7 +477,7 @@ sub create_oberflaeche{
 	    if($anzahl == 2){
 	      $vars->{$var}->{'Wahl'} = $self->get_input_flag
 		($var,\$var->{'Wert'});
-	    }elsif($anzahl <= $::conf->{-MAX_RADIO}){
+	    }elsif($anzahl <= $conf->{-MAX_RADIO}){
 	      # Radiobuttons hin
 	      $vars->{$var}->{'Wahl'} = 
 		$self->get_input_radio($var);
@@ -490,7 +495,7 @@ sub create_oberflaeche{
 	       if($anzahl == 2){
 		 $vars->{$var}->{'Wahl'} = $self->get_input_flag
 		   ($var,\$var->{'Wert'});
-	       }elsif($anzahl <= $::conf->{-MAX_RADIO}){
+	       }elsif($anzahl <= $conf->{-MAX_RADIO}){
 		    # Radiobuttons hin
 		 $vars->{$var}->{'Wahl'} = 
 		   $self->get_input_radio($var);
@@ -603,7 +608,7 @@ $Spruch::RW_log2 =
    'Text' => 'my $ref = sub{
         my $psi = $wert*$::stoffel->{"Basisattribut"}->{"PSI"};
         ($psi<1000)?($psi . " meter"):
-        (sprintf("%." . $::conf->{-KOMMA} . "f kilometer",$psi/1000))};
+        (sprintf("%." . $conf->{-KOMMA} . "f kilometer",$psi/1000))};
       &$ref',
    # [x] Du willst diese Zeilen nicht verstehen.
    'Beschreibung' => 'logarithmische RW in PSI-Metern'

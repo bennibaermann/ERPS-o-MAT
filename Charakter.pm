@@ -17,9 +17,11 @@ sub new{
      my $class = shift;
      my $name = shift; # Der Name des Charakterfiles ohne .ch und Dir
      my $self = {};
-
+    
      print "Charakter-new($name)\n";
 
+     $self->{-conf} = Eomconfig->new();
+     
      # einlesen des Charakterfiles... sehr simpel
      open(CHAR,"Charaktere/". $name . ".ch") or die "Fehler: $!\n";
      my @ev = <CHAR>;
@@ -131,6 +133,8 @@ sub berechne_ergebnis{
      my $gewuerfelt = shift;
      my $fertigkeit = shift;
 
+     my $conf = $self->{-conf};
+     
      my $summe = $gewuerfelt + $self->{'Bonus'};
 
 #
@@ -139,7 +143,7 @@ sub berechne_ergebnis{
 
      my $ergebnis = 0;
      
-     if($::conf->{-OLD_CRITS} == 1){
+     if($conf->{-OLD_CRITS} == 1){
      	     # TODO: verallgemeinerung in schleifen statt copy&paste
     	     $ergebnis = -5 if($summe >= $mw/32 && $summe < $mw/16);
      	     $ergebnis = -4 if($summe >= $mw/16 && $summe < $mw/8);
@@ -172,7 +176,7 @@ sub berechne_ergebnis{
      }
 
 # sonderbehandlung fuer negative(und null) ergebnisse
-$ergebnis = -$::conf->{-UNENDLICH} if($summe <= 0);
+$ergebnis = -$conf->{-UNENDLICH} if($summe <= 0);
 
      # print "summe: $summe mw: $mw ergebnis: $ergebnis gewuerfelt: $gewuerfelt\n";
      
