@@ -276,7 +276,7 @@ sub init_chars{
     my $class = shift; # wird nicht benutzt
     # my $hash = shift;
     my $list = shift;
-    my $sprueche = shift;
+    # my $sprueche = shift;
     
     my $conf = Eomconfig->new();
     

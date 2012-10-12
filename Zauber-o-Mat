@@ -20,26 +20,29 @@ use Tk::Table;
 use Tk::LabFrame;
 
 my $conf = Eomconfig->new();
-# $::conf = $conf;
 
+
+# TODO: die init_funktionen sollten in Konstruktor
+
+# Wahrscheinlichkeiten berechnen
 Erps->init_erps($conf);
 
-# TODO: das sollte in konstruktoren 
+# erstmal nur der default-Char
+my $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 
 # Sprueche initialisieren
 my $spruch_hash = {};
 my $spruch_list = [];
-Spruch->init_sprueche($spruch_hash,$spruch_list);
+Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel);
 
 # charaktere initialisieren
 my $char_list = [];
-Charakter->init_chars($char_list,$spruch_hash);
-
-# erstmal nur der default-Char
-$::stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
+#Charakter->init_chars($char_list,$spruch_hash);
+Charakter->init_chars($char_list);
 
 # nur der Defaultspruch...
 $::sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
+  use Data::Dumper; print "SSS"; print Dumper $::sprucho; print "SSS";
 $::sprucho_alt = $::sprucho;
 
 ############################################################
@@ -83,7 +86,7 @@ foreach my $char (@$char_list){
 }
 
 $::char_frame = $::input_frame->LabFrame
-     (-label => $::stoffel->{'Name'},
+     (-label => $stoffel->{'Name'},
       -labelside => 'acrosstop',
       -background => $conf->{-BGCOLOR});
 
@@ -97,7 +100,7 @@ $::Prozente = $::char_links_frame->Label(-text => $proz_text);
 
 $::PSI = $::char_rechts_frame->
      LabEntry(-textvariable => 
-	      \$::stoffel->{'Basisattribut'}->{'PSI'},
+	      \$stoffel->{'Basisattribut'}->{'PSI'},
 	      -width => 2,
 	      -label => 'PSI:',
 	      -labelPack => [ -side => 'left']);
@@ -106,7 +109,7 @@ $::PSI->bind('<Key-Return>',\&spruch_aktualisieren);
 
 $::PSE = $::char_links_frame->
      LabEntry(-textvariable => 
-	      \$::stoffel->{'Fertigkeit'}->{'PSE'},
+	      \$stoffel->{'Fertigkeit'}->{'PSE'},
 	      -width => 2,
 	      -label => 'PSE:',
 	      -labelPack => [ -side => 'left']);
@@ -115,7 +118,7 @@ $::PSE->bind('<Key-Return>',\&aktualisieren);
 
 $::magietheorie = $::char_rechts_frame->
      LabEntry(-textvariable => 
-	      \$::stoffel->{'Fertigkeit'}->{'Magietheorie'},
+	      \$stoffel->{'Fertigkeit'}->{'Magietheorie'},
 	      -width => 2,
 	      -label => 'Magietheorie:',
 	      -labelPack => [ -side => 'left']);
@@ -317,20 +320,20 @@ $::ws_magtheo_lp->pack(-anchor => 'e');
 sub char_aktualisieren{
     
     print "Charakter umschalten zu $::charname...\n";
-    # $::stoffel = $char_hash->{$::charname};
-    $::stoffel = Charakter->new($::charname,$spruch_list,$conf);
+    # $stoffel = $char_hash->{$::charname};
+    $stoffel = Charakter->new($::charname,$spruch_list,$conf);
     
     $::PSI->delete(0,'end');
-    $::PSI->insert(0,$::stoffel->{'Basisattribut'}->{'PSI'});
+    $::PSI->insert(0,$stoffel->{'Basisattribut'}->{'PSI'});
     
     $::PSE->delete(0,'end');
-    $::PSE->insert(0,$::stoffel->{'Fertigkeit'}->{'PSE'});
+    $::PSE->insert(0,$stoffel->{'Fertigkeit'}->{'PSE'});
     #     my $magtheo_txt = "PSE: " . 
     $::magietheorie->delete(0,'end');
     $::magietheorie->insert
-    (0, $::stoffel->{'Fertigkeit'}->{'Magietheorie'});
+    (0, $stoffel->{'Fertigkeit'}->{'Magietheorie'});
     
-    $::char_frame->configure(-label => $::stoffel->{'Name'});
+    $::char_frame->configure(-label => $stoffel->{'Name'});
     
     &spruch_aktualisieren;
 }
@@ -373,26 +376,26 @@ sub aktualisieren{
 # Wir berechnen die neue MW-Erhoehungsvorgabe anhand nicht-gekonnter
 # Fertigkeiten
 #
-	# use Data::Dumper;print Dumper $::stoffel;
-     $::mw_mod += $::stoffel->get_erhoehung
+	# use Data::Dumper;print Dumper $stoffel;
+     $::mw_mod += $stoffel->get_erhoehung
 	  ($::sprucho->{'Fertigkeit'});
      if(&Erps::ist_psi($::sprucho->{'Fertigkeit'})){
-	  $::mw_mod += $::stoffel->get_erhoehung('PSE');
+	  $::mw_mod += $stoffel->get_erhoehung('PSE');
      }
 
-     my $mws = $::sprucho->aktualisieren();
+     my $mws = $::sprucho->aktualisieren($stoffel);
 
 #
 # Der Bonus auf den Wuerfelwurf wird ausgerechnet
 #
-     my $bonus = $::stoffel->bonus($::sprucho->{'Fertigkeit'});
-     $::stoffel->{'Bonus'} = $bonus;
+     my $bonus = $stoffel->bonus($::sprucho->{'Fertigkeit'});
+     $stoffel->{'Bonus'} = $bonus;
 
 # das selbe fuer magtheo
 
-     my $m_bonus = $::stoffel->
+     my $m_bonus = $stoffel->
 	  magtheo_bonus($::sprucho->{'Fertigkeit'});
-     $::stoffel->{'Magtheo_Bonus'} = $m_bonus;
+     $stoffel->{'Magtheo_Bonus'} = $m_bonus;
 
      $::MWG->configure(-text => "unmodifizierter MW: $mws->{'Grund'}");
      $::MWU->configure
@@ -434,12 +437,12 @@ sub aktualisieren{
 	  (-text => "Lernpunkt-Magietheorie-Wahrscheinlichkeit: $ws \%");
      $::Prozente->configure
 	  (-text => "Prozente: " .
-	   $::stoffel->get_prozente($::sprucho->get_name()). "%");
+	   $stoffel->get_prozente($::sprucho->get_name()). "%");
      my $bereich = $::sprucho->{'Fertigkeit'};
-     if(defined($::stoffel->{'Fertigkeit'}->{$bereich})){
+     if(defined($stoffel->{'Fertigkeit'}->{$bereich})){
 	  $::Fertigkeit->configure
 	  (-text => "$bereich: " .
-	   $::stoffel->{'Fertigkeit'}->{$bereich});
+	   $stoffel->{'Fertigkeit'}->{$bereich});
      }else{
 	  $::Fertigkeit->configure
 	  (-text => "$bereich: nicht vorhanden");
@@ -460,15 +463,15 @@ for($::y = 1; $::y != $conf->{-MAX_TABLE}; $::y++){
      my $zeilen_anfang = 2;
      my ($ergebnis,$gewuerfelt_text);
      my $zeile = 1;
-#     $::stoffel->{'Bonus'} = 
-#	  $::stoffel->bonus($::sprucho->{'Fertigkeit'});
-     my $alt_ergebnis = $::stoffel->berechne_ergebnis
+#     $stoffel->{'Bonus'} = 
+#	  $stoffel->bonus($::sprucho->{'Fertigkeit'});
+     my $alt_ergebnis = $stoffel->berechne_ergebnis
 	       ($mws->{'Gesenkt'},
 		2,
 		$::sprucho->{'Fertigkeit'});;
 	       for ($wurf = 2;$wurf != $conf->{-MAXWURF}; $wurf++){
 
-	  $ergebnis = $::stoffel->berechne_ergebnis
+	  $ergebnis = $stoffel->berechne_ergebnis
 	       ($mws->{'Gesenkt'},
 		$wurf,
 		$::sprucho->{'Fertigkeit'});
