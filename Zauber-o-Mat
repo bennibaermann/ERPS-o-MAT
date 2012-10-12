@@ -162,10 +162,10 @@ $::dauer_wahl->insert('end', 'Stundenzauber');
 $::dauer_wahl->insert('end', 'Tagezauber'); 
 $::dauer_wahl->Subwidget('entry')->bind('<Key-Return>',
 					      \&aktualisieren);
-$::mw_mod = 0;
+my $mw_mod = 0;
 $::mw_mod_wahl = $::allgemein_frame->BrowseEntry
      (-label => 'MW-Modifikationen: ', 
-      -variable => \$::mw_mod,
+      -variable => \$mw_mod,
       -browsecmd => \&aktualisieren);
 
 for($::i = 0; $::i != 20; $::i++){
@@ -174,10 +174,10 @@ for($::i = 0; $::i != 20; $::i++){
 $::mw_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
 					      \&aktualisieren);
 
-$::wuerfel_mod = 0;
+my $wuerfel_mod = 0;
 $::wuerfel_mod_wahl = $::allgemein_frame->BrowseEntry
      (-label => 'Würfel-Modifikationen: ', 
-      -variable => \$::wuerfel_mod,
+      -variable => \$wuerfel_mod,
       -browsecmd => \&aktualisieren);
 
 for($::i = -10; $::i != 10; $::i++){
@@ -377,24 +377,24 @@ sub aktualisieren{
 # Fertigkeiten
 #
 	# use Data::Dumper;print Dumper $stoffel;
-     $::mw_mod += $stoffel->get_erhoehung
+     $mw_mod += $stoffel->get_erhoehung
 	  ($::sprucho->{'Fertigkeit'});
      if(&Erps::ist_psi($::sprucho->{'Fertigkeit'})){
-	  $::mw_mod += $stoffel->get_erhoehung('PSE');
+	  $mw_mod += $stoffel->get_erhoehung('PSE');
      }
 
-     my $mws = $::sprucho->aktualisieren($stoffel);
+     my $mws = $::sprucho->aktualisieren($::gesenkt_um,$mw_mod);
 
 #
 # Der Bonus auf den Wuerfelwurf wird ausgerechnet
 #
-     my $bonus = $stoffel->bonus($::sprucho->{'Fertigkeit'});
+     my $bonus = $stoffel->bonus($::sprucho->{'Fertigkeit'},$wuerfel_mod);
      $stoffel->{'Bonus'} = $bonus;
 
 # das selbe fuer magtheo
 
      my $m_bonus = $stoffel->
-	  magtheo_bonus($::sprucho->{'Fertigkeit'});
+	  magtheo_bonus($::sprucho->{'Fertigkeit'},$wuerfel_mod);
      $stoffel->{'Magtheo_Bonus'} = $m_bonus;
 
      $::MWG->configure(-text => "unmodifizierter MW: $mws->{'Grund'}");

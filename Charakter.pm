@@ -72,6 +72,7 @@ sub TRK_Tabelle{
 sub bonus{
      my $self = shift;
      my $fertigkeit = shift;
+     my $wuerfel_mod = shift;
 
      my $summe = 0;
      if(defined ( $self->{'Fertigkeit'}->{$fertigkeit})){
@@ -84,7 +85,7 @@ sub bonus{
        }
      }
      # jetzt noch die Wuerfelmodifikationen
-     $summe += $::wuerfel_mod;
+     $summe += $wuerfel_mod;
      return $summe;
 }
 
@@ -93,6 +94,7 @@ sub bonus{
 sub magtheo_bonus{
      my $self = shift;
      my $fertigkeit = shift;
+     my $wuerfel_mod = shift;
 
      my $summe = 0;
      if(defined ( $self->{'Fertigkeit'}->{$fertigkeit})){
@@ -105,7 +107,7 @@ sub magtheo_bonus{
        }
      }
      # jetzt noch die Wuerfelmodifikationen
-     $summe += $::wuerfel_mod;
+     $summe += $wuerfel_mod;
      return $summe;
 }
 

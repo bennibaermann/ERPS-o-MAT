@@ -65,10 +65,8 @@ sub match_skill{
 #
 # Diese Funktion ermittelt die Mindestwuerfe...
 #
-# Eingabe: Zauberer-Referenz
-#          gesenkt um wieviel Punkte
-#          Reichweite (ab hier Spruchspezifisch)
-#          Schaden
+# Eingabe: gesenkt um wieviel Punkte
+#          MW-modifikationen
 #
 # Ausgabe: (als Hashreferenz)
 #          'Grund':     Grundmindestwurf
@@ -80,6 +78,9 @@ sub berechne{
     my $self = shift;
     my $zauberer = $self->{-char};
     my $gesenkt_um = shift;
+    my $mw_mod = shift;
+    
+    print "berechne(gesenkt_um: $gesenkt_um,mw_mod: $mw_mod)\n";
     
     my $mw = {};
     
@@ -90,9 +91,8 @@ sub berechne{
     
     $mw->{'Grund'} = $self->formel();
     
-    $mw->{'Ungesenkt'} = POSIX::floor
-    ($mw->{'Grund'} * ($prozente/100) 
-    	* ($self->dauer_prozente($::dauer)/100) + 0.5 + $::mw_mod);
+    $mw->{'Ungesenkt'} = POSIX::floor($mw->{'Grund'} * ($prozente/100) 
+    	* ($self->dauer_prozente($::dauer)/100) + 0.5 + $mw_mod);
     $mw->{'Gesenkt'} = $mw->{'Ungesenkt'} - $gesenkt_um;
     
     return $mw;
@@ -538,8 +538,10 @@ sub create_oberflaeche{
 sub aktualisieren{
     my $self = shift;
     my $stoffel = $self->{-char};
+    my $gesenkt_um = shift;
+    my $mw_mod = shift;
     
-    my $mws = $self->berechne($::gesenkt_um);
+    my $mws = $self->berechne($gesenkt_um,$mw_mod);
     
     return $mws;
 };
