@@ -41,8 +41,8 @@ my $char_list = [];
 Charakter->init_chars($char_list);
 
 # nur der Defaultspruch...
-$::sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
-$::sprucho_alt = $::sprucho;
+my $sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
+my $sprucho_alt = $sprucho;
 
 ############################################################
 #
@@ -53,250 +53,251 @@ $::sprucho_alt = $::sprucho;
 #
 ############################################################
 
-$::top = MainWindow->new();
-$::top->title("ZAUBER-o-MAT Version 0.2");
+my $top = MainWindow->new();
+$top->title("ZAUBER-o-MAT Version 0.2");
 
-$::oben_frame = $::top->Frame();
-$::input_frame = $::oben_frame->LabFrame
-     (-label => 'Eingabe',
-      -labelside => 'acrosstop');
-$::output_frame= $::oben_frame->LabFrame
-     (-label => 'Ausgabe',
-      -labelside => 'acrosstop',
-      -background => $conf->{-BGCOLOR});
-     $::command_frame=$::top->Frame(-background => $conf->{-BGCOLOR});
+my $oben_frame = $top->Frame();
+my $input_frame = $oben_frame->LabFrame
+(-label => 'Eingabe',
+    -labelside => 'acrosstop');
+my $output_frame= $oben_frame->LabFrame
+(-label => 'Ausgabe',
+    -labelside => 'acrosstop',
+    -background => $conf->{-BGCOLOR});
+
+my $command_frame = $top->Frame(-background => $conf->{-BGCOLOR});
 
 #
 # Die Eingabeseite
 #
 
 
-$::charname = $conf->{-DEFAULT_CHARAKTER};
-$::charwahl = $::input_frame->BrowseEntry(-label => 'Charakter: ',
-					-variable => \$::charname,
-					-browsecmd => \&char_aktualisieren);
+my $charname = $conf->{-DEFAULT_CHARAKTER};
+my $charwahl = $input_frame->BrowseEntry(-label => 'Charakter: ',
+    -variable => \$charname,
+    -browsecmd => \&char_aktualisieren);
 
-$::charwahl->Subwidget('entry')->bind('<Key-Return>',
-					      \&char_aktualisieren);
+$charwahl->Subwidget('entry')->bind('<Key-Return>',
+    \&char_aktualisieren);
 
 # nur die verfuegbaren charaktere werden auch eingetragen
 foreach my $char (@$char_list){
-     $::charwahl->insert('end',$char);
+    $charwahl->insert('end',$char);
 }
 
-$::char_frame = $::input_frame->LabFrame
-     (-label => $stoffel->{'Name'},
-      -labelside => 'acrosstop',
-      -background => $conf->{-BGCOLOR});
+my $char_frame = $input_frame->LabFrame
+(-label => $stoffel->{'Name'},
+    -labelside => 'acrosstop',
+    -background => $conf->{-BGCOLOR});
 
-$::char_links_frame = $::char_frame->Frame();
-$::char_rechts_frame = $::char_frame->Frame();
+my $char_links_frame = $char_frame->Frame();
+my $char_rechts_frame = $char_frame->Frame();
 
 my $fert_text = "Fertigkeit: ???";
-$::Fertigkeit = $::char_links_frame->Label(-text => $fert_text);  
+my $Fertigkeit = $char_links_frame->Label(-text => $fert_text);  
 my $proz_text = "Prozente: ???";
-$::Prozente = $::char_links_frame->Label(-text => $proz_text);  
+my $Prozente = $char_links_frame->Label(-text => $proz_text);  
 
-$::PSI = $::char_rechts_frame->
-     LabEntry(-textvariable => 
-	      \$stoffel->{'Basisattribut'}->{'PSI'},
-	      -width => 2,
-	      -label => 'PSI:',
-	      -labelPack => [ -side => 'left']);
+my $PSI = $char_rechts_frame->
+LabEntry(-textvariable => 
+    \$stoffel->{'Basisattribut'}->{'PSI'},
+    -width => 2,
+    -label => 'PSI:',
+    -labelPack => [ -side => 'left']);
 
-$::PSI->bind('<Key-Return>',\&spruch_aktualisieren);
+$PSI->bind('<Key-Return>',\&spruch_aktualisieren);
 
-$::PSE = $::char_links_frame->
-     LabEntry(-textvariable => 
-	      \$stoffel->{'Fertigkeit'}->{'PSE'},
-	      -width => 2,
-	      -label => 'PSE:',
-	      -labelPack => [ -side => 'left']);
+my $PSE = $char_links_frame->
+LabEntry(-textvariable => 
+    \$stoffel->{'Fertigkeit'}->{'PSE'},
+    -width => 2,
+    -label => 'PSE:',
+    -labelPack => [ -side => 'left']);
 
-$::PSE->bind('<Key-Return>',\&aktualisieren);
+$PSE->bind('<Key-Return>',\&aktualisieren);
 
-$::magietheorie = $::char_rechts_frame->
-     LabEntry(-textvariable => 
-	      \$stoffel->{'Fertigkeit'}->{'Magietheorie'},
-	      -width => 2,
-	      -label => 'Magietheorie:',
-	      -labelPack => [ -side => 'left']);
+my $magietheorie = $char_rechts_frame->
+LabEntry(-textvariable => 
+    \$stoffel->{'Fertigkeit'}->{'Magietheorie'},
+    -width => 2,
+    -label => 'Magietheorie:',
+    -labelPack => [ -side => 'left']);
 
-$::magietheorie->bind('<Key-Return>',\&aktualisieren);
+$magietheorie->bind('<Key-Return>',\&aktualisieren);
 
 
-$::allgemein_frame = $::input_frame->LabFrame
-     (-label => 'Allgemeines',
-      -labelside => 'acrosstop',
-      -background => $conf->{-BGCOLOR});
+my $allgemein_frame = $input_frame->LabFrame
+(-label => 'Allgemeines',
+    -labelside => 'acrosstop',
+    -background => $conf->{-BGCOLOR});
 
 # $::spruch = "Schockstrahl";
-$::spruch = $conf->{-DEFAULT_SPRUCH};
-$::spruchwahl = $::allgemein_frame->BrowseEntry(-label => 'Spruch: ',
-					-variable => \$::spruch,
-					-browsecmd => \&spruch_aktualisieren);
+my $spruch = $conf->{-DEFAULT_SPRUCH};
+my $spruchwahl = $allgemein_frame->BrowseEntry(-label => 'Spruch: ',
+    -variable => \$spruch,
+    -browsecmd => \&spruch_aktualisieren);
 
 # nur die verfuegbaren sprueche werden auch eingetragen
-foreach $::spru (@$spruch_list){
-     $::spruchwahl->insert('end',$::spru);
+foreach my $spru (@$spruch_list){
+    $spruchwahl->insert('end',$spru);
 }
 
-$::spruchwahl->Subwidget('entry')->bind('<Key-Return>',
-					      \&spruch_aktualisieren);
+$spruchwahl->Subwidget('entry')->bind('<Key-Return>',
+    \&spruch_aktualisieren);
 
-$::spruch_frame = $::input_frame->LabFrame
-     (-label => 'Spruchabhängige Parameter',
-      -labelside => 'acrosstop',
-      -background => $conf->{-BGCOLOR});
+my $spruch_frame = $input_frame->LabFrame
+(-label => 'Spruchabhängige Parameter',
+    -labelside => 'acrosstop',
+    -background => $conf->{-BGCOLOR});
 
-$::dauer = $::sprucho->{'Dauer'};
-$::dauer_wahl = $::allgemein_frame->BrowseEntry
-     (-label => 'Spruchdauer: ', 
-      -variable => \$::dauer,
-      -browsecmd => \&aktualisieren);
+my $dauer = $sprucho->{'Dauer'};
+my $dauer_wahl = $allgemein_frame->BrowseEntry
+(-label => 'Spruchdauer: ', 
+    -variable => \$dauer,
+    -browsecmd => \&aktualisieren);
 
-$::dauer_wahl->insert('end', 'Sofortiger Zauber'); 
-$::dauer_wahl->insert('end', 'Rundenzauber'); 
-$::dauer_wahl->insert('end', 'Minutenzauber'); 
-$::dauer_wahl->insert('end', 'Stundenzauber'); 
-$::dauer_wahl->insert('end', 'Tagezauber'); 
-$::dauer_wahl->Subwidget('entry')->bind('<Key-Return>',
-					      \&aktualisieren);
+$dauer_wahl->insert('end', 'Sofortiger Zauber'); 
+$dauer_wahl->insert('end', 'Rundenzauber'); 
+$dauer_wahl->insert('end', 'Minutenzauber'); 
+$dauer_wahl->insert('end', 'Stundenzauber'); 
+$dauer_wahl->insert('end', 'Tagezauber'); 
+$dauer_wahl->Subwidget('entry')->bind('<Key-Return>',
+    \&aktualisieren);
 my $mw_mod = 0;
-$::mw_mod_wahl = $::allgemein_frame->BrowseEntry
-     (-label => 'MW-Modifikationen: ', 
-      -variable => \$mw_mod,
-      -browsecmd => \&aktualisieren);
+my $mw_mod_wahl = $allgemein_frame->BrowseEntry
+(-label => 'MW-Modifikationen: ', 
+    -variable => \$mw_mod,
+    -browsecmd => \&aktualisieren);
 
-for($::i = 0; $::i != 20; $::i++){
-     $::mw_mod_wahl->insert('end', $::i); 
+for(my $i = 0; $i != 20; $i++){
+    $mw_mod_wahl->insert('end', $i); 
 }
-$::mw_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
-					      \&aktualisieren);
+$mw_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
+    \&aktualisieren);
 
 my $wuerfel_mod = 0;
-$::wuerfel_mod_wahl = $::allgemein_frame->BrowseEntry
-     (-label => 'Würfel-Modifikationen: ', 
-      -variable => \$wuerfel_mod,
-      -browsecmd => \&aktualisieren);
+my $wuerfel_mod_wahl = $allgemein_frame->BrowseEntry
+(-label => 'Würfel-Modifikationen: ', 
+    -variable => \$wuerfel_mod,
+    -browsecmd => \&aktualisieren);
 
-for($::i = -10; $::i != 10; $::i++){
-     $::wuerfel_mod_wahl->insert('end', $::i); 
+for(my $i = -10; $i != 10; $i++){
+    $wuerfel_mod_wahl->insert('end', $i); 
 }
-$::wuerfel_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
-					      \&aktualisieren);
-$::gesenkt_um = 0;
-$::gesenkt_wahl = $::allgemein_frame->BrowseEntry
-     (-label => 'gesenkt um: ', 
-      -variable => \$::gesenkt_um,
-      -browsecmd => \&aktualisieren);
+$wuerfel_mod_wahl->Subwidget('entry')->bind('<Key-Return>',
+    \&aktualisieren);
+my $gesenkt_um = 0;
+my $gesenkt_wahl = $allgemein_frame->BrowseEntry
+(-label => 'gesenkt um: ', 
+    -variable => \$gesenkt_um,
+    -browsecmd => \&aktualisieren);
 
-for($::i = 0; $::i != 20; $::i++){
-     $::gesenkt_wahl->insert('end', $::i); 
+for(my $i = 0; $i != 20; $i++){
+    $gesenkt_wahl->insert('end', $i); 
 }
 
-$::gesenkt_wahl->Subwidget('entry')->bind('<Key-Return>',
-					      \&aktualisieren);
+$gesenkt_wahl->Subwidget('entry')->bind('<Key-Return>',
+    \&aktualisieren);
 
-$::ist_negativ = 0;
-$::check_negativ = $::allgemein_frame->Checkbutton
-	  (-text => 'nach dem Senken negative Psi-Punkte',
-	   -command => \&::aktualisieren,
-	   -variable => \$::ist_negativ,
-	   -onvalue => '1',
-	   -offvalue => '0');
+my $ist_negativ = 0;
+my $check_negativ = $allgemein_frame->Checkbutton
+(-text => 'nach dem Senken negative Psi-Punkte',
+    -command => \&aktualisieren,
+    -variable => \$ist_negativ,
+    -onvalue => '1',
+    -offvalue => '0');
 
-$::exit_button = $::command_frame->Button(-text => "Exit",
-				      -command => \&exit);
+my $exit_button = $command_frame->Button(-text => "Exit",
+    -command => \&exit);
 
 #
 # Die Ausgabe-Seite
 #
 
-$::mw_frame = $::output_frame->LabFrame
-     (-label => 'Mindestwürfe',
-      -labelside => 'acrosstop');
+my $mw_frame = $output_frame->LabFrame
+(-label => 'Mindestwürfe',
+    -labelside => 'acrosstop');
 
-$::MWG = $::mw_frame->Label(-text => 'Grund-MW: 0');
-$::MWU = $::mw_frame->Label(-text => 'MW-Ungesenkt: 0');
-$::MWS = $::mw_frame->Label(-text => 'MW-Gesenkt: 0');
+my $MWG = $mw_frame->Label(-text => 'Grund-MW: 0');
+my $MWU = $mw_frame->Label(-text => 'MW-Ungesenkt: 0');
+my $MWS = $mw_frame->Label(-text => 'MW-Gesenkt: 0');
 
-$::table_frame = $::output_frame->LabFrame
-     (-label => 'Würfeltabelle',
-      -labelside => 'acrosstop');
+my $table_frame = $output_frame->LabFrame
+(-label => 'Würfeltabelle',
+    -labelside => 'acrosstop');
 
-     $::tabelle = $::table_frame->Table(-rows => $conf->{-MAX_TABLE},
-					    -columns => 4,
-					    -scrollbars => 0);
+my $tabelle = $table_frame->Table(-rows => $conf->{-MAX_TABLE},
+    -columns => 4,
+    -scrollbars => 0);
 
-$::tabelle->put(0,0,'Gewürfelt');
-$::tabelle->put(0,1,'Ergebnis');
-$::tabelle->put(0,2,'PSI-Kosten');
-$::tabelle->put(0,3,'WS');
+$tabelle->put(0,0,'Gewürfelt');
+$tabelle->put(0,1,'Ergebnis');
+$tabelle->put(0,2,'PSI-Kosten');
+$tabelle->put(0,3,'WS');
 
-$::ws_fert = $::table_frame->Label
-     (-text => 'Erfolgswahrscheinlichkeit: ??');
-$::ws_lp =  $::table_frame->Label
-     (-text => 'Lernpunktwahrscheinlichkeit: ??');
-$::ws_magtheo = $::table_frame->Label
-     (-text => 'Magietheoriewahrscheinlichkeit: ??');
-$::ws_magtheo_lp =  $::table_frame->Label
-     (-text => 'Lernpunkt-Magietheorie-wahrscheinlichkeit: ??');
+my $ws_fert = $table_frame->Label
+(-text => 'Erfolgswahrscheinlichkeit: ??');
+my $ws_lp =  $table_frame->Label
+(-text => 'Lernpunktwahrscheinlichkeit: ??');
+my $ws_magtheo = $table_frame->Label
+(-text => 'Magietheoriewahrscheinlichkeit: ??');
+my $ws_magtheo_lp =  $table_frame->Label
+(-text => 'Lernpunkt-Magietheorie-wahrscheinlichkeit: ??');
 
-$::spruch_out_frame = $::output_frame->LabFrame
-     (-label => 'Spruchabhängige Ausgaben',
-      -labelside => 'acrosstop',
-      -background => $conf->{-BGCOLOR});
+my $spruch_out_frame = $output_frame->LabFrame
+(-label => 'Spruchabhängige Ausgaben',
+    -labelside => 'acrosstop',
+    -background => $conf->{-BGCOLOR});
 
-$::sprucho->create_oberflaeche($::spruch_frame);
+$sprucho->create_oberflaeche($spruch_frame);
 
 #
 # Packung!
 #
 
-$::oben_frame->pack(-side => 'top', -anchor => 'n');
-$::input_frame->pack(-side => 'left', -anchor => 'n');
-$::charwahl->pack(-anchor => 'w');
-$::char_frame->pack( -anchor => 'w', -fill => 'x');
-$::char_links_frame->pack( -anchor => 'w', -fill => 'x',
-			       -side => 'left', -expand => 'both');
-$::char_rechts_frame->pack( -anchor => 'n', -fill => 'x', 
-				-side => 'left', -expand => 'both');
-$::allgemein_frame->pack( -anchor => 'w', -fill => 'x');
-$::spruch_frame->pack( -anchor => 'w', -fill => 'x');
-$::mw_frame->pack( -anchor => 'w', -fill => 'x');
-$::table_frame->pack( -anchor => 'w', -fill => 'x');
-$::spruch_out_frame->pack( -anchor => 'w', -fill => 'x');
-$::output_frame->pack(-side => 'left', -anchor => 'n');
-$::command_frame->pack(-side => 'bottom');
+$oben_frame->pack(-side => 'top', -anchor => 'n');
+$input_frame->pack(-side => 'left', -anchor => 'n');
+$charwahl->pack(-anchor => 'w');
+$char_frame->pack( -anchor => 'w', -fill => 'x');
+$char_links_frame->pack( -anchor => 'w', -fill => 'x',
+    -side => 'left', -expand => 'both');
+$char_rechts_frame->pack( -anchor => 'n', -fill => 'x', 
+    -side => 'left', -expand => 'both');
+$allgemein_frame->pack( -anchor => 'w', -fill => 'x');
+$spruch_frame->pack( -anchor => 'w', -fill => 'x');
+$mw_frame->pack( -anchor => 'w', -fill => 'x');
+$table_frame->pack( -anchor => 'w', -fill => 'x');
+$spruch_out_frame->pack( -anchor => 'w', -fill => 'x');
+$output_frame->pack(-side => 'left', -anchor => 'n');
+$command_frame->pack(-side => 'bottom');
 
-$::exit_button->pack();
+$exit_button->pack();
 
-$::spruchwahl->pack(-anchor => 'e');
+$spruchwahl->pack(-anchor => 'e');
 
 # auch hier: dynamisch!!!
-$::sprucho->pack();
+$sprucho->pack();
 
-$::dauer_wahl->pack(-anchor => 'e');
-$::mw_mod_wahl->pack(-anchor => 'e');
-$::wuerfel_mod_wahl->pack(-anchor => 'e');
-$::gesenkt_wahl->pack(-anchor => 'e');
-$::check_negativ->pack(-anchor => 'e');
-$::PSI->pack(-anchor => 'e');
-$::PSE->pack(-anchor => 'e');
-$::magietheorie->pack(-anchor => 'e');
-$::Fertigkeit->pack(-anchor => 'e');
-$::Prozente->pack(-anchor => 'e');
+$dauer_wahl->pack(-anchor => 'e');
+$mw_mod_wahl->pack(-anchor => 'e');
+$wuerfel_mod_wahl->pack(-anchor => 'e');
+$gesenkt_wahl->pack(-anchor => 'e');
+$check_negativ->pack(-anchor => 'e');
+$PSI->pack(-anchor => 'e');
+$PSE->pack(-anchor => 'e');
+$magietheorie->pack(-anchor => 'e');
+$Fertigkeit->pack(-anchor => 'e');
+$Prozente->pack(-anchor => 'e');
 
-$::MWG->pack(-anchor => 'w');
-$::MWU->pack(-anchor => 'w');
-$::MWS->pack(-anchor => 'w');
+$MWG->pack(-anchor => 'w');
+$MWU->pack(-anchor => 'w');
+$MWS->pack(-anchor => 'w');
 
-$::tabelle->pack();
-$::ws_fert->pack(-anchor => 'e');
-$::ws_lp->pack(-anchor => 'e');
-$::ws_magtheo->pack(-anchor => 'e');
-$::ws_magtheo_lp->pack(-anchor => 'e');
+$tabelle->pack();
+$ws_fert->pack(-anchor => 'e');
+$ws_lp->pack(-anchor => 'e');
+$ws_magtheo->pack(-anchor => 'e');
+$ws_magtheo_lp->pack(-anchor => 'e');
 
 &spruch_aktualisieren;
 # &aktualisieren;
@@ -318,21 +319,22 @@ $::ws_magtheo_lp->pack(-anchor => 'e');
 #
 sub char_aktualisieren{
     
-    print "Charakter umschalten zu $::charname...\n";
+    print "Charakter umschalten zu $charname...\n";
     # $stoffel = $char_hash->{$::charname};
-    $stoffel = Charakter->new($::charname,$conf);
-        
-    $::PSI->delete(0,'end');
-    $::PSI->insert(0,$stoffel->{'Basisattribut'}->{'PSI'});
+    $stoffel = Charakter->new($charname,$conf);
+       
+    $mw_mod = 0;
     
-    $::PSE->delete(0,'end');
-    $::PSE->insert(0,$stoffel->{'Fertigkeit'}->{'PSE'});
+    $PSI->delete(0,'end');
+    $PSI->insert(0,$stoffel->{'Basisattribut'}->{'PSI'});
+    
+    $PSE->delete(0,'end');
+    $PSE->insert(0,$stoffel->{'Fertigkeit'}->{'PSE'});
     #     my $magtheo_txt = "PSE: " . 
-    $::magietheorie->delete(0,'end');
-    $::magietheorie->insert
-    (0, $stoffel->{'Fertigkeit'}->{'Magietheorie'});
+    $magietheorie->delete(0,'end');
+    $magietheorie->insert(0, $stoffel->{'Fertigkeit'}->{'Magietheorie'});
     
-    $::char_frame->configure(-label => $stoffel->{'Name'});
+    $char_frame->configure(-label => $stoffel->{'Name'});
     
     &spruch_aktualisieren;
 }
@@ -342,28 +344,28 @@ sub char_aktualisieren{
 #
 
 sub spruch_aktualisieren{
-
-     # zuerst die alte oberflaeche vernichten
-     my $spruchabhaengig = $::sprucho_alt->get_spruchabhaengig();
-
-     my $widget;
-     foreach $widget (@$spruchabhaengig){
-#	  print "zu zerstoerendes Widget: $widget\n";
-	  $widget->destroy() if(Exists($widget));
-     }
-
-     $::sprucho = $spruch_hash->{$::spruch};
-     $::sprucho->set_char($stoffel);
-
-     # die neue oberflaeche erzeugen und packen
-     $::sprucho->create_oberflaeche($::spruch_frame);
-     $::sprucho->pack();
-     $::sprucho_alt = $::sprucho;
-
-     # neue Zauberdauer eintragen
-     $::dauer = $::sprucho->{'Dauer'};
-     
-     &aktualisieren;
+    
+    # zuerst die alte oberflaeche vernichten
+    my $spruchabhaengig = $sprucho_alt->get_spruchabhaengig();
+    
+    my $widget;
+    foreach $widget (@$spruchabhaengig){
+    	#	  print "zu zerstoerendes Widget: $widget\n";
+    	$widget->destroy() if(Exists($widget));
+    }
+    
+    $sprucho = $spruch_hash->{$spruch};
+    $sprucho->set_char($stoffel);
+    
+    # die neue oberflaeche erzeugen und packen
+    $sprucho->create_oberflaeche($spruch_frame);
+    $sprucho->pack();
+    $sprucho_alt = $sprucho;
+    
+    # neue Zauberdauer eintragen
+    $dauer = $sprucho->{'Dauer'};
+    
+    &aktualisieren;
 }
 
 # Diese Funktion wird bei so gut wie jeder Oberflaecheninteraktion
@@ -371,167 +373,163 @@ sub spruch_aktualisieren{
 # TODO: aufspalten dieser Funktion. bisserl gross geworden...
 
 sub aktualisieren{
+    
+    #
+    # Wir berechnen die neue MW-Erhoehungsvorgabe anhand nicht-gekonnter
+    # Fertigkeiten
+    #
 
-#
-# Wir berechnen die neue MW-Erhoehungsvorgabe anhand nicht-gekonnter
-# Fertigkeiten
-#
-	# use Data::Dumper;print Dumper $stoffel;
-     $mw_mod += $stoffel->get_erhoehung
-	  ($::sprucho->{'Fertigkeit'});
-     if(&Erps::ist_psi($::sprucho->{'Fertigkeit'})){
-	  $mw_mod += $stoffel->get_erhoehung('PSE');
-     }
-
-     my $mws = $::sprucho->aktualisieren($::gesenkt_um,$mw_mod,$::dauer);
-
-#
-# Der Bonus auf den Wuerfelwurf wird ausgerechnet
-#
-     my $bonus = $stoffel->bonus($::sprucho->{'Fertigkeit'},$wuerfel_mod);
-     $stoffel->{'Bonus'} = $bonus;
-
-# das selbe fuer magtheo
-
-     my $m_bonus = $stoffel->
-	  magtheo_bonus($::sprucho->{'Fertigkeit'},$wuerfel_mod);
-     $stoffel->{'Magtheo_Bonus'} = $m_bonus;
-
-     $::MWG->configure(-text => "unmodifizierter MW: $mws->{'Grund'}");
-     $::MWU->configure
-	  (-text => "MW nach Prozenten und Modifikationen: ".
-	   "$mws->{'Ungesenkt'}");
-     $::MWS->configure(-text => "MW-Gesenkt: $mws->{'Gesenkt'}");
-     # diverse wahrscheinlichkeiten ausrechnen
-
-     #
-     # Probleme im Zusammenhang mit Wahrscheinlichkeiten:
-     #    - Summe in der Tabelle gibt immer 91% statt 100%
-     #    - diese 9% fehlen immer im hinteren Teil
-     #    - Wenn nur die 1-1 faild: 100% Erfolg statt 99%
-
-     if($bonus > 0){
-	  $::tabelle->put(0,0,"Gewuerfelt (+$bonus)");
-     }elsif($bonus < 0){
-	  $::tabelle->put(0,0,"Gewuerfelt (-$bonus)");
-     }else{
-	  $::tabelle->put(0,0,"Gewuerfelt");
-     }
-     my $ws = Erps::WS_Fert($mws->{'Gesenkt'} - $bonus);
-     $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
-     $::ws_fert->configure
-	  (-text => "Erfolgswahrscheinlichkeit: $ws \%");
-     $ws = Erps::WS_LP($mws->{'Gesenkt'} - $bonus);
-     $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
-     $::ws_lp->configure
-	  (-text => "Lernpunktwahrscheinlichkeit: $ws \%");
-     $ws = Erps::WS_Magtheo($mws->{'Gesenkt'} - $m_bonus,
-			    $mws->{'Ungesenkt'} - $m_bonus);
-     $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
-     $::ws_magtheo->configure
-	  (-text => "Magietheoriewahrscheinlichkeit: $ws \%");
-     $ws = Erps::WS_Magtheo_LP($mws->{'Gesenkt'} - $m_bonus,
-			       $mws->{'Ungesenkt'} - $m_bonus);
-     $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
-     $::ws_magtheo_lp->configure
-	  (-text => "Lernpunkt-Magietheorie-Wahrscheinlichkeit: $ws \%");
-     $::Prozente->configure
-	  (-text => "Prozente: " .
-	   $stoffel->get_prozente($::sprucho->get_name()). "%");
-     my $bereich = $::sprucho->{'Fertigkeit'};
-     if(defined($stoffel->{'Fertigkeit'}->{$bereich})){
-	  $::Fertigkeit->configure
-	  (-text => "$bereich: " .
-	   $stoffel->{'Fertigkeit'}->{$bereich});
-     }else{
-	  $::Fertigkeit->configure
-	  (-text => "$bereich: nicht vorhanden");
-     }
-	   
-#
-# Hier wird jetzt die Tabelle gefuellt
-#
-
-# zunaechst muessen wir sie mal leeren ...
-
-for($::y = 1; $::y != $conf->{-MAX_TABLE}; $::y++){
-	  for($::x = 0; $::x != 4;$::x++){
-	       $::tabelle->put($::y,$::x,"");
-	  }
-     }
-     my $wurf;
-     my $zeilen_anfang = 2;
-     my ($ergebnis,$gewuerfelt_text);
-     my $zeile = 1;
-#     $stoffel->{'Bonus'} = 
-#	  $stoffel->bonus($::sprucho->{'Fertigkeit'});
-     my $alt_ergebnis = $stoffel->berechne_ergebnis
-	       ($mws->{'Gesenkt'},
-		2,
-		$::sprucho->{'Fertigkeit'});;
-	       for ($wurf = 2;$wurf != $conf->{-MAXWURF}; $wurf++){
-
-	  $ergebnis = $stoffel->berechne_ergebnis
-	       ($mws->{'Gesenkt'},
-		$wurf,
-		$::sprucho->{'Fertigkeit'});
-	  # zeilensprung in der Tabelle!
-	  if($ergebnis != $alt_ergebnis || $wurf == $conf->{-MAXWURF}-1){
-	       my $WS;
-	       # nur ein einzelnes Ergebnis in der Zeile?
-	       if($wurf-1 != $zeilen_anfang){
-		    my $wurf1 = $wurf-1;
-		    $gewuerfelt_text = "$zeilen_anfang - $wurf1";
-		    $WS = Erps::WS_zwischen($zeilen_anfang,$wurf1);
-	       }else{
-		    $gewuerfelt_text = "$zeilen_anfang";
-		    $WS = Erps::WS_eq($zeilen_anfang);
-	       }
-	       $WS = sprintf('%.' . $conf->{-KOMMA} . 'f %%',$WS);
-	       
-	       if($zeile < $conf->{-MAX_TABLE} && $alt_ergebnis != 0){
-		    $::tabelle->put($zeile,0,$gewuerfelt_text);
-		    $::tabelle->put($zeile,1,Erps::decode($alt_ergebnis,
-		    	$conf->{-UNENDLICH}));
-		    $::tabelle->put($zeile,3,$WS);
-
-		    my $kosten;
-		    my $normal_kosten;
-		    my $runden_mod = 0;
-		    $runden_mod = 0.5 unless $conf->{-PSIKOSTEN_ABRUNDEN};		    
-		    if(! $::ist_negativ){
-			 $normal_kosten = floor(Erps::berechne_PSI_Kosten
-						($alt_ergebnis, 
-					    Erps::standard_psi_kosten
-						 ($mws->{'Gesenkt'}))+$runden_mod);
-			 $kosten = $::gesenkt_um + $normal_kosten;
-		    }else{
-			 # doppelte kosten im negativen
-			 $normal_kosten = 2*floor(Erps::berechne_PSI_Kosten
-						($alt_ergebnis, 
-					    Erps::standard_psi_kosten
-						 ($mws->{'Gesenkt'}))+$runden_mod);
-			 $kosten = $::gesenkt_um + $normal_kosten;
-		    }
-		    # kann bei negativen Wuerfelmodifikationen
-		    # passieren
-		    $kosten = "unendlich" if 
-		    ($alt_ergebnis == -$conf->{-UNENDLICH});
-
-		    $::tabelle->put
-			 ($zeile,2,
-			  "$normal_kosten + $::gesenkt_um = $kosten");
-	       }
-						
-	       $zeile++;
-	       $zeilen_anfang = $wurf;
-	  }
-	  $alt_ergebnis = $ergebnis;
-     }
-
+    $mw_mod += $stoffel->get_erhoehung
+    ($sprucho->{'Fertigkeit'});
+    if(&Erps::ist_psi($sprucho->{'Fertigkeit'})){
+    	$mw_mod += $stoffel->get_erhoehung('PSE');
+    }
+    
+    my $mws = $sprucho->aktualisieren($gesenkt_um,$mw_mod,$dauer);
+    
+    #
+    # Der Bonus auf den Wuerfelwurf wird ausgerechnet
+    #
+    my $bonus = $stoffel->bonus($sprucho->{'Fertigkeit'},$wuerfel_mod);
+    $stoffel->{'Bonus'} = $bonus;
+    
+    # das selbe fuer magtheo
+    
+    my $m_bonus = $stoffel->
+    magtheo_bonus($sprucho->{'Fertigkeit'},$wuerfel_mod);
+    $stoffel->{'Magtheo_Bonus'} = $m_bonus;
+    
+    $MWG->configure(-text => "unmodifizierter MW: $mws->{'Grund'}");
+    $MWU->configure
+    (-text => "MW nach Prozenten und Modifikationen: ".
+    	"$mws->{'Ungesenkt'}");
+    $MWS->configure(-text => "MW-Gesenkt: $mws->{'Gesenkt'}");
+    # diverse wahrscheinlichkeiten ausrechnen
+    
+    #
+    # Probleme im Zusammenhang mit Wahrscheinlichkeiten:
+    #    - Summe in der Tabelle gibt immer 91% statt 100%
+    #    - diese 9% fehlen immer im hinteren Teil
+    #    - Wenn nur die 1-1 faild: 100% Erfolg statt 99%
+    
+    if($bonus > 0){
+    	$tabelle->put(0,0,"Gewuerfelt (+$bonus)");
+    }elsif($bonus < 0){
+    	$tabelle->put(0,0,"Gewuerfelt (-$bonus)");
+    }else{
+    	$tabelle->put(0,0,"Gewuerfelt");
+    }
+    my $ws = Erps::WS_Fert($mws->{'Gesenkt'} - $bonus);
+    $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
+    $ws_fert->configure
+    (-text => "Erfolgswahrscheinlichkeit: $ws \%");
+    $ws = Erps::WS_LP($mws->{'Gesenkt'} - $bonus);
+    $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
+    $ws_lp->configure
+    (-text => "Lernpunktwahrscheinlichkeit: $ws \%");
+    $ws = Erps::WS_Magtheo($mws->{'Gesenkt'} - $m_bonus,
+    	$mws->{'Ungesenkt'} - $m_bonus);
+    $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
+    $ws_magtheo->configure
+    (-text => "Magietheoriewahrscheinlichkeit: $ws \%");
+    $ws = Erps::WS_Magtheo_LP($mws->{'Gesenkt'} - $m_bonus,
+    	$mws->{'Ungesenkt'} - $m_bonus);
+    $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
+    $ws_magtheo_lp->configure
+    (-text => "Lernpunkt-Magietheorie-Wahrscheinlichkeit: $ws \%");
+    $Prozente->configure
+    (-text => "Prozente: " .
+    	$stoffel->get_prozente($sprucho->get_name()). "%");
+    my $bereich = $sprucho->{'Fertigkeit'};
+    if(defined($stoffel->{'Fertigkeit'}->{$bereich})){
+    	$Fertigkeit->configure
+    	(-text => "$bereich: " .
+    	    $stoffel->{'Fertigkeit'}->{$bereich});
+    }else{
+    	$Fertigkeit->configure
+    	(-text => "$bereich: nicht vorhanden");
+    }
+    
+    #
+    # Hier wird jetzt die Tabelle gefuellt
+    #
+    
+    # zunaechst muessen wir sie mal leeren ...
+    
+    for(my $y = 1; $y != $conf->{-MAX_TABLE}; $y++){
+    	for(my $x = 0; $x != 4;$x++){
+    	    $tabelle->put($y,$x,"");
+    	}
+    }
+    my $wurf;
+    my $zeilen_anfang = 2;
+    my ($ergebnis,$gewuerfelt_text);
+    my $zeile = 1;
+    #     $stoffel->{'Bonus'} = 
+    #	  $stoffel->bonus($::sprucho->{'Fertigkeit'});
+    my $alt_ergebnis = $stoffel->berechne_ergebnis
+    ($mws->{'Gesenkt'},
+    	2,
+    	$sprucho->{'Fertigkeit'});;
+    for ($wurf = 2;$wurf != $conf->{-MAXWURF}; $wurf++){
+    	
+    	$ergebnis = $stoffel->berechne_ergebnis
+    	($mws->{'Gesenkt'},
+    	    $wurf,
+    	    $sprucho->{'Fertigkeit'});
+    	# zeilensprung in der Tabelle!
+    	if($ergebnis != $alt_ergebnis || $wurf == $conf->{-MAXWURF}-1){
+    	    my $WS;
+    	    # nur ein einzelnes Ergebnis in der Zeile?
+    	    if($wurf-1 != $zeilen_anfang){
+    	    	my $wurf1 = $wurf-1;
+    	    	$gewuerfelt_text = "$zeilen_anfang - $wurf1";
+    	    	$WS = Erps::WS_zwischen($zeilen_anfang,$wurf1);
+    	    }else{
+    	    	$gewuerfelt_text = "$zeilen_anfang";
+    	    	$WS = Erps::WS_eq($zeilen_anfang);
+    	    }
+    	    $WS = sprintf('%.' . $conf->{-KOMMA} . 'f %%',$WS);
+    	    
+    	    if($zeile < $conf->{-MAX_TABLE} && $alt_ergebnis != 0){
+    	    	$tabelle->put($zeile,0,$gewuerfelt_text);
+    	    	$tabelle->put($zeile,1,Erps::decode($alt_ergebnis,
+    	    	    $conf->{-UNENDLICH}));
+    	    	$tabelle->put($zeile,3,$WS);
+    	    	
+    	    	my $kosten;
+    	    	my $normal_kosten;
+    	    	my $runden_mod = 0;
+    	    	$runden_mod = 0.5 unless $conf->{-PSIKOSTEN_ABRUNDEN};		    
+    	    	if(! $ist_negativ){
+    	    	    $normal_kosten = floor(Erps::berechne_PSI_Kosten
+    	    	    	($alt_ergebnis, 
+    	    	    	    Erps::standard_psi_kosten
+    	    	    	    ($mws->{'Gesenkt'}))+$runden_mod);
+    	    	    $kosten = $gesenkt_um + $normal_kosten;
+    	    	}else{
+    	    	    # doppelte kosten im negativen
+    	    	    $normal_kosten = 2*floor(Erps::berechne_PSI_Kosten
+    	    	    	($alt_ergebnis, 
+    	    	    	    Erps::standard_psi_kosten
+    	    	    	    ($mws->{'Gesenkt'}))+$runden_mod);
+    	    	    $kosten = $gesenkt_um + $normal_kosten;
+    	    	}
+    	    	# kann bei negativen Wuerfelmodifikationen
+    	    	# passieren
+    	    	$kosten = "unendlich" if 
+    	    	($alt_ergebnis == -$conf->{-UNENDLICH});
+    	    	
+    	    	$tabelle->put
+    	    	($zeile,2,
+    	    	    "$normal_kosten + $gesenkt_um = $kosten");
+    	    }
+    	    
+    	    $zeile++;
+    	    $zeilen_anfang = $wurf;
+    	}
+    	$alt_ergebnis = $ergebnis;
+    }
+    
 }
-
-
-
-
 

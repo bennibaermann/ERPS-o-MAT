@@ -98,5 +98,4 @@ sub new{
     return bless ($self,$class);
 };
 
-# sub get_conf{return $::conf;};
 1;
