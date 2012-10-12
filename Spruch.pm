@@ -6,6 +6,11 @@ package Spruch;
 use POSIX;
 use strict;
 use Eomconfig;
+use Tk;
+use Tk::BrowseEntry;
+use Tk::Radiobutton;
+use Tk::Table;
+use Tk::LabFrame;
 
 # Konstruktor:
 # Die Wesentliche Arbeit machen hier die abgeleiteten Klassen
@@ -106,6 +111,9 @@ sub berechne{
 #
 ####################################################################
 
+# TODO: das hier sollte in eine abgeleitete klasse oder in eine view-klasse
+# in der dann auch $spruch_frame und $spruch_out_frame member-variablen sind
+
 #
 # Ermittle aus dem Index (undokumentiert in $browseentry->{'_BE_curIndex'})
 # den Wert einer Variable, abhaengig von der Groessenordnung
@@ -147,16 +155,15 @@ sub get_wert{
 #
 # Diese Funktion gibt ein BrowseEntry-Widget zurueck, dass auf
 # der Eingabe-Seite angezeigt wird. 
-# Parameter: - Das Label
-#            - Die Variable als Skalar-Referenz
-#            - deren Defaultwert
-#            - wie soll ich initialisieren?
+#
+# Parameter: TODO DOKU
 
 sub get_input_var{
     my $self = shift;
     my $label = shift;
     my $listref = shift;
     my $stoffel = $self->{-char};
+    my $spruch_frame = shift;
     
     my $back;
     if(!ref($self->{'Variable'}->{$label}->{'Groessenordnung'})){
@@ -164,7 +171,7 @@ sub get_input_var{
     	# Die Variable muss in jedem Spruch so heissen wie hier!
     	my $wert = $self->{'Variable'}->{$label}->{'Wert'};
     	my $text = eval($self->{'Variable'}->{$label}->{'Text'});
-    	$back =  $::spruch_frame->BrowseEntry
+    	$back =  $spruch_frame->BrowseEntry
     	(-label => $label,
     	    -variable => \$text,
     	    -browsecmd => \&::aktualisieren
@@ -173,7 +180,7 @@ sub get_input_var{
     	$back->{'curIndex'}-- 
     	if($self->{'Variable'}->{$label}->{'Groessenordnung'} eq 'log2');
     }else{
-    	$back = $::spruch_frame->BrowseEntry
+    	$back = $spruch_frame->BrowseEntry
     	(-label => $label,
     	    -variable => \$self->{'Variable'}->{$label}->{'Wert'},
     	    -browsecmd => \&::aktualisieren
@@ -198,8 +205,9 @@ sub get_input_var{
 sub get_input_flag{
     my $text = shift;
     my $var_ref = shift;
+    my $spruch_frame = shift;
     
-    return $::spruch_frame->Checkbutton
+    return $spruch_frame->Checkbutton
     (-text => $text,
     	-command => \&::aktualisieren,
     	-variable => $var_ref,
@@ -218,8 +226,9 @@ sub get_input_radio{
     my $ref = $self->{'Variable'}->{$var};
     my $groe = $ref->{'Groessenordnung'};
     my $stoffel = $self->{-char};
+    my $spruch_frame = shift;
     
-    my $radio_frame = $::spruch_frame->LabFrame
+    my $radio_frame = $spruch_frame->LabFrame
     (-label => $var,
     	-labelside => 'acrosstop');
     
@@ -261,8 +270,9 @@ sub get_input_radio{
 # Das selbe fuer die Ausgabe-Seite
 sub get_output_text{
     my $text = shift;
+    my $spruch_out_frame = shift;
     
-    return $::spruch_out_frame->Label(-text => $text);
+    return $spruch_out_frame->Label(-text => $text);
 }
 
 #
@@ -446,7 +456,10 @@ sub suche_radio{
 sub create_oberflaeche{
     my $self = shift;
     my $stoffel = $self->{-char};
+    my $spruch_frame = shift;
     
+    print "create_oberflaeche($spruch_frame);\n";
+     
     my $conf = $self->{-config};
    
     for my $var (keys(%{$self->{'Variable'}})){
@@ -466,19 +479,19 @@ sub create_oberflaeche{
     	if($max == 1){
     	    # checkbutton
     	    $vars->{$var}->{'Wahl'} = get_input_flag
-    	    ($var,\$vars->{$var}->{'Wert'});
+    	    ($var,\$vars->{$var}->{'Wert'},$spruch_frame);
    
 	       }elsif($max <= $conf->{-MAX_RADIO}){
 	       	   #radiobutton
 	       	   $vars->{$var}->{'Wahl'} = 
-		   $self->get_input_radio($var);
+		   $self->get_input_radio($var,$spruch_frame);
 	       }else{
 	       	   for my $wert (0..$max){
 	       	       push(@auswahl,eval($vars->{$var}->{'Text'}));
 	       	   }
 	       	   # my $wert = $vars->{$var}->{'Wert'};
 	       	   $vars->{$var}->{'Wahl'} = $self->get_input_var
-		   ($var,\@auswahl, $stoffel);
+		   ($var,\@auswahl,$spruch_frame);
 	       }
 	    }elsif($groe eq 'log2'){
 	    	my @auswahl;
@@ -493,42 +506,42 @@ sub create_oberflaeche{
 		    push(@auswahl,eval($vars->{$var}->{'Text'}));
 		}
 		$vars->{$var}->{'Wahl'} = $self->get_input_var
-		($var,\@auswahl, $stoffel);
+		($var,\@auswahl,$spruch_frame);
 	    }elsif(ref($groe) eq 'ARRAY'){
 	    	# sortiertes enum
 	    	my $anzahl = scalar(@$groe);
 	    	if($anzahl == 2){
 	    	    $vars->{$var}->{'Wahl'} = $self->get_input_flag
-	    	    ($var,\$var->{'Wert'});
+	    	    ($var,\$var->{'Wert'},$spruch_frame);
 	    }elsif($anzahl <= $conf->{-MAX_RADIO}){
 	    	# Radiobuttons hin
 	    	$vars->{$var}->{'Wahl'} = 
-		$self->get_input_radio($var);
+		$self->get_input_radio($var,$spruch_frame);
 	    }else{
 	    	my @auswahl = ();
 	    	for my $wert (@$groe){
 	    	    push(@auswahl,$wert->[0]);
 	    	}
 	    	$vars->{$var}->{'Wahl'} = $self->get_input_var
-	    	($var,\@auswahl, $stoffel);
+	    	($var,\@auswahl,$spruch_frame);
 	    }
 	    }elsif(ref($groe) eq 'HASH'){  
 	    	# unsortiertes enum
 	    	my $anzahl = scalar(keys(%$groe));
 	    	if($anzahl == 2){
 	    	    $vars->{$var}->{'Wahl'} = $self->get_input_flag
-	    	    ($var,\$var->{'Wert'});
+	    	    ($var,\$var->{'Wert'},$spruch_frame);
 	       }elsif($anzahl <= $conf->{-MAX_RADIO}){
 	       	   # Radiobuttons hin
 	       	   $vars->{$var}->{'Wahl'} = 
-		   $self->get_input_radio($var);
+		   $self->get_input_radio($var,$spruch_frame);
 	       }else{
 	       	   my @auswahl = ();
 	       	   for my $wert (keys(%$groe)){
 	       	       push(@auswahl,$wert);
 	       	   }
 	       	   $vars->{$var}->{'Wahl'} = $self->get_input_var
-	       	   ($var,\@auswahl, $stoffel);
+	       	   ($var,\@auswahl,$spruch_frame);
 	       }
 	    }else{
 	    	die "Falsche Groessenordnung: $groe\n";		    

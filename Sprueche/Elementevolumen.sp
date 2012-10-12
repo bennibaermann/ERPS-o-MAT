@@ -7,6 +7,8 @@ $self =
     'Variable' => 
     {  'RW' => $Spruch::RW_quadratisch,
        'Volumen' => 
+
+       # TODO: stimmt das hier wirklich? warum ist bei 2km schluss?
        { 'Wert' => 20,
 	 'Groessenordnung' => 'linear',
 	 'Faktor' => 1,

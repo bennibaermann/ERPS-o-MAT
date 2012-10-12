@@ -248,7 +248,7 @@ $::spruch_out_frame = $::output_frame->LabFrame
       -labelside => 'acrosstop',
       -background => $conf->{-BGCOLOR});
 
-$::sprucho->create_oberflaeche();
+$::sprucho->create_oberflaeche($::spruch_frame);
 
 #
 # Packung!
@@ -356,7 +356,7 @@ sub spruch_aktualisieren{
      $::sprucho->set_char($stoffel);
 
      # die neue oberflaeche erzeugen und packen
-     $::sprucho->create_oberflaeche();
+     $::sprucho->create_oberflaeche($::spruch_frame);
      $::sprucho->pack();
      $::sprucho_alt = $::sprucho;
 
