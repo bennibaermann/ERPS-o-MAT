@@ -383,7 +383,7 @@ sub aktualisieren{
 	  $mw_mod += $stoffel->get_erhoehung('PSE');
      }
 
-     my $mws = $::sprucho->aktualisieren($::gesenkt_um,$mw_mod);
+     my $mws = $::sprucho->aktualisieren($::gesenkt_um,$mw_mod,$::dauer);
 
 #
 # Der Bonus auf den Wuerfelwurf wird ausgerechnet

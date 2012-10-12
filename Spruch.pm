@@ -79,6 +79,7 @@ sub berechne{
     my $zauberer = $self->{-char};
     my $gesenkt_um = shift;
     my $mw_mod = shift;
+    my $dauer = shift;
     
     print "berechne(gesenkt_um: $gesenkt_um,mw_mod: $mw_mod)\n";
     
@@ -92,7 +93,7 @@ sub berechne{
     $mw->{'Grund'} = $self->formel();
     
     $mw->{'Ungesenkt'} = POSIX::floor($mw->{'Grund'} * ($prozente/100) 
-    	* ($self->dauer_prozente($::dauer)/100) + 0.5 + $mw_mod);
+    	* ($self->dauer_prozente($dauer)/100) + 0.5 + $mw_mod);
     $mw->{'Gesenkt'} = $mw->{'Ungesenkt'} - $gesenkt_um;
     
     return $mw;
@@ -535,13 +536,16 @@ sub create_oberflaeche{
     }
 }
 
+
+# TODO: überflüssiger wrapper, weg damit
 sub aktualisieren{
     my $self = shift;
     my $stoffel = $self->{-char};
     my $gesenkt_um = shift;
     my $mw_mod = shift;
+    my $dauer = shift;
     
-    my $mws = $self->berechne($gesenkt_um,$mw_mod);
+    my $mws = $self->berechne($gesenkt_um,$mw_mod,$dauer);
     
     return $mws;
 };
