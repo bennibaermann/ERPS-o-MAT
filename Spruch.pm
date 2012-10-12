@@ -28,13 +28,18 @@ sub new{
     # config
     $self->{-config} = Eomconfig->new();
     
-    # char
-    $self->{-char} = $stoffel;
-    
     $self = bless($self,$class);
     $self->match_skill();
+    $self->set_char($stoffel);
     
     return $self;
+}
+
+sub set_char{
+    my $self = shift;
+    my $char = shift;
+    
+    $self->{-char} = $char;
 }
 
 # ermittelt welcher skill des aktuellen chars fuer den spruch verwendet wird.

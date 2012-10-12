@@ -22,6 +22,13 @@ sub new{
      my $self = {};
     
      print "Charakter-new($name)\n";
+
+     # einlesen des Charakterfiles... 
+     open(CHAR,"Charaktere/". $name . ".ch") or die "Fehler: $!\n";
+     my @ev = <CHAR>;
+     close CHAR;
+     eval "@ev";
+  
      if(defined $conf){
      	 $self->{-conf} = $conf;
      }else{
@@ -29,12 +36,6 @@ sub new{
      }
      $self->{-sprueche} = $sprueche;
      
-     # einlesen des Charakterfiles... 
-     open(CHAR,"Charaktere/". $name . ".ch") or die "Fehler: $!\n";
-     my @ev = <CHAR>;
-     close CHAR;
-     eval "@ev";
-
      return bless($self,$class);
 }
 

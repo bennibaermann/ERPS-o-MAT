@@ -42,7 +42,6 @@ Charakter->init_chars($char_list);
 
 # nur der Defaultspruch...
 $::sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
-  use Data::Dumper; print "SSS"; print Dumper $::sprucho; print "SSS";
 $::sprucho_alt = $::sprucho;
 
 ############################################################
@@ -321,8 +320,8 @@ sub char_aktualisieren{
     
     print "Charakter umschalten zu $::charname...\n";
     # $stoffel = $char_hash->{$::charname};
-    $stoffel = Charakter->new($::charname,$spruch_list,$conf);
-    
+    $stoffel = Charakter->new($::charname,$conf);
+        
     $::PSI->delete(0,'end');
     $::PSI->insert(0,$stoffel->{'Basisattribut'}->{'PSI'});
     
@@ -354,6 +353,7 @@ sub spruch_aktualisieren{
      }
 
      $::sprucho = $spruch_hash->{$::spruch};
+     $::sprucho->set_char($stoffel);
 
      # die neue oberflaeche erzeugen und packen
      $::sprucho->create_oberflaeche();
@@ -362,7 +362,7 @@ sub spruch_aktualisieren{
 
      # neue Zauberdauer eintragen
      $::dauer = $::sprucho->{'Dauer'};
-
+     
      &aktualisieren;
 }
 
