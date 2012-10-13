@@ -1,0 +1,49 @@
+<html>
+<head></head>
+<body>
+<h1>Zauber-o-Mat</h1>
+Das Zauberspruchberechnungstool für ERPS
+[-
+####################################
+# Die Web-App für den Zauber-o-Mat #
+####################################
+
+#use Cwd;
+#print "cwd: ". cwd() . "<p>";
+
+use strict;
+use utf8;
+use Eomconfig;
+use Data::Dumper;
+# use diagnostics;
+use Charakter;
+use Spruch;
+use Erps;
+use POSIX;
+
+my $conf = Eomconfig->new();
+Erps->init_erps($conf);
+my $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
+
+# Sprueche initialisieren
+my $spruch_hash = {};
+my $spruch_list = [];
+Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel);
+
+# charaktere initialisieren
+my $char_list = [];
+Charakter->init_chars($char_list,$spruch_hash);
+Charakter->init_chars($char_list);
+
+# nur der Defaultspruch...
+my $sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
+my $sprucho_alt = $sprucho;
+
+
+print OUT Dumper($stoffel, $sprucho);
+
+-]
+
+
+
+
