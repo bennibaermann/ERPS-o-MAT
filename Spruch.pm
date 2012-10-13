@@ -6,11 +6,11 @@ package Spruch;
 use POSIX;
 use strict;
 use Eomconfig;
-use Tk;
-use Tk::BrowseEntry;
-use Tk::Radiobutton;
-use Tk::Table;
-use Tk::LabFrame;
+# use Tk;
+# use Tk::BrowseEntry;
+# use Tk::Radiobutton;
+# use Tk::Table;
+# use Tk::LabFrame;
 
 # Konstruktor:
 # Die Wesentliche Arbeit machen hier die abgeleiteten Klassen
@@ -22,16 +22,18 @@ sub new{
     my $self = {};
     
     print "Spruch->new($name)\n";
+    
+    my $conf = Eomconfig->new();
         
     # einlesen des Spruchfiles... sehr simpel
-    open(SPRU,"Sprueche/". $name . ".sp") or 
-    die "!!! Kann Spruch nicht oeffnen: $! ";
+    my $path = $conf->{-SPRUCHDIR} . $name . '.sp';
+    open(SPRU,$path) or die "Kann Spruchdatei $path nicht oeffnen: $! ";
     my @ev = <SPRU>;
     close SPRU;
     eval "@ev";
   
     # config
-    $self->{-config} = Eomconfig->new();
+    $self->{-config} = $conf;
     
     $self = bless($self,$class);
     $self->match_skill();

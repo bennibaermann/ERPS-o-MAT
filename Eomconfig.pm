@@ -48,13 +48,13 @@ sub new{
 	# Aus diesem Verzeichnis werden alle *.pm-Dateien als Spruchklassen
 	# geladen. Pfad relativ zum aktuellen Verzeichnis.
 	#
-	-SPRUCHDIR => '/home/benni/ERPS-o-MAT/Sprueche',
+	-SPRUCHDIR => '/home/benni/ERPS-o-MAT/Sprueche/',
 	
 	#
 	# Aus diesem Verzeichnis werden alle *.ch-Dateien als Charakterdaten
 	# geladen. Pfad relativ zum aktuellen Verzeichnis.
 	#
-	-CHARDIR => '/home/benni/ERPS-o-MAT/Charaktere',
+	-CHARDIR => '/home/benni/ERPS-o-MAT/Charaktere/',
 	
 	#
 	# wird an einigen stellen als "sehr grosser wert" verwendet

@@ -5,6 +5,7 @@
 # Zauberspruchberechner 
 # use Cwd; print "cwd: ". getcwd() . "<p>";
 package Charakter;
+use utf8;
 use strict;
 use POSIX;
 use Eomconfig;# qw($conf get_conf);
@@ -16,24 +17,28 @@ use Eomconfig;# qw($conf get_conf);
 sub new{
      my $class = shift;
      my $name = shift; # Der Name des Charakterfiles ohne .ch und Dir
-     my $sprueche = shift;
+     my $sprueche = shift; # TODO? eigentlich falsch hier...
      my $conf = shift;
 
      my $self = {};
+     my $newconf = $conf;
+     if(defined $conf){
+     	 $newconf = $conf;
+     }else{
+     	 $newconf = Eomconfig->new();
+     }
     
      print "Charakter-new($name)\n";
 
      # einlesen des Charakterfiles... 
-     open(CHAR,"Charaktere/". $name . ".ch") or die "Fehler: $!\n";
+     my $path = $newconf->{-CHARDIR} . $name . ".ch";
+     open(CHAR,$path) or 
+     	die "Kann Charakter-Datei $path nicht öffnen: $!\n";
      my @ev = <CHAR>;
      close CHAR;
      eval "@ev";
   
-     if(defined $conf){
-     	 $self->{-conf} = $conf;
-     }else{
-     	 $self->{-conf} = Eomconfig->new();
-     }
+     $self->{-conf} = $newconf;
      $self->{-sprueche} = $sprueche;
      
      return bless($self,$class);

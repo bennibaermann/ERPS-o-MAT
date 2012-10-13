@@ -28,6 +28,8 @@ my $conf = Eomconfig->new();
 Erps->init_erps($conf);
 
 # erstmal nur der default-Char
+# TODO?: wieso funktioniert das, obwohl $spruch_hash hier gar nicht
+# übergeben wird?
 my $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 
 # Sprueche initialisieren
