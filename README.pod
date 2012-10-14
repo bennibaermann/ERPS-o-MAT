@@ -1,0 +1,52 @@
+=pod
+
+=encoding utf8
+
+=head1 Zaubersprüche berechnen für ERPS
+
+Mit diesem Perl-Programm kann man Zaubersprüche für das 
+Fantasy-Pen&Paper-Rollenspiel ERPS berechnen.
+
+Eine Perl/TK-Oberfläche zur Ausführung als Anwendung am eigenen Computer
+existiert bereits.
+
+Ich arbeite gerade an einer Webanwendung auf der Basis von Embperl.
+
+=head1 Perl/Tk
+
+Einfach das script "Zauber-o-Mat" starten.
+
+=head1 Webanwendung
+
+Um die Webanwendung zu benutzen brauchst Du:
+
+=over
+
+=item * Einen Appache Webserver
+
+=item * Perl
+
+=item * mod_perl
+
+=item * Embperl
+
+=back
+
+Vorsicht: Aktuelle Perl-Versionen werden nur von den sehr aktuellen Embperl-
+Versionen aus dem CVS unterstützt.
+
+=head1 Lizenz: AGPL
+
+siehe COPYING.
+
+=head1
+
+Links:
+
+=over
+
+=item * http://erps.de/
+
+=back
+
+=cut
