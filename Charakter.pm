@@ -293,7 +293,7 @@ sub init_chars{
     while($_ = readdir(CHARS)){
     	next if( ! (/.*\.ch$/)); # nur *.ch-files
     	s/^(.*?)\.ch$/$1/;
-    	my $charaktername = $_;
+    	# my $charaktername = $_;
     	# my $char = Charakter->new($charaktername,$sprueche);
     	# $hash->{$charaktername} = $char;
     	push(@$list,$_);

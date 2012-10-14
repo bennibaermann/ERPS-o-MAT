@@ -14,11 +14,15 @@ Ich arbeite gerade an einer Webanwendung auf der Basis von Embperl.
 
 =head1 Perl/Tk
 
-Einfach das script "Zauber-o-Mat" starten.
+Einfach das script "Zauber-o-Mat" starten. Natürlich sollten die notwendigen
+Perl-Module installiert sein.
 
 =head1 Webanwendung
 
-Um die Webanwendung zu benutzen brauchst Du:
+Um die Webanwendung zu benutzen musst Du nur eine Webseite ansurfen, auf der
+die Anwendung installiert wurde (siehe unten)
+
+Um die Webanwendung laufen zu lassen brauchst Du:
 
 =over
 
@@ -39,13 +43,14 @@ Versionen aus dem CVS unterstützt.
 
 siehe COPYING.
 
-=head1
-
-Links:
+=head1 Links
 
 =over
 
-=item * http://erps.de/
+=item * http://erps.de/ Die Seite des Rollenspiel ERPS.
+
+=item * http://aymargeddon.de/ERPS-o-MAT/Zauber-o-Mat.epl Hier läuft die
+Webanwendung wenn es mal so weit ist.
 
 =back
 

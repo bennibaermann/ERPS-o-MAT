@@ -11,7 +11,7 @@ Das Zauberspruchberechnungstool für ERPS
 #use Cwd;
 #print "cwd: ". cwd() . "<p>";
 
-use strict;
+# use strict;
 use utf8;
 use Eomconfig;
 use Data::Dumper;
@@ -31,8 +31,8 @@ my $spruch_list = [];
 Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel);
 
 # charaktere initialisieren
-my $char_list = [];
-Charakter->init_chars($char_list,$spruch_hash);
+$char_list = [];
+# Charakter->init_chars($char_list,$spruch_hash);
 Charakter->init_chars($char_list);
 
 # nur der Defaultspruch...
@@ -43,8 +43,9 @@ my $sprucho_alt = $sprucho;
 <form method="get" action="Zauber-o-Mat.epl">
 
 Charakter: <select name="charakter">
-<option>Stoffel</option>
-<option>Ara Seva<option/>
+[$ foreach $char (@$char_list) $]
+<option>[+ $char +]</option>
+[$ endforeach $]
 </select>
 
 <input type="submit" name="submit" value="Berechnen">
