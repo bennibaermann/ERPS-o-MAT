@@ -38,12 +38,24 @@ Charakter->init_chars($char_list);
 # nur der Defaultspruch...
 my $sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
 my $sprucho_alt = $sprucho;
-
-
-print OUT Dumper($stoffel, $sprucho);
-
 -]
 
+<form method="get" action="Zauber-o-Mat.epl">
 
+Charakter: <select name="charakter">
+<option>Stoffel</option>
+<option>Ara Seva<option/>
+</select>
 
+<input type="submit" name="submit" value="Berechnen">
+
+</form>
+<p>
+[$ if exists $fdat{charakter} $]
+Ausgewählter Charakter: [+ $fdat{charakter} +]
+[$ else $]
+Kein Charakter ausgewählt.
+[$ endif $]
+
+</body></html>
 
