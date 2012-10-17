@@ -10,9 +10,6 @@ Das Zauberspruchberechnungstool für ERPS
 # Die Web-App für den Zauber-o-Mat #
 ####################################
 
-#use Cwd;
-#print "cwd: ". cwd() . "<p>";
-
 # use strict;
 use utf8;
 use Eomconfig;
@@ -23,9 +20,9 @@ use Spruch;
 use Erps;
 use POSIX;
 
-my $conf = Eomconfig->new();
+$conf = Eomconfig->new();
 Erps->init_erps($conf);
-my $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
+$stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 
 # Sprueche initialisieren
 my $spruch_hash = {};
@@ -41,7 +38,7 @@ Charakter->init_chars($char_list);
 my $sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
 my $sprucho_alt = $sprucho;
 -]
-
+<p>
 <form method="get" action="Zauber-o-Mat.epl">
 
 Charakter: <select name="charakter">
@@ -49,16 +46,24 @@ Charakter: <select name="charakter">
 <option>[+ $char +]</option>
 [$ endforeach $]
 </select>
+<p>
+[$ if exists $fdat{charakter} $]
+Ausgewählter Charakter: [+ $fdat{charakter} +]
+[- $stoffel = Charakter->new($fdat{charakter},$conf); -]
 
+<p>
+PSI: <input type="text" size="2" maxlength="2" name="PSI" value="
+[+ $stoffel->{'Basisattribut'}->{'PSI'} +]">
+<p>
+[$ else $]
+Kein Charakter ausgewählt.
+[$ endif $]
+<p>
 <input type="submit" name="submit" value="Berechnen">
 
 </form>
 <p>
-[$ if exists $fdat{charakter} $]
-Ausgewählter Charakter: [+ $fdat{charakter} +]
-[$ else $]
-Kein Charakter ausgewählt.
-[$ endif $]
+
 
 </body></html>
 
