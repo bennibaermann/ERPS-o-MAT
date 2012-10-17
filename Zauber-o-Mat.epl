@@ -47,17 +47,28 @@ Charakter: <select name="charakter">
 [$ endforeach $]
 </select>
 <p>
+
+
 [$ if exists $fdat{charakter} $]
 Ausgewählter Charakter: [+ $fdat{charakter} +]
 [- $stoffel = Charakter->new($fdat{charakter},$conf); -]
 
 <p>
+PSE: <input type="text" size="2" maxlength="2" name="PSE" value="
+[+ $stoffel->{'Fertigkeit'}->{'PSE'} +]">
+
+<p>
 PSI: <input type="text" size="2" maxlength="2" name="PSI" value="
 [+ $stoffel->{'Basisattribut'}->{'PSI'} +]">
+
 <p>
+
+
 [$ else $]
 Kein Charakter ausgewählt.
 [$ endif $]
+
+
 <p>
 <input type="submit" name="submit" value="Berechnen">
 
