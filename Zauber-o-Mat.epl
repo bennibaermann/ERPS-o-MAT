@@ -54,6 +54,7 @@ Ausgewählter Charakter: [+ $fdat{charakter} +]
 [- $stoffel = Charakter->new($fdat{charakter},$conf); -]
 
 <hr>
+<h2>[+ $stoffel->{'Name'} +]</h2>
 <p>
 PSE: <input type="text" size="2" maxlength="2" name="PSE" value="
 [+ $stoffel->{'Fertigkeit'}->{'PSE'} +]">
@@ -70,14 +71,47 @@ value="
 <hr>
 <p>
 
-<select name="spruch">
+Spruch: <select name="spruch">
 [$ foreach $spruch (@$spruch_list) $]
 <option>[+ $spruch +]</option>
 [$ endforeach $]
 </select>
 
 <p>
+Spruchdauer: <select name="dauer">
+<option selected>Sofortiger Zauber</option>
+<option>Rundenzauber</option>
+<option>Minutenzauber</option>
+<option>Stundenzauber</option>
+<option>Tagezauber</option>
+</select>
 
+<p>
+MW-Modifikationen: <select name="mw_mod">
+<option selected>0</option>
+[$ foreach $i (1..20) $]
+<option>[+ $i +]</option>
+[$ endforeach $]
+</select>
+
+<p>
+Würfel-Modifikationen: <select name="wuerfel_mod">
+[$ foreach $i (-10..-1) $]
+<option>[+ $i +]</option>
+[$ endforeach $]
+<option selected>0</option>
+[$ foreach $i (1..10) $]
+<option>[+ $i +]</option>
+[$ endforeach $]
+</select>
+
+<p>
+Gesenkt um: <select name="gesenkt_um">
+<option selected>0</option>
+[$ foreach $i (1..20) $]
+<option>[+ $i +]</option>
+[$ endforeach $]
+</select>
 
 [$ else $]
 Kein Charakter ausgewählt.
