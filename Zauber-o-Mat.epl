@@ -26,7 +26,7 @@ $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 
 # Sprueche initialisieren
 my $spruch_hash = {};
-my $spruch_list = [];
+$spruch_list = [];
 Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel);
 
 # charaktere initialisieren
@@ -53,6 +53,7 @@ Charakter: <select name="charakter">
 Ausgewählter Charakter: [+ $fdat{charakter} +]
 [- $stoffel = Charakter->new($fdat{charakter},$conf); -]
 
+<hr>
 <p>
 PSE: <input type="text" size="2" maxlength="2" name="PSE" value="
 [+ $stoffel->{'Fertigkeit'}->{'PSE'} +]">
@@ -60,6 +61,20 @@ PSE: <input type="text" size="2" maxlength="2" name="PSE" value="
 <p>
 PSI: <input type="text" size="2" maxlength="2" name="PSI" value="
 [+ $stoffel->{'Basisattribut'}->{'PSI'} +]">
+
+<p>
+Magietheorie: <input type="text" size="2" maxlength="2" name="Magietheorie"
+value="
+[+ $stoffel->{'Fertigkeit'}->{'Magietheorie'} +]">
+
+<hr>
+<p>
+
+<select name="spruch">
+[$ foreach $spruch (@$spruch_list) $]
+<option>[+ $spruch +]</option>
+[$ endforeach $]
+</select>
 
 <p>
 
