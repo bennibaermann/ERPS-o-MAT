@@ -14,11 +14,12 @@ use Eomconfig;
 
 # Konstruktor:
 # Die Wesentliche Arbeit machen hier die abgeleiteten Klassen
-# TODO: stoffel sollte member werden
 sub new{
     my $class = shift;
-    my $name = shift;
-    my $stoffel = shift;
+    my $name = shift; # spruch
+    my $stoffel = shift; # character
+    my $mode = shift; $mode = "tk" unless defined $mode; # tk oder web?
+    
     my $self = {};
     
     print "Spruch->new($name)\n";
@@ -34,6 +35,8 @@ sub new{
   
     # config
     $self->{-config} = $conf;
+    
+    $self->{-mode} = $mode;
     
     $self = bless($self,$class);
     $self->match_skill();
@@ -279,9 +282,12 @@ sub get_output_text{
 
 #
 # Die allgemeine Pack-Routine, kann evntl. ueberladen werden
-#
+# wird nur für Tk gebraucht
 sub pack{
     my $self = shift;
+    
+    die "Wrong mode $self->{-mode} != 'tk' in method Spruch::pack()" 
+    	if $self->{-mode} != 'tk';
     
     my $widget;
     my $arrayref = $self->get_spruchabhaengig();
@@ -295,6 +301,21 @@ sub pack{
     }
 }
 
+# gibt den spruchabhängigen Teil des Webformulars aus
+# nur für web gebraucht
+sub get_form{
+    my $self = shift;
+    
+    die "Wrong mode $self->{-mode} != 'web' in method Spruch::get_form()" 
+    	if $self->{-mode} != 'web';
+    
+    my $out = '';
+    my $arrayref = $self->get_spruchabhaengig();
+    for my $text (@$arrayref){
+    	$out .= $text;
+    }
+    return $out;
+}
 ########################################################################
 #
 # TODO_WEBAPP: Ende Tk-spezifischer Code.
@@ -420,16 +441,36 @@ sub get_prozente{
 #
 # Liefert die Spruchabhaengigen Widgets zurueck.
 # Wird zum packen und kaputtmachen, etc... benoetigt
-# TODO_WEBAPP: Evaluieren ob wir sowas für die Webapp auch brauchen
+# nur für Tk gebraucht
 
 sub get_spruchabhaengig{
     my $self = shift;
     my $list;# = [];
     
+    die "Wrong mode $self->{-mode} != 'tk' in method Spruch::get_spruchabhaengig"
+    if $self->{-mode} != 'tk';
+    
     for my $var (keys(%{$self->{'Variable'}})){
     	push (@$list, $self->{'Variable'}->{$var}->{'Wahl'});
     	my @children = $self->{'Variable'}->{$var}->{'Wahl'}->children;
     	suche_radio($self->{'Variable'}->{$var}->{'Wahl'},$list);
+    }
+    
+    return $list;
+}
+
+# das selbe fuers web
+sub get_spruchabhaengig_web{
+    my $self = shift;
+    my $list;# = [];
+    
+    die "Wrong mode $self->{-mode} != 'web' in method Spruch::get_spruchabhaengig"
+    if $self->{-mode} != 'web';
+    
+    for my $var (keys(%{$self->{'Variable'}})){
+    	push (@$list, $self->{'Variable'}->{$var}->{'Wahl'});
+    	#my @children = $self->{'Variable'}->{$var}->{'Wahl'}->children;
+    	#packsuche_radio($self->{'Variable'}->{$var}->{'Wahl'},$list);
     }
     
     return $list;
@@ -676,6 +717,7 @@ sub init_sprueche{
     my $hash = shift;
     my $list = shift;
     my $stoffel = shift;
+    my $mode = shift;
     
     my $conf = Eomconfig->new();
     
@@ -685,7 +727,7 @@ sub init_sprueche{
     	next if( ! (/^.*\.sp$/)); # nur *.sp-files
     	s/^(.*)\.sp$/$1/;
     	my $spruchname = $_;
-    	my $spruch = Spruch->new($spruchname,$stoffel);
+    	my $spruch = Spruch->new($spruchname,$stoffel,$mode);
     	$hash->{$spruchname} = $spruch;
     	push(@$list,$spruchname);
     }

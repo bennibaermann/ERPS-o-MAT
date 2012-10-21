@@ -3,8 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<h1>Zauber-o-Mat</h1>
-Das Zauberspruchberechnungstool für ERPS
+<h1>Zauber-o-Mat - Das Zauberspruchberechnungstool für ERPS</h1>
 [-
 ####################################
 # Die Web-App für den Zauber-o-Mat #
@@ -27,7 +26,7 @@ $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 # Sprueche initialisieren
 my $spruch_hash = {};
 $spruch_list = [];
-Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel);
+Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel,"web");
 
 # charaktere initialisieren
 $char_list = [];
@@ -50,7 +49,6 @@ Charakter: <select name="charakter">
 
 
 [$ if exists $fdat{charakter} $]
-Ausgewählter Charakter: [+ $fdat{charakter} +]
 [- $stoffel = Charakter->new($fdat{charakter},$conf); -]
 
 <hr>
@@ -69,6 +67,7 @@ value="
 [+ $stoffel->{'Fertigkeit'}->{'Magietheorie'} +]">
 
 <hr>
+<h2>Allgemeines</h2>
 <p>
 
 Spruch: <select name="spruch">
@@ -112,6 +111,15 @@ Gesenkt um: <select name="gesenkt_um">
 <option>[+ $i +]</option>
 [$ endforeach $]
 </select>
+
+<p>
+Nach dem Senken negative PSI-Punkte?
+<input type="checkbox" name="ist_negativ" value="0">
+
+<hr>
+<h2>Spruchabhängige Parameter</h2>
+
+
 
 [$ else $]
 Kein Charakter ausgewählt.
