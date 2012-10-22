@@ -19,6 +19,8 @@ use Spruch;
 use Erps;
 use POSIX;
 
+$escmode = 0;
+
 $conf = Eomconfig->new();
 Erps->init_erps($conf);
 $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);

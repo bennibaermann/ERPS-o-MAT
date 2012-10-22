@@ -169,25 +169,30 @@ sub get_input_var{
     my $stoffel = $self->{-char};
     my $spruch_frame = shift;
     
-    my $back;
+    my $back = '';
     if(!ref($self->{'Variable'}->{$label}->{'Groessenordnung'})){
     	# $wert wird in dem Text zum eval benoetigt!!
     	# Die Variable muss in jedem Spruch so heissen wie hier!
     	my $wert = $self->{'Variable'}->{$label}->{'Wert'};
     	my $text = eval($self->{'Variable'}->{$label}->{'Text'});
-    	if($self->{'Variable'}->{$label}->{'Groessenordnung'} eq 'log2'){
-    	    if($self->{-mode} eq 'tk'){
-    	    	$back =  $spruch_frame->BrowseEntry
-    	    	(-label => $label,
-    	    	    -variable => \$text,
-    	    	    -browsecmd => \&::aktualisieren
-    	    	    );
-    	    	$back->{'curIndex'} = $wert;
-    	    	$back->{'curIndex'}--;
-    	    	
-    	    }else{ # mode eq 'web'
-    	    }
+    	if($self->{-mode} eq 'tk'){
+    	    
+    	    
+    	    $back =  $spruch_frame->BrowseEntry
+    	    (-label => $label,
+    	    	-variable => \$text,
+    	    	-browsecmd => \&::aktualisieren
+    	    	);
+    	    $back->{'curIndex'} = $wert;
+    	    $back->{'curIndex'}-- 
+    	    if($self->{'Variable'}->{$label}->{'Groessenordnung'} 
+    	    	eq 'log2');
+    	    
+    	}else{ # mode eq 'web'
+    	    $back .= "<p>\n$label: <select name=\"$label\">\n";
+    	    
     	}
+    	
     }else{
     	if($self->{-mode} eq 'tk'){
     	    
@@ -197,24 +202,24 @@ sub get_input_var{
     	    	-browsecmd => \&::aktualisieren
     	    	);
     	}else{ # mode eq 'web'
+    	    $back .= "<p>\n$label: <select name=\"$label\">\n"; #oder ausserhalb des if?
     	}
     	
     }
     if($listref){
-    	if($self->{-mode} eq 'tk'){
-    	    
-    	    for my $entry (@$listref){
+    	for my $entry (@$listref){
+    	    if($self->{-mode} eq 'tk'){
     	    	$back->insert('end', $entry);
+    	    }else{ # mode eq 'web'
+    	    	$back .= "<option>$entry</option>\n";
     	    }
-    	}else{ # mode eq 'web'
     	}
     }
     if($self->{-mode} eq 'tk'){
-    	
-    	
     	$back->Subwidget('entry')->bind('<Key-Return>',
     	    \&::aktualisieren);
     }else{ # mode eq 'web'
+    	$back .= "</select>\n";
     }
     
     return $back;
