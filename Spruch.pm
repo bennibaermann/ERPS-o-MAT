@@ -13,20 +13,19 @@ use Eomconfig;
 # use Tk::LabFrame;
 
 # Konstruktor:
-# Die Wesentliche Arbeit machen hier die abgeleiteten Klassen
 sub new{
     my $class = shift;
     my $name = shift; # spruch
     my $stoffel = shift; # character
-    my $mode = shift; $mode = "tk" unless defined $mode; # tk oder web?
+    my $mode = shift; $mode = 'tk' unless defined $mode; # tk oder web?
     
     my $self = {};
     
-    print "Spruch->new($name)\n";
+    print "Spruch->new($name)\n" if $mode eq 'tk';
     
     my $conf = Eomconfig->new();
         
-    # einlesen des Spruchfiles... sehr simpel
+    # einlesen des Spruchfiles...
     my $path = $conf->{-SPRUCHDIR} . $name . '.sp';
     open(SPRU,$path) or die "Kann Spruchdatei $path nicht oeffnen: $! ";
     my @ev = <SPRU>;
@@ -176,28 +175,48 @@ sub get_input_var{
     	# Die Variable muss in jedem Spruch so heissen wie hier!
     	my $wert = $self->{'Variable'}->{$label}->{'Wert'};
     	my $text = eval($self->{'Variable'}->{$label}->{'Text'});
-    	$back =  $spruch_frame->BrowseEntry
-    	(-label => $label,
-    	    -variable => \$text,
-    	    -browsecmd => \&::aktualisieren
-    	    );
-    	$back->{'curIndex'} = $wert;
-    	$back->{'curIndex'}-- 
-    	if($self->{'Variable'}->{$label}->{'Groessenordnung'} eq 'log2');
+    	if($self->{'Variable'}->{$label}->{'Groessenordnung'} eq 'log2'){
+    	    if($self->{-mode} eq 'tk'){
+    	    	$back =  $spruch_frame->BrowseEntry
+    	    	(-label => $label,
+    	    	    -variable => \$text,
+    	    	    -browsecmd => \&::aktualisieren
+    	    	    );
+    	    	$back->{'curIndex'} = $wert;
+    	    	$back->{'curIndex'}--;
+    	    	
+    	    }else{ # mode eq 'web'
+    	    }
+    	}
     }else{
-    	$back = $spruch_frame->BrowseEntry
-    	(-label => $label,
-    	    -variable => \$self->{'Variable'}->{$label}->{'Wert'},
-    	    -browsecmd => \&::aktualisieren
-    	    );
+    	if($self->{-mode} eq 'tk'){
+    	    
+    	    $back = $spruch_frame->BrowseEntry
+    	    (-label => $label,
+    	    	-variable => \$self->{'Variable'}->{$label}->{'Wert'},
+    	    	-browsecmd => \&::aktualisieren
+    	    	);
+    	}else{ # mode eq 'web'
+    	}
+    	
     }
     if($listref){
-    	for my $entry (@$listref){
-    	    $back->insert('end', $entry);
+    	if($self->{-mode} eq 'tk'){
+    	    
+    	    for my $entry (@$listref){
+    	    	$back->insert('end', $entry);
+    	    }
+    	}else{ # mode eq 'web'
     	}
     }
-    $back->Subwidget('entry')->bind('<Key-Return>',
-    	\&::aktualisieren);
+    if($self->{-mode} eq 'tk'){
+    	
+    	
+    	$back->Subwidget('entry')->bind('<Key-Return>',
+    	    \&::aktualisieren);
+    }else{ # mode eq 'web'
+    }
+    
     return $back;
 }
 
@@ -287,7 +306,7 @@ sub pack{
     my $self = shift;
     
     die "Wrong mode $self->{-mode} != 'tk' in method Spruch::pack()" 
-    	if $self->{-mode} != 'tk';
+    	if $self->{-mode} ne 'tk';
     
     my $widget;
     my $arrayref = $self->get_spruchabhaengig();
@@ -301,21 +320,6 @@ sub pack{
     }
 }
 
-# gibt den spruchabhängigen Teil des Webformulars aus
-# nur für web gebraucht
-sub get_form{
-    my $self = shift;
-    
-    die "Wrong mode $self->{-mode} != 'web' in method Spruch::get_form()" 
-    	if $self->{-mode} != 'web';
-    
-    my $out = '';
-    my $arrayref = $self->get_spruchabhaengig();
-    for my $text (@$arrayref){
-    	$out .= $text;
-    }
-    return $out;
-}
 ########################################################################
 #
 # TODO_WEBAPP: Ende Tk-spezifischer Code.
@@ -448,7 +452,7 @@ sub get_spruchabhaengig{
     my $list;# = [];
     
     die "Wrong mode $self->{-mode} != 'tk' in method Spruch::get_spruchabhaengig"
-    if $self->{-mode} != 'tk';
+    if $self->{-mode} ne 'tk';
     
     for my $var (keys(%{$self->{'Variable'}})){
     	push (@$list, $self->{'Variable'}->{$var}->{'Wahl'});
@@ -459,21 +463,19 @@ sub get_spruchabhaengig{
     return $list;
 }
 
-# das selbe fuers web
-sub get_spruchabhaengig_web{
+# gibt das HTML zurück für den spruchabhängigen Teil des Formulars
+sub get_form{
     my $self = shift;
-    my $list;# = [];
+    my $html = '';
     
     die "Wrong mode $self->{-mode} != 'web' in method Spruch::get_spruchabhaengig"
-    if $self->{-mode} != 'web';
+    if $self->{-mode} ne 'web';
     
     for my $var (keys(%{$self->{'Variable'}})){
-    	push (@$list, $self->{'Variable'}->{$var}->{'Wahl'});
-    	#my @children = $self->{'Variable'}->{$var}->{'Wahl'}->children;
-    	#packsuche_radio($self->{'Variable'}->{$var}->{'Wahl'},$list);
+    	$html .=  $self->{'Variable'}->{$var}->{'Wahl'};
     }
     
-    return $list;
+    return $html;
 }
 
 sub suche_radio{
@@ -500,6 +502,9 @@ sub create_oberflaeche{
     my $self = shift;
     my $stoffel = $self->{-char};
     my $spruch_frame = shift;
+    
+    die "wir brauchen einen \$spruch_frame im Tk-Modus!" 
+    	if ($self->{-mode} eq 'tk' && !defined $spruch_frame);
     
     print "create_oberflaeche($spruch_frame);\n";
      

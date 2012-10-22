@@ -26,7 +26,7 @@ $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 # Sprueche initialisieren
 my $spruch_hash = {};
 $spruch_list = [];
-Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel,"web");
+Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel,'web');
 
 # charaktere initialisieren
 $char_list = [];
@@ -34,8 +34,7 @@ $char_list = [];
 Charakter->init_chars($char_list);
 
 # nur der Defaultspruch...
-my $sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
-my $sprucho_alt = $sprucho;
+$sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
 -]
 <p>
 <form method="get" action="Zauber-o-Mat.epl">
@@ -119,6 +118,10 @@ Nach dem Senken negative PSI-Punkte?
 <hr>
 <h2>Spruchabhängige Parameter</h2>
 
+[-
+$sprucho->create_oberflaeche();
+-]
+[+ $sprucho->get_form() +]
 
 
 [$ else $]
