@@ -132,7 +132,12 @@ sub get_wert{
     my $stoffel = $self->{-char};
     
     # TODO: something better than this very dirty hack
-    my $index = $ref->{'Wahl'}->{'_BE_curIndex'};
+    my $index;
+    if($self->{-mode} eq 'tk'){
+    	$index = $ref->{'Wahl'}->{'_BE_curIndex'};
+    }else{
+    	#TODO: how to get index in web?
+    }
     
     #  print "curIndex: $index Groessenordnung: $groe\n";
     my $MAX_RADIO = $self->{-conf}->{-MAX_RADIO};
@@ -407,7 +412,13 @@ sub groessenordnung{
     my $groe = $self->{'Variable'}->{$var}->{'Groessenordnung'};
     my $wert = $self->get_wert($var);
     
-    my $test = $self->{'Variable'}->{$var}->{'Wahl'}->{'curIndex'};
+    
+    my $test;
+    if($self->{-mode} eq 'tk'){
+    	$test = $self->{'Variable'}->{$var}->{'Wahl'}->{'curIndex'};
+    }else{
+    	#TODO webapp
+    }
     
     if($groe eq 'quadratisch'){
     	return $wert ** 2;

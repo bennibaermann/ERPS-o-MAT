@@ -125,6 +125,27 @@ $sprucho->create_oberflaeche();
 -]
 [+ $sprucho->get_form() +]
 
+[-
+
+# neue Zauberdauer eintragen
+$dauer = $sprucho->{'Dauer'};
+
+#
+# Wir berechnen die neue MW-Erhoehungsvorgabe anhand nicht-gekonnter
+# Fertigkeiten
+#
+
+$mw_mod += $stoffel->get_erhoehung
+($sprucho->{'Fertigkeit'});
+if(&Erps::ist_psi($sprucho->{'Fertigkeit'})){
+    $mw_mod += $stoffel->get_erhoehung('PSE');
+}
+
+$mws = $sprucho->aktualisieren($gesenkt_um,$mw_mod,$dauer);
+
+use Data::Dumper; $mws_dump = Dumper $mws;
+-]
+[+ $mws_dump +]
 
 [$ else $]
 Kein Charakter ausgewählt.

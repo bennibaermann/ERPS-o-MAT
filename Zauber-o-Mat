@@ -407,13 +407,7 @@ sub aktualisieren{
     	"$mws->{'Ungesenkt'}");
     $MWS->configure(-text => "MW-Gesenkt: $mws->{'Gesenkt'}");
     # diverse wahrscheinlichkeiten ausrechnen
-    
-    #
-    # Probleme im Zusammenhang mit Wahrscheinlichkeiten:
-    #    - Summe in der Tabelle gibt immer 91% statt 100%
-    #    - diese 9% fehlen immer im hinteren Teil
-    #    - Wenn nur die 1-1 faild: 100% Erfolg statt 99%
-    
+   
     if($bonus > 0){
     	$tabelle->put(0,0,"Gewuerfelt (+$bonus)");
     }elsif($bonus < 0){
