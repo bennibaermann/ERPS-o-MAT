@@ -310,10 +310,6 @@ $ws_magtheo_lp->pack(-anchor => 'e');
 # Aktualisierungsfunktionen, die von der Oberfläche aufgerufen werden
 # wenn eine Neuberechnung notwendig wird.
 #
-# TODO_WEBAPP: Die Aktualisierungsfunktionen müssen so verallgemeinert 
-# werden, dass sie auch vom Submit-Button einer Webapp aufgerufen werden
-# können
-#
 #####################################################################
 
 #

@@ -90,7 +90,7 @@ sub berechne{
     my $mw_mod = shift;
     my $dauer = shift;
     
-    print "berechne(gesenkt_um: $gesenkt_um,mw_mod: $mw_mod)\n";
+    print "berechne(gesenkt_um: $gesenkt_um, mw_mod: $mw_mod)\n";
     
     my $mw = {};
     
@@ -131,9 +131,9 @@ sub get_wert{
     my $groe = $ref->{'Groessenordnung'};
     my $stoffel = $self->{-char};
     
-    # TODO: something better than this very dirty hack
     my $index;
     if($self->{-mode} eq 'tk'){
+    	# TODO: something better than this very dirty hack
     	$index = $ref->{'Wahl'}->{'_BE_curIndex'};
     }else{
     	#TODO: how to get index in web?

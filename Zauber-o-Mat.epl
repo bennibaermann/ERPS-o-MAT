@@ -35,8 +35,12 @@ $char_list = [];
 # Charakter->init_chars($char_list,$spruch_hash);
 Charakter->init_chars($char_list);
 
-# nur der Defaultspruch...
-$sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
+if(defined $fdat{'spruch'}){
+    $sprucho = $spruch_hash->{$fdat{'spruch'}};
+}else{
+    # Defaultspruch falls im Formular noch nichts ausgewählt
+    $sprucho = $spruch_hash->{$conf->{-DEFAULT_SPRUCH}};
+}
 -]
 <p>
 <form method="get" action="Zauber-o-Mat.epl">
