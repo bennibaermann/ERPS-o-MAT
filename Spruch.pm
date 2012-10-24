@@ -162,8 +162,9 @@ sub get_wert{
 }
 
 #
-# Diese Funktion gibt ein BrowseEntry-Widget zurueck, dass auf
-# der Eingabe-Seite angezeigt wird. 
+# Diese Funktion gibt im Tk-Modus ein BrowseEntry-Widget zurueck, dass auf
+# der Eingabe-Seite angezeigt wird. Im Web-Modus gibt es ein <select>-Tag 
+# mit den zugehörigen <option>s zurück als string.
 #
 # Parameter: TODO DOKU
 
@@ -237,16 +238,21 @@ sub get_input_var{
 #
 
 sub get_input_flag{
+    my $self = shift;
     my $text = shift;
     my $var_ref = shift;
     my $spruch_frame = shift;
     
-    return $spruch_frame->Checkbutton
-    (-text => $text,
-    	-command => \&::aktualisieren,
-    	-variable => $var_ref,
-    	-onvalue => '1',
-    	-offvalue => '0');
+    if($self->{-mode} eq 'tk'){
+    	return $spruch_frame->Checkbutton
+    	(-text => $text,
+    	    -command => \&::aktualisieren,
+    	    -variable => $var_ref,
+    	    -onvalue => '1',
+    	    -offvalue => '0');
+    }else{
+    	return "$text: <input type='checkbox' name='$text'>";
+    }
 }
 
 #
@@ -254,13 +260,34 @@ sub get_input_flag{
 #
 #
 
-sub get_input_radio{
+sub get_input_radio_web{
     my $self = shift;
     my $var = shift;
     my $ref = $self->{'Variable'}->{$var};
     my $groe = $ref->{'Groessenordnung'};
     my $stoffel = $self->{-char};
+    
+    # TODO: hier muss die logik aus get_input_var() hin
+    # nur mit strings statt widgets als resultat
+        
+    
+}
+
+#
+#
+#
+#
+sub get_input_radio{
+    my $self = shift;
+    my $var = shift;
     my $spruch_frame = shift;
+
+    return $self->get_input_radio_web($var) if($self->{-mode} eq 'web');
+
+    my $ref = $self->{'Variable'}->{$var};
+    my $groe = $ref->{'Groessenordnung'};
+    my $stoffel = $self->{-char};
+    
     
     my $radio_frame = $spruch_frame->LabFrame
     (-label => $var,
@@ -542,7 +569,7 @@ sub create_oberflaeche{
     	}
     	if($max == 1){
     	    # checkbutton
-    	    $vars->{$var}->{'Wahl'} = get_input_flag
+    	    $vars->{$var}->{'Wahl'} = $self->get_input_flag
     	    ($var,\$vars->{$var}->{'Wert'},$spruch_frame);
    
 	       }elsif($max <= $conf->{-MAX_RADIO}){
