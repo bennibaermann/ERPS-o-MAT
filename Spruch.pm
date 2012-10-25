@@ -267,10 +267,25 @@ sub get_input_radio_web{
     my $groe = $ref->{'Groessenordnung'};
     my $stoffel = $self->{-char};
     
-    # TODO: hier muss die logik aus get_input_var() hin
+    # TODO: hier muss die logik aus get_input_radio() hin
     # nur mit strings statt widgets als resultat
-        
     
+    my $max;
+    if(!ref($groe)){
+    	$max = $ref->{'Obergrenze'} ;
+    	for my $wert (0..$max){
+    	    return "<input type='radio' name='$var' value='$wert'>\n";
+    	}
+    }elsif(ref($groe) eq 'ARRAY'){
+    	$max = scalar(@$groe);
+    	for my $wert (0..$max-1){
+    	    return "<input type='radio' name='$var' value='$wert'>\n";
+    	}
+    }elsif(ref($groe) eq 'HASH'){
+    	for my $wert (keys(%$groe)){
+    	    return "<input type='radio' name='$var' value='$wert'>\n";
+    	}
+    }
 }
 
 #
