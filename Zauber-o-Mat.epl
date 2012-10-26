@@ -82,9 +82,15 @@ value="
 <h2>Allgemeines</h2>
 <p>
 
-Spruch: <select name="spruch">
+Spruch: <select name="spruch" onChange="document.rechner.submit();">
 [$ foreach $spruch (@$spruch_list) $]
-<option>[+ $spruch +]</option>
+[- 
+$selected ="";
+if($fdat{'spruch'} eq $spruch){
+    $selected = "selected='selected'";
+}
+-]
+<option [+ $selected +]>[+ $spruch +]</option>
 [$ endforeach $]
 </select>
 
