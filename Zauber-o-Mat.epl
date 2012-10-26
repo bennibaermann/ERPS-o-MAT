@@ -43,11 +43,18 @@ if(defined $fdat{'spruch'}){
 }
 -]
 <p>
-<form method="get" action="Zauber-o-Mat.epl">
+<form method="get" action="Zauber-o-Mat.epl" name="rechner">
 
-Charakter: <select name="charakter">
+Charakter: <select name="charakter" 
+	onChange="document.rechner.submit();">
 [$ foreach $char (@$char_list) $]
-<option>[+ $char +]</option>
+[- 
+$selected ="";
+if($fdat{'charakter'} eq $char){
+    $selected = "selected='selected'";
+}
+-]
+<option [+ $selected +] > [+ $char +]</option> #]
 [$ endforeach $]
 </select>
 <p>
@@ -157,7 +164,7 @@ Kein Charakter ausgewählt.
 
 
 <p>
-<input type="submit" name="submit" value="Berechnen">
+<input type="submit" name="submitter" value="Berechnen">
 
 </form>
 <p>
