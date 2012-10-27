@@ -40,7 +40,7 @@ Known-Bugs-Section
 
 - Fehler bei Schockwelle-Abstand (alles 0) (web und tk)
 
-- Radiobuttons funktionieren noch nicht (web)
+- checkbuttons funktionieren noch nicht (web,illusion)
 
 1 mehrere Fertigkeiten pro Spruch funktionieren noch garnicht.
 

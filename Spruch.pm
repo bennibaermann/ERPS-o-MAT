@@ -271,21 +271,23 @@ sub get_input_radio_web{
     # nur mit strings statt widgets als resultat
     
     my $max;
+    my $ret = '';
     if(!ref($groe)){
     	$max = $ref->{'Obergrenze'} ;
     	for my $wert (0..$max){
-    	    return "$wert: <input type='radio' name='$var' value='$wert'>\n";
+    	    $ret .= "$wert: <input type='radio' name='$var' value='$wert'>\n";
     	}
     }elsif(ref($groe) eq 'ARRAY'){
     	$max = scalar(@$groe);
     	for my $wert (0..$max-1){
-    	    return "$wert: <input type='radio' name='$var' value='$wert'>\n";
+    	    $ret .= "$wert: <input type='radio' name='$var' value='$wert'>\n";
     	}
     }elsif(ref($groe) eq 'HASH'){
     	for my $wert (keys(%$groe)){
-    	    return "$wert: <input type='radio' name='$var' value='$wert'>\n";
+    	    $ret .= "$wert: <input type='radio' name='$var' value='$wert'>\n";
     	}
     }
+    return "<p>\n$ret";
 }
 
 #
