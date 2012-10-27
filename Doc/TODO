@@ -35,6 +35,30 @@ Im Einzelnen fehlt in dieser Version des Programms noch
 folgendes. Sortiert nach vermutetem Implementierungsaufwand. 
 Die Zahl gibt meine Prioritaet an. 1 ist hoch:
 
+Known-Bugs-Section
+------------------
+
+- Fehler bei Schockwelle-Abstand (alles 0) (web und tk)
+
+- Radiobuttons funktionieren noch nicht (web)
+
+1 mehrere Fertigkeiten pro Spruch funktionieren noch garnicht.
+
+1 Der Fertigkeit-nicht-vorhanden-malus wird bei jedem &aktualisieren
+  nochmal draufaddiert! Loesung:? Nur bei Spruch- oder Charakterwechsel?
+
+1 Fehler bei mehrfachen Charakterwechseln
+
+1 Mw-mod bleiben nach charakterwechsel stehen.
+
+3 Bug bei schon mit 1-2 geschafft: magtheo 99% muesste kleiner
+  sein... oder? nochmal checken, ob das ueberhaupt ein bug ist.
+
+5 Spruch wird mehrfach aufgerufen am anfang... doof und langsam
+
+3 Magietheorie wird noch nicht korrekt
+  behandelt, wenn man sie garnicht hat. aber auch sonst nicht ;-)
+
 
 Simpel
 ------
@@ -48,6 +72,7 @@ Simpel
   (einfach den leeren Spruch definieren, allerdings werden 
   dann Mehrfachfertigkeiten gebraucht, siehe unten)
   
+
 3 Die Formel des Spruches anzeigen. Dafür ein eigenes Textfeld im Spruch anlegen.
 
 2 negative MW-Modifikationen erlauben (zB Vereinfachungen, die nicht vorgesehen 
@@ -185,22 +210,3 @@ Unbekannt
 Ausserdem muss natuerlich die Spruchbibliothek vervollstaendigt werden. 
 
 
-Known-Bugs-Section
-------------------
-
-1 mehrere Fertigkeiten pro Spruch funktionieren noch garnicht.
-
-1 Der Fertigkeit-nicht-vorhanden-malus wird bei jedem &aktualisieren
-  nochmal draufaddiert! Loesung:? Nur bei Spruch- oder Charakterwechsel?
-
-1 Fehler bei mehrfachen Charakterwechseln
-
-1 Mw-mod bleiben nach charakterwechsel stehen.
-
-3 Bug bei schon mit 1-2 geschafft: magtheo 99% muesste kleiner
-  sein... oder? nochmal checken, ob das ueberhaupt ein bug ist.
-
-5 Spruch wird mehrfach aufgerufen am anfang... doof und langsam
-
-3 Magietheorie wird noch nicht korrekt
-  behandelt, wenn man sie garnicht hat. aber auch sonst nicht ;-)

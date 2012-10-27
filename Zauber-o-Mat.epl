@@ -29,6 +29,7 @@ $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 my $spruch_hash = {};
 $spruch_list = [];
 Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel,'web');
+$stoffel->set_sprueche($spruch_hash);
 
 # charaktere initialisieren
 $char_list = [];

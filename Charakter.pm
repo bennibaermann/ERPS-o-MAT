@@ -17,7 +17,7 @@ use Eomconfig;# qw($conf get_conf);
 sub new{
      my $class = shift;
      my $name = shift; # Der Name des Charakterfiles ohne .ch und Dir
-     my $sprueche = shift; # TODO? eigentlich falsch hier...
+     # my $sprueche = shift; # TODO? eigentlich falsch hier...
      my $conf = shift;
 
      my $self = {};
@@ -39,9 +39,15 @@ sub new{
      eval "@ev";
   
      $self->{-conf} = $newconf;
-     $self->{-sprueche} = $sprueche;
+     # $self->{-sprueche} = $sprueche;
      
      return bless($self,$class);
+}
+
+sub set_sprueche{
+    my $self = shift;
+    my $sprueche = shift;
+    $self->{-sprueche} = $sprueche;
 }
 
 # diese funktion berechnet die PSI-tragkraft, die fuer einige sprueche
