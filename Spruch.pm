@@ -280,7 +280,9 @@ sub get_input_radio_web{
     }elsif(ref($groe) eq 'ARRAY'){
     	$max = scalar(@$groe);
     	for my $wert (0..$max-1){
-    	    $ret .= "$wert: <input type='radio' name='$var' value='$wert'>\n";
+    	    my $val = $groe->[$wert][1];
+    	    my $txt = $groe->[$wert][0];
+    	    $ret .= "$txt: <input type='radio' name='$var' value='$val'>\n";
     	}
     }elsif(ref($groe) eq 'HASH'){
     	for my $wert (keys(%$groe)){
