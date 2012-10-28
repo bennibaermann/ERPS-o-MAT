@@ -62,6 +62,9 @@ if($fdat{'charakter'} eq $char){
 
 
 [$ if exists $fdat{charakter} $]
+
+[####################### Charakter ##############################]
+
 [- $stoffel = Charakter->new($fdat{charakter},$conf); -]
 
 <hr>
@@ -78,6 +81,23 @@ PSI: <input type="text" size="2" maxlength="2" name="PSI" value="
 Magietheorie: <input type="text" size="2" maxlength="2" name="Magietheorie"
 value="
 [+ $stoffel->{'Fertigkeit'}->{'Magietheorie'} +]">
+
+[- $prozente = $stoffel->get_prozente($sprucho->get_name()) . '%'; -]
+<p>
+Prozente: [+ $prozente +]
+
+[- 
+$bereich = $sprucho->{'Fertigkeit'};
+if(defined($stoffel->{'Fertigkeit'}->{$bereich})){
+	$bereich .= ': ' . $stoffel->{'Fertigkeit'}->{$bereich};
+}else{
+	$bereich .= ': nicht vorhanden';
+}
+-]
+<p>
+[+ $bereich +]
+
+[########################## Allgemeines #########################]
 
 <hr>
 <h2>Allgemeines</h2>
@@ -134,6 +154,8 @@ Gesenkt um: <select name="gesenkt_um">
 <p>
 Nach dem Senken negative PSI-Punkte?
 <input type="checkbox" name="ist_negativ" value="0">
+
+[################ Spruchabhängiger Input ###############]
 
 <hr>
 <h2>Spruchabhängige Parameter</h2>

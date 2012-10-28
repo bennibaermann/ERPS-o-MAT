@@ -38,9 +38,13 @@ Die Zahl gibt meine Prioritaet an. 1 ist hoch:
 Known-Bugs-Section
 ------------------
 
+- spezialisierung_passt-Bug bei Gedankenlesen wieder aufgetaucht...
+
+- Defaultwerte sind noch fast nirgends gesetzt (web)
+
 - Fehler bei Schockwelle-Abstand (alles 0) (web und tk)
 
-- checkbuttons funktionieren noch nicht (web,illusion)
+- Ausgabeseite fehlt (web)
 
 1 mehrere Fertigkeiten pro Spruch funktionieren noch garnicht.
 

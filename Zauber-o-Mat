@@ -429,9 +429,14 @@ sub aktualisieren{
     $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);
     $ws_magtheo_lp->configure
     (-text => "Lernpunkt-Magietheorie-Wahrscheinlichkeit: $ws \%");
+
+    #
+    # Prozente und Fertigkeit des Charakters ermitteln und ausgeben
+    #
+
     $Prozente->configure
     (-text => "Prozente: " .
-    	$stoffel->get_prozente($sprucho->get_name()). "%");
+    	$stoffel->get_prozente($sprucho->get_name()). '%');
     my $bereich = $sprucho->{'Fertigkeit'};
     if(defined($stoffel->{'Fertigkeit'}->{$bereich})){
     	$Fertigkeit->configure
