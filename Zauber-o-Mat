@@ -36,6 +36,7 @@ my $stoffel = Charakter->new($conf->{-DEFAULT_CHARAKTER},$conf);
 my $spruch_hash = {};
 my $spruch_list = [];
 Spruch->init_sprueche($spruch_hash,$spruch_list,$stoffel);
+$stoffel->set_sprueche($spruch_hash);
 
 # charaktere initialisieren
 my $char_list = [];

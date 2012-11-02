@@ -13,7 +13,7 @@
 use utf8;
 use Eomconfig;
 use Data::Dumper;
-# use diagnostics;
+use diagnostics;
 use Charakter;
 use Spruch;
 use Erps;
