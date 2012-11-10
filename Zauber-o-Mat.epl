@@ -61,26 +61,47 @@ if($fdat{'charakter'} eq $char){
 <p>
 
 
-[$ if exists $fdat{charakter} $]
+[$ if exists $fdat{'charakter'} $]
 
 [####################### Charakter ##############################]
 
-[- $stoffel = Charakter->new($fdat{charakter},$conf); -]
+[# TODO: Wenn neuer Char ausgewählt -> $fdat löschen #]
+
+[- $stoffel = Charakter->new($fdat{'charakter'},$conf); -]
 
 <hr>
 <h2>[+ $stoffel->{'Name'} +]</h2>
 <p>
+[-
+if(defined $fdat{'PSE'}){
+	$PSE = $fdat{'PSE'};
+}else{
+	$PSE = $stoffel->{'Fertigkeit'}->{'PSE'};
+}
+if(defined $fdat{'PSI'}){
+	$PSI = $fdat{'PSI'};
+}else{
+	$PSI = $stoffel->{'Fertigkeit'}->{'PSI'};
+}
+if(defined $fdat{'Magietheorie'}){
+	$Magtheo = $fdat{'Magietheorie'};
+}else{
+	$Magtheo = $stoffel->{'Fertigkeit'}->{'Magietheorie'};
+}
+
+-]
+
 PSE: <input type="text" size="2" maxlength="2" name="PSE" value="
-[+ $stoffel->{'Fertigkeit'}->{'PSE'} +]">
+[+ $PSE +]">
 
 <p>
 PSI: <input type="text" size="2" maxlength="2" name="PSI" value="
-[+ $stoffel->{'Basisattribut'}->{'PSI'} +]">
+[+ $PSI +]">
 
 <p>
 Magietheorie: <input type="text" size="2" maxlength="2" name="Magietheorie"
 value="
-[+ $stoffel->{'Fertigkeit'}->{'Magietheorie'} +]">
+[+ $Magtheo +]">
 
 [- $prozente = $stoffel->get_prozente($sprucho->get_name()) . '%'; -]
 <p>
