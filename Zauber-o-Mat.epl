@@ -182,10 +182,18 @@ if(&Erps::ist_psi($sprucho->{'Fertigkeit'})){
 }
 
 $mws = $sprucho->aktualisieren($gesenkt_um,$mw_mod,$dauer);
-
-use Data::Dumper; $mws_dump = Dumper $mws;
 -]
-[+ $mws_dump +]
+
+[####################### Ausgabe Mindestwürfe #####################]
+
+<hr><hr><h1>Ausgabe:</h1>
+
+unmmodifizierter MW: [+ $mws->{'Grund'} +]<p>
+MW nach Prozenten und Modifikationen: [+ $mws->{'Ungesenkt'} +]<p>
+MW Gesenkt: [+ $mws->{'Gesenkt'} +]<p>
+<hr>
+
+[#################### Ausgabe Tabelle ##################]
 
 [$ else $]
 Kein Charakter ausgewählt.
