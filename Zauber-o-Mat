@@ -406,11 +406,11 @@ sub aktualisieren{
     # diverse wahrscheinlichkeiten ausrechnen
    
     if($bonus > 0){
-    	$tabelle->put(0,0,"Gewuerfelt (+$bonus)");
+    	$tabelle->put(0,0,"Gewürfelt (+$bonus)");
     }elsif($bonus < 0){
-    	$tabelle->put(0,0,"Gewuerfelt (-$bonus)");
+    	$tabelle->put(0,0,"Gewürfelt (-$bonus)");
     }else{
-    	$tabelle->put(0,0,"Gewuerfelt");
+    	$tabelle->put(0,0,"Gewürfelt");
     }
     my $ws = Erps::WS_Fert($mws->{'Gesenkt'} - $bonus);
     $ws = sprintf('%.' . $conf->{-KOMMA} . 'f',$ws);

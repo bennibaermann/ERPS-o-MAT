@@ -136,8 +136,37 @@ if($fdat{'spruch'} eq $spruch){
 [$ endforeach $]
 </select>
 
+[-
+
+
+
+
+# TODO
+
+
+if(defined $fdat{'dauer'}){
+}else{
+}
+
+if(defined $fdat{'mw_mod'}){
+}else{
+}
+
+if(defined $fdat{'wuerfel_mod'}){
+}else{
+}
+
+if(defined $fdat{'gesenkt_um'}){
+}else{
+}
+
+if(defined $fdat{'ist_negativ'}){
+}else{
+}
+-]
+
 <p>
-Spruchdauer: <select name="dauer">
+Spruchdauer: <select name="dauer" onChange="document.rechner.submit();">
 <option selected>Sofortiger Zauber</option>
 <option>Rundenzauber</option>
 <option>Minutenzauber</option>
@@ -146,7 +175,7 @@ Spruchdauer: <select name="dauer">
 </select>
 
 <p>
-MW-Modifikationen: <select name="mw_mod">
+MW-Modifikationen: <select name="mw_mod" onChange="document.rechner.submit();">
 <option selected>0</option>
 [$ foreach $i (1..20) $]
 <option>[+ $i +]</option>
@@ -154,7 +183,7 @@ MW-Modifikationen: <select name="mw_mod">
 </select>
 
 <p>
-Würfel-Modifikationen: <select name="wuerfel_mod">
+Würfel-Modifikationen: <select name="wuerfel_mod" onChange="document.rechner.submit();">
 [$ foreach $i (-10..-1) $]
 <option>[+ $i +]</option>
 [$ endforeach $]
@@ -165,7 +194,7 @@ Würfel-Modifikationen: <select name="wuerfel_mod">
 </select>
 
 <p>
-Gesenkt um: <select name="gesenkt_um">
+Gesenkt um: <select name="gesenkt_um" onChange="document.rechner.submit();">
 <option selected>0</option>
 [$ foreach $i (1..20) $]
 <option>[+ $i +]</option>
@@ -174,7 +203,7 @@ Gesenkt um: <select name="gesenkt_um">
 
 <p>
 Nach dem Senken negative PSI-Punkte?
-<input type="checkbox" name="ist_negativ" value="0">
+<input type="checkbox" name="ist_negativ" value="0" onChange="document.rechner.submit();">
 
 [################ Spruchabhängiger Input ###############]
 
@@ -215,6 +244,34 @@ MW Gesenkt: [+ $mws->{'Gesenkt'} +]<p>
 <hr>
 
 [#################### Ausgabe Tabelle ##################]
+
+[-  
+	# Boni ausrechnen
+	$bonus = $stoffel->bonus($sprucho->{'Fertigkeit'},$wuerfel_mod);
+    $stoffel->{'Bonus'} = $bonus;
+    $m_bonus = $stoffel->magtheo_bonus($sprucho->{'Fertigkeit'},$wuerfel_mod);
+    $stoffel->{'Magtheo_Bonus'} = $m_bonus;
+    
+    if($bonus > 0){
+    	$gewuerfelt_tab_header = "Gewürfelt (+$bonus)";
+    }elsif($bonus < 0){
+    	$gewuerfelt_tab_header = "Gewürfelt (-$bonus)";
+    }else{
+    	$gewuerfelt_tab_header = "Gewürfelt";
+    }
+-]
+
+<h1>Würfeltabelle</h1>
+
+<table border="1">
+<tr>
+<th>[+ $gewuerfelt_tab_header +]</th>
+<th>Ergebnis</th>
+<th>PSI-Kosten</th>
+<th>WS</th>
+</tr>
+</table>
+
 
 [$ else $]
 Kein Charakter ausgewählt.
