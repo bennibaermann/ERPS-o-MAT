@@ -309,9 +309,7 @@ MW Gesenkt: [+ $mws->{'Gesenkt'} +]<p>
     	    	$tab .= "<td>$gewuerfelt_text</td>";
     	    	$tab .= "<td>".Erps::decode($alt_ergebnis,
     	    	    $conf->{-UNENDLICH})."</td>";
-    	    	$tab .= "<td>TODO</td>";
-    	    	$tab .= "<td>$WS</td>";
-    	    	
+
     	    	my $kosten;
     	    	my $normal_kosten;
     	    	my $runden_mod = 0;
@@ -334,10 +332,10 @@ MW Gesenkt: [+ $mws->{'Gesenkt'} +]<p>
     	    	# passieren
     	    	$kosten = "unendlich" if 
     	    	($alt_ergebnis == -$conf->{-UNENDLICH});
-    	    	
-    	    	# $tabelle->put
-    	    	# ($zeile,2,
-    	    	#    "$normal_kosten + $gesenkt_um = $kosten");
+    
+    	    	$tab .= "<td> $normal_kosten + $gesenkt_um = $kosten </td>";
+    	    	$tab .= "<td>$WS</td>";
+ 
     	    }
     	    
     	    $zeile++;
