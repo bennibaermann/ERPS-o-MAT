@@ -270,6 +270,86 @@ MW Gesenkt: [+ $mws->{'Gesenkt'} +]<p>
 <th>PSI-Kosten</th>
 <th>WS</th>
 </tr>
+
+[-
+	$tab = '';
+	
+    my $wurf;
+    my $zeilen_anfang = 2;
+    my ($ergebnis,$gewuerfelt_text);
+    my $zeile = 1;
+    #     $stoffel->{'Bonus'} = 
+    #	  $stoffel->bonus($::sprucho->{'Fertigkeit'});
+    my $alt_ergebnis = $stoffel->berechne_ergebnis($mws->{'Gesenkt'},2,
+    	$sprucho->{'Fertigkeit'});
+    for ($wurf = 2;$wurf != $conf->{-MAXWURF}; $wurf++){
+    	
+    	$ergebnis = $stoffel->berechne_ergebnis
+    	($mws->{'Gesenkt'},
+    	    $wurf,
+    	    $sprucho->{'Fertigkeit'});
+    	# zeilensprung in der Tabelle!
+    	if($ergebnis != $alt_ergebnis || $wurf == $conf->{-MAXWURF}-1){
+    	    my $WS;
+    	    
+    	    $tab .= '<tr>';
+    	    
+    	    # nur ein einzelnes Ergebnis in der Zeile?
+    	    if($wurf-1 != $zeilen_anfang){
+    	    	my $wurf1 = $wurf-1;
+    	    	$gewuerfelt_text = "$zeilen_anfang - $wurf1";
+    	    	$WS = Erps::WS_zwischen($zeilen_anfang,$wurf1);
+    	    }else{
+    	    	$gewuerfelt_text = "$zeilen_anfang";
+    	    	$WS = Erps::WS_eq($zeilen_anfang);
+    	    }
+    	    $WS = sprintf('%.' . $conf->{-KOMMA} . 'f %%',$WS);
+    	    
+    	    if($zeile < $conf->{-MAX_TABLE} && $alt_ergebnis != 0){	
+    	    	$tab .= "<td>$gewuerfelt_text</td>";
+    	    	$tab .= "<td>".Erps::decode($alt_ergebnis,
+    	    	    $conf->{-UNENDLICH})."</td>";
+    	    	$tab .= "<td>TODO</td>";
+    	    	$tab .= "<td>$WS</td>";
+    	    	
+    	    	my $kosten;
+    	    	my $normal_kosten;
+    	    	my $runden_mod = 0;
+    	    	$runden_mod = 0.5 unless $conf->{-PSIKOSTEN_ABRUNDEN};		    
+    	    	if(! $ist_negativ){
+    	    	    $normal_kosten = floor(Erps::berechne_PSI_Kosten
+    	    	    	($alt_ergebnis, 
+    	    	    	    Erps::standard_psi_kosten
+    	    	    	    ($mws->{'Gesenkt'}))+$runden_mod);
+    	    	    $kosten = $gesenkt_um + $normal_kosten;
+    	    	}else{
+    	    	    # doppelte kosten im negativen
+    	    	    $normal_kosten = 2*floor(Erps::berechne_PSI_Kosten
+    	    	    	($alt_ergebnis, 
+    	    	    	    Erps::standard_psi_kosten
+    	    	    	    ($mws->{'Gesenkt'}))+$runden_mod);
+    	    	    $kosten = $gesenkt_um + $normal_kosten;
+    	    	}
+    	    	# kann bei negativen Wuerfelmodifikationen
+    	    	# passieren
+    	    	$kosten = "unendlich" if 
+    	    	($alt_ergebnis == -$conf->{-UNENDLICH});
+    	    	
+    	    	# $tabelle->put
+    	    	# ($zeile,2,
+    	    	#    "$normal_kosten + $gesenkt_um = $kosten");
+    	    }
+    	    
+    	    $zeile++;
+    	    $zeilen_anfang = $wurf;
+    	}
+    	$alt_ergebnis = $ergebnis;
+    }
+    	    	
+-]
+
+[+ $tab +]
+
 </table>
 
 
