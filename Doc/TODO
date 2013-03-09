@@ -38,6 +38,10 @@ Die Zahl gibt meine Prioritaet an. 1 ist hoch:
 Known-Bugs-Section
 ------------------
 
+- was ist mit Sprüchen, die mehrere Bereiche betreffen (Heilen =
+Körperbew./Regeneration). Oder funktioniert das schon ist nur bei den
+Sprüchen falsch?
+
 - spezialisierung_passt-Bug bei Gedankenlesen wieder aufgetaucht...
 
 - Defaultwerte sind noch fast nirgends gesetzt (web)

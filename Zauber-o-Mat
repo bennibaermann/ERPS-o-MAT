@@ -51,9 +51,6 @@ my $sprucho_alt = $sprucho;
 #
 # Ab hier Tk-spezifischer Code
 #
-# TODO_WEBAPP: Dieser Teil muss komplett neu in einem Embperlscript
-# TODO_WEBAPP: geschrieben werden
-#
 ############################################################
 
 my $top = MainWindow->new();
@@ -63,6 +60,9 @@ my $oben_frame = $top->Frame();
 my $input_frame = $oben_frame->LabFrame
 (-label => 'Eingabe',
     -labelside => 'acrosstop');
+my $description_frame = $oben_frame->LabFrame(-label => 'Beschreibung',
+    -labelside => 'acrosstop',
+    -background => $conf->{-BGCOLOR});
 my $output_frame= $oben_frame->LabFrame
 (-label => 'Ausgabe',
     -labelside => 'acrosstop',
@@ -214,6 +214,15 @@ my $exit_button = $command_frame->Button(-text => "Exit",
     -command => \&exit);
 
 #
+# Spruchbeschreibung
+#
+
+my $descr = $description_frame->
+Text(  
+    -width => 40);
+
+$descr->insert('end',$sprucho->{'Beschreibung'});
+#
 # Die Ausgabe-Seite
 #
 
@@ -259,6 +268,7 @@ $sprucho->create_oberflaeche($spruch_frame);
 #
 
 $oben_frame->pack(-side => 'top', -anchor => 'n');
+
 $input_frame->pack(-side => 'left', -anchor => 'n');
 $charwahl->pack(-anchor => 'w');
 $char_frame->pack( -anchor => 'w', -fill => 'x');
@@ -271,6 +281,10 @@ $spruch_frame->pack( -anchor => 'w', -fill => 'x');
 $mw_frame->pack( -anchor => 'w', -fill => 'x');
 $table_frame->pack( -anchor => 'w', -fill => 'x');
 $spruch_out_frame->pack( -anchor => 'w', -fill => 'x');
+
+$description_frame->pack(-side => 'left', -anchor => 'n');
+$descr->pack();
+
 $output_frame->pack(-side => 'left', -anchor => 'n');
 $command_frame->pack(-side => 'bottom');
 
